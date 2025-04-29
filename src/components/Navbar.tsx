@@ -20,18 +20,18 @@ export default function Navbar() {
         <HeroNavbar>
             <NavbarBrand>
                 <Link href="/">
-                    <p className="font-bold text-inherit">AGI for Good</p>
+                    <p className="font-bold text-inherit">智能向善</p>
                 </Link>
             </NavbarBrand>
 
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
                 <NavbarItem>
-                    <Link color="foreground" href="#">
+                    <Link color="foreground" href="https://westlakeaiforgood.feishu.cn/wiki/JNXXwuhMairUVxk1wfocW2lcnkc" target="_blank">
                         路线图
                     </Link>
                 </NavbarItem>
                 <NavbarItem>
-                    <Link color="foreground" href="#">
+                    <Link color="foreground" href="https://westlakeaiforgood.feishu.cn/wiki/E88hwBpPeiOE6vkDumxcvRITnIe" target="_blank">
                         任务
                     </Link>
                 </NavbarItem>
