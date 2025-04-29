@@ -3,12 +3,14 @@ import Features from '@/components/Features';
 import About from '@/components/About';
 import Footer from '@/components/Footer';
 import ScrollButton from '@/components/ScrollButton';
+import Navbar from '@/components/Navbar';
 
 export default function Home() {
   return (
     <div className="flex flex-col">
+      <Navbar />
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center relative">
+      <section className="min-h-screen flex items-center justify-center relative pt-16">
         {/* Background pattern layer */}
         <div className="absolute inset-0 bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-50"></div>
         {/* Gradient overlay */}
