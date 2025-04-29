@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import { useRouter } from 'next/navigation';
 const { useSession } = authClient
 import { Spinner, Card, CardHeader, CardBody, CardFooter, Divider, Image, Button } from '@heroui/react';
+import Avatar, { genConfig } from 'react-nice-avatar'
 
 interface UserProfile {
     profile: Profile;
@@ -40,7 +41,7 @@ interface UserTag {
 }
 
 interface UserAvailability {
-    weekday: number;
+    weekDay: number;
     timeSlot: number;
 }
 
@@ -85,12 +86,16 @@ export default function ProfilePage() {
             <div className="flex-grow py-12">
                 <Card className="max-w-3xl mx-auto">
                     <CardHeader>
-                        <Image src={profile.profile.avatarUrl} alt="头像" className="w-24 h-24 rounded-full border" />
+                        {profile.profile.avatarUrl ?
+                            <Image src={profile.profile.avatarUrl} alt="头像" className="w-24 h-24 rounded-full border" />
+                            :
+                            <Avatar className="w-24 h-24 rounded-full border" {...genConfig(profile.profile.userId)} />
+                        }
                         <div className="flex flex-col">
                             <div className="text-2xl font-bold">{session?.user.name} <span className="text-gray-400 text-base">ID: {profile.profile.handle}</span></div>
                             <div className="text-gray-400 text-base">{profile.profile.statusMessage}</div>
                         </div>
-                        <Button className="max-w-1 m-4" >编辑</Button>
+                        <Button className="max-w-1 m-4" onPress={() => router.push('/profile/edit')} >编辑</Button>
                     </CardHeader>
                     <Divider />
                     <CardBody>
@@ -134,8 +139,8 @@ export default function ProfilePage() {
                             <h3 className="font-semibold">可参与时间</h3>
                             <div className="flex flex-wrap gap-2">
                                 {profile.availability.map(availability => (
-                                    <div key={availability.weekday} className="bg-gray-100 px-2 py-1 rounded-full text-sm">
-                                        {availability.weekday} {availability.timeSlot}
+                                    <div key={availability.weekDay} className="bg-gray-100 px-2 py-1 rounded-full text-sm">
+                                        {availability.weekDay} {availability.timeSlot}
                                     </div>
                                 ))}
                             </div>

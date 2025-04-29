@@ -1,7 +1,8 @@
 'use client';
 
-import { Navbar as HeroNavbar, NavbarBrand, NavbarContent, NavbarItem, Dropdown, DropdownTrigger, Avatar, DropdownMenu, DropdownItem, Button } from '@heroui/react';
+import { Navbar as HeroNavbar, NavbarBrand, NavbarContent, NavbarItem, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from '@heroui/react';
 import Link from 'next/link';
+import Avatar, { genConfig } from 'react-nice-avatar'
 import { authClient } from '@/lib/authClient';
 import { useRouter } from 'next/navigation';
 const { useSession } = authClient
@@ -34,21 +35,27 @@ export default function Navbar() {
                         任务
                     </Link>
                 </NavbarItem>
+                {
+                    session?.user ? (
+                        <NavbarItem>
+                            <Link color="foreground" href="/network">
+                                志愿者网络
+                            </Link>
+                        </NavbarItem>
+                    ) : null
+                }
             </NavbarContent>
 
             <NavbarContent as="div" justify="end">
                 {session?.user ? (
                     <Dropdown placement="bottom-end">
                         <DropdownTrigger>
-                            <Avatar
-                                isBordered
-                                as="button"
-                                className="transition-transform"
-                                color="secondary"
-                                name="Jason Hughes"
-                                size="sm"
-                                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-                            />
+                            <Button variant="light" color="secondary" size="sm" radius="full" className="w-24" isIconOnly>
+                                <div className="flex items-center gap-2">
+                                    <Avatar className="w-8 h-8" {...genConfig(session?.user?.id)} />
+                                    <p className="text-sm">{session?.user?.name}</p>
+                                </div>
+                            </Button>
                         </DropdownTrigger>
                         <DropdownMenu aria-label="Profile Actions" variant="flat">
                             <DropdownItem key="user" className="h-14 gap-2">
