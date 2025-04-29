@@ -46,6 +46,11 @@ const Footer = () => {
                     <p className="text-sm text-gray-500">
                         © 2025 西湖智能向善社会创新网络. 保留所有权利
                     </p>
+                    <p className="text-sm text-gray-500 mt-2">
+                        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                            浙ICP备2025166409号-1
+                        </a>
+                    </p>
                 </div>
             </div>
         </footer>
