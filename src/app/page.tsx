@@ -40,7 +40,7 @@ export default function Home() {
       <About />
 
       {/* Footer */}
-      <Footer />
+      <Footer showOnlyCopyright={false} />
     </div>
   );
 }

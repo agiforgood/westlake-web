@@ -6,153 +6,117 @@ import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/authClient';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { Form, Input, Button, addToast } from '@heroui/react';
 
 export default function RegisterPage() {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-    });
-    const [error, setError] = useState('');
+    const [errors, setErrors] = useState({});
     const router = useRouter();
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setError('');
+        const data = Object.fromEntries(new FormData(e.currentTarget));
+        const email = data.email as string;
+        const password = data.password as string;
+        const name = data.name as string;
+        const confirmPassword = data.confirmPassword as string;
 
-        if (formData.password !== formData.confirmPassword) {
-            setError('两次输入的密码不一致');
+        if (password !== confirmPassword) {
+            setErrors({
+                password: '两次输入的密码不一致',
+                confirmPassword: '两次输入的密码不一致',
+            });
             return;
         }
 
         try {
             const { user, error: authError } = await authClient.signUp.email({
-                email: formData.email,
-                password: formData.password,
-                name: formData.name
+                email,
+                password,
+                name
             });
 
             if (authError) {
-                setError('注册失败，请稍后重试');
+                addToast({
+                    title: '注册失败',
+                    description: '请稍后重试',
+                    color: 'danger',
+                });
                 return;
             }
 
-            // Redirect to profile page after successful login
             router.push('/profile');
         } catch {
-            setError('注册失败，请稍后重试');
+            addToast({
+                title: '注册失败',
+                description: '请稍后重试',
+                color: 'danger',
+            });
         }
     };
 
     return (
-        <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <div className="flex-grow flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-md w-full space-y-8">
-                    <div>
-                        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                            注册新账号
-                        </h2>
-                        <p className="mt-2 text-center text-sm text-gray-600">
-                            或{' '}
-                            <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
-                                登录已有账号
-                            </Link>
-                        </p>
-                    </div>
-                    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                        {error && (
-                            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
-                                {error}
-                            </div>
-                        )}
-                        <div className="rounded-md shadow-sm -space-y-px">
-                            <div>
-                                <label htmlFor="name" className="sr-only">
-                                    姓名
-                                </label>
-                                <input
-                                    id="name"
-                                    name="name"
-                                    type="text"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                                    placeholder="姓名"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="email" className="sr-only">
-                                    邮箱地址
-                                </label>
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                                    placeholder="邮箱地址"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="password" className="sr-only">
-                                    密码
-                                </label>
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    autoComplete="new-password"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                                    placeholder="密码"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="confirmPassword" className="sr-only">
-                                    确认密码
-                                </label>
-                                <input
-                                    id="confirmPassword"
-                                    name="confirmPassword"
-                                    type="password"
-                                    autoComplete="new-password"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                                    placeholder="确认密码"
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                        </div>
-
+        <>
+            <div className="flex flex-col min-h-screen">
+                <Navbar />
+                <div className="flex-grow flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+                    <div className="max-w-md w-full space-y-8">
                         <div>
-                            <button
-                                type="submit"
-                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                            >
-                                注册
-                            </button>
+                            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                                注册新账号
+                            </h2>
+                            <p className="mt-2 text-center text-sm text-gray-600">
+                                或{' '}
+                                <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+                                    登录已有账号
+                                </Link>
+                            </p>
                         </div>
-                    </form>
+                        <Form
+                            onSubmit={handleSubmit}
+                            validationErrors={errors}
+                        >
+                            <Input
+                                isRequired
+                                errorMessage="请输入姓名"
+                                label="姓名"
+                                labelPlacement="outside"
+                                name="name"
+                                placeholder="输入姓名"
+                                type="text"
+                            />
+                            <Input
+                                isRequired
+                                errorMessage="请输入邮箱地址"
+                                label="邮箱地址"
+                                labelPlacement="outside"
+                                name="email"
+                                placeholder="输入邮箱地址"
+                                type="email"
+                            />
+                            <Input
+                                isRequired
+                                errorMessage="请输入密码"
+                                label="密码"
+                                labelPlacement="outside"
+                                name="password"
+                                placeholder="输入密码"
+                                type="password"
+                            />
+                            <Input
+                                isRequired
+                                errorMessage="请确认密码"
+                                label="确认密码"
+                                labelPlacement="outside"
+                                name="confirmPassword"
+                                placeholder="确认密码"
+                                type="password"
+                            />
+                            <Button type="submit">注册</Button>
+                        </Form>
+                    </div>
                 </div>
+                <Footer />
             </div>
-            <Footer />
-        </div>
+        </>
     );
 } 
