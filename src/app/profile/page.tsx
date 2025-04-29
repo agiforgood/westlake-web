@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useRouter } from 'next/navigation';
 const { useSession } = authClient
-import { Spinner, Card, CardHeader, CardBody, CardFooter, Divider, Image, Button } from '@heroui/react';
+import { Spinner, Card, CardHeader, CardBody, Divider, Image, Button } from '@heroui/react';
 import Avatar, { genConfig } from 'react-nice-avatar'
 
 interface UserProfile {

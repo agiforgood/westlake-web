@@ -3,8 +3,7 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { getAllProfiles } from "@/lib/userProfileApi";
-import { Button, Card, CardBody, CardHeader, CardFooter, Image } from "@heroui/react";
-import Link from 'next/link';
+import { Card, CardBody, CardHeader, Image } from "@heroui/react";
 import { useEffect, useState } from "react";
 import Avatar, { genConfig } from 'react-nice-avatar'
 

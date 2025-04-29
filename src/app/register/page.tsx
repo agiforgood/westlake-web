@@ -29,7 +29,7 @@ export default function RegisterPage() {
         }
 
         try {
-            const { user, error: authError } = await authClient.signUp.email({
+            const { error: authError } = await authClient.signUp.email({
                 email,
                 password,
                 name

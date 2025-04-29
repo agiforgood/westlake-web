@@ -2,8 +2,7 @@
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Button, Table, TableBody, TableHeader, TableRow, TableCell, TableColumn, getKeyValue } from "@heroui/react";
-import Link from 'next/link';
+import { Table, TableBody, TableHeader, TableRow, TableCell, TableColumn, getKeyValue } from "@heroui/react";
 import { useState, useEffect } from "react";
 import { adminGetWaitingProfiles } from "@/lib/userProfileApi";
 
@@ -117,7 +116,7 @@ export default function AdminProfilesPage() {
                         <TableBody>
                             {profiles.map((profile) =>
                                 <TableRow key={profile.userId}>
-                                    {(columnKey) => <TableCell>{getValue(profile, columnKey)}</TableCell>}
+                                    {(columnKey) => <TableCell>{getValue(profile, columnKey as string)}</TableCell>}
                                 </TableRow>)}
                         </TableBody>
                     </Table>

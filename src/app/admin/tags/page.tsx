@@ -13,7 +13,6 @@ import {
     Form,
     addToast
 } from "@heroui/react";
-import Link from 'next/link';
 import { useState, useEffect } from "react";
 import { adminGetTags, adminAddTag } from "@/lib/userProfileApi";
 
@@ -120,7 +119,7 @@ export default function AdminTagsPage() {
                         </TableHeader>
                         <TableBody>
                             {tags.map((tag) =>
-                                <TableRow key={tag.tagId}>
+                                <TableRow key={tag.id}>
                                     {(columnKey) => <TableCell>{getKeyValue(tag, columnKey)}</TableCell>}
                                 </TableRow>)}
                         </TableBody>

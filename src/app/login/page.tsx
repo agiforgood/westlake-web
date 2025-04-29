@@ -17,7 +17,7 @@ export default function LoginPage() {
         const password = data.password as string;
 
         try {
-            const { user, error: authError } = await authClient.signIn.email({
+            const { error: authError } = await authClient.signIn.email({
                 email,
                 password,
             });

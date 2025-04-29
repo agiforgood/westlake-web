@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { authClient } from '@/lib/authClient';
 const { useSession } = authClient
-import { Spinner, Card, CardHeader, CardBody, CardFooter, Divider, Image, Button, Form, Input, Textarea, Select, SelectItem, addToast, Checkbox } from '@heroui/react';
+import { Spinner, Card, CardHeader, CardBody, Divider, Button, Form, Input, Textarea, Select, SelectItem, addToast, Checkbox } from '@heroui/react';
 import { nanoid } from 'nanoid';
 import pca from '@/lib/pca.json';
 
@@ -60,6 +60,7 @@ export default function ProfileEditPage() {
     const [city, setCity] = useState('');
     const [district, setDistrict] = useState('');
     const [tags, setTags] = useState<Tag[]>([]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [provinceList, setProvinceList] = useState<{ key: string, label: string }[]>(pca.map(object => ({ key: object.name, label: object.name })));
     const [cityList, setCityList] = useState<{ key: string, label: string }[]>([]);
     const [districtList, setDistrictList] = useState<{ key: string, label: string }[]>([]);
@@ -70,7 +71,6 @@ export default function ProfileEditPage() {
 
     useEffect(() => {
         getMyProfile().then(data => {
-            console.log(data);
             setProfile(data);
             setLoading(false);
             setHandle(data.profile.handle);
