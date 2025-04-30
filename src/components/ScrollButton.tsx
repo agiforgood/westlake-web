@@ -3,12 +3,12 @@
 const ScrollButton = () => {
     const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
-        document.getElementById('stats')?.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
     };
 
     return (
         <a
-            href="#stats"
+            href="#features"
             className="inline-flex items-center justify-center w-12 h-12 rounded-full border-2 border-gray-300 hover:border-gray-400 transition-colors duration-300"
             onClick={handleScroll}
         >

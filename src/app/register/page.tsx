@@ -74,21 +74,22 @@ export default function RegisterPage() {
                         <Form
                             onSubmit={handleSubmit}
                             validationErrors={errors}
+                            autoComplete='off'
                         >
                             <Input
                                 isRequired
                                 errorMessage="请输入姓名"
-                                label="姓名"
-                                labelPlacement="outside"
+                                label="姓名（注册后不可修改）"
+                                labelPlacement="inside"
                                 name="name"
-                                placeholder="输入姓名"
+                                placeholder="输入姓名（注册后不可修改）"
                                 type="text"
                             />
                             <Input
                                 isRequired
                                 errorMessage="请输入邮箱地址"
                                 label="邮箱地址"
-                                labelPlacement="outside"
+                                labelPlacement="inside"
                                 name="email"
                                 placeholder="输入邮箱地址"
                                 type="email"
@@ -97,7 +98,7 @@ export default function RegisterPage() {
                                 isRequired
                                 errorMessage="请输入密码"
                                 label="密码"
-                                labelPlacement="outside"
+                                labelPlacement="inside"
                                 name="password"
                                 placeholder="输入密码"
                                 type="password"
@@ -106,12 +107,12 @@ export default function RegisterPage() {
                                 isRequired
                                 errorMessage="请确认密码"
                                 label="确认密码"
-                                labelPlacement="outside"
+                                labelPlacement="inside"
                                 name="confirmPassword"
                                 placeholder="确认密码"
                                 type="password"
                             />
-                            <Button type="submit">注册</Button>
+                            <Button type="submit" className="w-full" color="secondary">注册</Button>
                         </Form>
                     </div>
                 </div>

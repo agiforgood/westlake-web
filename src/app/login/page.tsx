@@ -61,7 +61,7 @@ export default function LoginPage() {
                                 isRequired
                                 errorMessage="请输入邮箱地址"
                                 label="邮箱地址"
-                                labelPlacement="outside"
+                                labelPlacement="inside"
                                 name="email"
                                 placeholder="输入邮箱地址"
                                 type="email"
@@ -70,12 +70,12 @@ export default function LoginPage() {
                                 isRequired
                                 errorMessage="请输入密码"
                                 label="密码"
-                                labelPlacement="outside"
+                                labelPlacement="inside"
                                 name="password"
                                 placeholder="输入密码"
                                 type="password"
                             />
-                            <Button type="submit">登录</Button>
+                            <Button type="submit" className="w-full" color="secondary">登录</Button>
                         </Form>
                     </div>
                 </div>

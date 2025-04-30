@@ -2,9 +2,9 @@
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Table, TableBody, TableHeader, TableRow, TableCell, TableColumn, getKeyValue } from "@heroui/react";
+import { Table, TableBody, TableHeader, TableRow, TableCell, TableColumn, getKeyValue, Button, addToast } from "@heroui/react";
 import { useState, useEffect } from "react";
-import { adminGetWaitingProfiles } from "@/lib/userProfileApi";
+import { adminAuditProfile, adminGetWaitingProfiles } from "@/lib/userProfileApi";
 
 interface Profile {
     userId: string;
@@ -75,6 +75,10 @@ const columns = [
     {
         key: "district",
         label: "district"
+    },
+    {
+        key: "action",
+        label: "action"
     }
 ]
 
@@ -95,9 +99,43 @@ export default function AdminProfilesPage() {
         </div>
     );
 
+    const handleAuditProfile = async (userId: string, isApproved: boolean) => {
+        const response = await adminAuditProfile(userId, isApproved);
+        if (response) {
+            addToast({
+                title: "审核成功",
+                description: "用户信息审核成功",
+                color: "success",
+            });
+            setProfiles(profiles.filter((profile) => profile.userId !== userId));
+        } else {
+            addToast({
+                title: "审核失败",
+                description: "用户信息审核失败",
+                color: "danger",
+            });
+        }
+    }
+
     const getValue = (profile: Profile, columnKey: string) => {
         if (columnKey == "userId") {
             return profile.userId;
+        }
+        if (columnKey == "action") {
+            return (
+                <>
+                    <Button onPress={() => {
+                        handleAuditProfile(profile.userId, true);
+                    }}>
+                        通过
+                    </Button>
+                    <Button onPress={() => {
+                        handleAuditProfile(profile.userId, false);
+                    }}>
+                        拒绝
+                    </Button>
+                </>
+            );
         }
         const newSnapshot = profile.newSnapshot as object;
         return getKeyValue(newSnapshot, columnKey);

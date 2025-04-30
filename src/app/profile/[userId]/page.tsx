@@ -1,12 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { getMyProfile } from '@/lib/userProfileApi';
-import { authClient } from '@/lib/authClient';
+import { getUserProfile } from '@/lib/userProfileApi';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { useRouter } from 'next/navigation';
-const { useSession } = authClient
-import { Spinner, Card, CardHeader, CardBody, Divider, Image, Button } from '@heroui/react';
+import { usePathname } from 'next/navigation';
+import { Spinner, Card, CardHeader, CardBody, Divider, Image } from '@heroui/react';
 import Avatar, { genConfig } from 'react-nice-avatar'
 
 interface UserProfile {
@@ -18,6 +16,7 @@ interface UserProfile {
 interface Profile {
     userId: string;
     handle: string;
+    name: string;
     gender: number;
     avatarUrl?: string;
     bannerUrl?: string;
@@ -46,28 +45,39 @@ interface UserAvailability {
     timeSlot: number;
 }
 
-export default function ProfilePage() {
+export default function UserProfilePage() {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
-    const router = useRouter();
-    const {
-        data: session,
-    } = useSession()
+    const pathname = usePathname()
+    const userId = pathname.split('/').pop()
 
     useEffect(() => {
-        if (session?.session) {
-            getMyProfile().then(data => {
-                console.log(data);
-                setProfile(data);
-                setLoading(false);
-            });
-        }
-    }, [session, router]);
+        getUserProfile(userId as string).then(data => {
+            console.log(data);
+            setProfile(data);
+            setLoading(false);
+        });
+    }, [userId]);
 
     const getAvailabilityText = (weekDay: number, timeSlot: number) => {
         const weekdayText = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
         const timeSlotText = ["上午", "下午", "晚上"];
         return `${weekdayText[weekDay]} ${timeSlotText[timeSlot]}`;
+    }
+
+    const getAvatarConfig = (userId: string, gender: number) => {
+        if (gender == 0) {
+            return genConfig(userId)
+        }
+        const config = genConfig(userId)
+        let sex: 'man' | 'woman' = 'man'
+        if (gender == 1) {
+            sex = 'woman'
+        }
+        return {
+            ...config,
+            sex: sex
+        }
     }
 
     if (loading) return (
@@ -87,21 +97,6 @@ export default function ProfilePage() {
         </div>
     );
 
-    const getAvatarConfig = (userId: string, gender: number) => {
-        if (gender == 0) {
-            return genConfig(userId)
-        }
-        const config = genConfig(userId)
-        let sex: 'man' | 'woman' = 'man'
-        if (gender == 1) {
-            sex = 'woman'
-        }
-        return {
-            ...config,
-            sex: sex
-        }
-    }
-
     return (
         <div className="flex flex-col min-h-screen">
             <Navbar />
@@ -115,14 +110,10 @@ export default function ProfilePage() {
                                 <Avatar className="w-24 h-24 rounded-full border" {...getAvatarConfig(profile.profile.userId, profile.profile.gender)} />
                             }
                             <div className="flex flex-col">
-                                <div className="text-2xl font-bold">{session?.user.name}
-                                </div>
+                                <div className="text-2xl font-bold">{profile.profile.name}</div>
                                 <div className="text-gray-400 text-base">ID: {profile.profile.handle}</div>
                                 <div className="text-gray-400 text-base">性别：{profile.profile.gender == 0 ? "保密" : profile.profile.gender == 1 ? "男" : "女"}</div>
                                 <div className="text-gray-400 text-base">{profile.profile.statusMessage}</div>
-                            </div>
-                            <div className="ml-auto">
-                                <Button onPress={() => router.push('/profile/edit')} >编辑</Button>
                             </div>
                         </div>
                     </CardHeader>

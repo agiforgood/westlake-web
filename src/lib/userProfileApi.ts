@@ -1,12 +1,21 @@
 'use client'
 
-// const API_BASE = 'http://localhost:3000';
-const API_BASE = 'https://api.westlakeaiforgood.com';
+const DEV_API_BASE = 'http://localhost:3000';
+const PRO_API_BASE = 'https://api.westlakeaiforgood.com';
+const API_BASE = process.env.NODE_ENV === 'development' ? DEV_API_BASE : PRO_API_BASE;
 
 export async function getMyProfile() {
     const res = await fetch(`${API_BASE}/api/profile`, {
         credentials: 'include',
         mode: 'cors'
+    });
+    return res.json();
+}
+
+export async function getUserProfile(userId: string) {
+    const res = await fetch(`${API_BASE}/api/profile/${userId}`, {
+        credentials: 'include',
+        mode: 'cors',
     });
     return res.json();
 }
@@ -99,6 +108,16 @@ export async function deleteTag(tagId: string) {
         credentials: 'include',
         mode: 'cors',
         method: 'DELETE',
+    });
+    return res.json();
+}
+
+export async function adminAuditProfile(userId: string, isApproved: boolean) {
+    const res = await fetch(`${API_BASE}/api/admin/profiles`, {
+        credentials: 'include',
+        mode: 'cors',
+        method: 'POST',
+        body: JSON.stringify({ userId, isApproved }),
     });
     return res.json();
 }

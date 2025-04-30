@@ -1,4 +1,3 @@
-import Stats from '@/components/Stats';
 import Features from '@/components/Features';
 import About from '@/components/About';
 import Footer from '@/components/Footer';
@@ -29,12 +28,14 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <div id="stats">
+      {/* <div id="stats">
         <Stats />
-      </div>
+      </div> */}
 
       {/* Features Section */}
-      <Features />
+      <div id="features">
+        <Features />
+      </div>
 
       {/* About Section */}
       <About />

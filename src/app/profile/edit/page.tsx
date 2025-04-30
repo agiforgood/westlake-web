@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { authClient } from '@/lib/authClient';
 const { useSession } = authClient
-import { Spinner, Card, CardHeader, CardBody, Divider, Button, Form, Input, Textarea, Select, SelectItem, addToast, Checkbox } from '@heroui/react';
+import { Spinner, Card, CardHeader, CardBody, Divider, Button, Form, Input, Textarea, Select, SelectItem, addToast, Checkbox, RadioGroup, Radio } from '@heroui/react';
 import { nanoid } from 'nanoid';
 import pca from '@/lib/pca.json';
 
@@ -19,6 +19,7 @@ interface UserProfile {
 interface Profile {
     userId: string;
     handle: string;
+    gender: number;
     avatarUrl?: string;
     bannerUrl?: string;
     statusMessage?: string;
@@ -193,6 +194,7 @@ export default function ProfileEditPage() {
 
         const snapshot = {
             handle: handle,
+            gender: parseInt(data.gender as string),
             avatarUrl: profile?.profile.avatarUrl,
             bannerUrl: profile?.profile.bannerUrl,
             statusMessage: data.statusMessage,
@@ -203,7 +205,7 @@ export default function ProfileEditPage() {
             expectations: data.expectations,
             canOffer: data.canOffer,
             wechat: data.wechat,
-            locationVisibility: data.locationVisibility,
+            locationVisibility: parseInt(data.locationVisibility as string),
             province: province,
             city: city,
             district: district,
@@ -258,17 +260,22 @@ export default function ProfileEditPage() {
                                 <Input
                                     isDisabled
                                     label="姓名"
-                                    labelPlacement="outside"
+                                    labelPlacement="inside"
                                     name="name"
                                     value={session?.user.name}
                                     type="text"
                                 />
+                                <RadioGroup label="性别" orientation="horizontal" name="gender" defaultValue={profile.profile.gender.toString()}>
+                                    <Radio value="0">保密</Radio>
+                                    <Radio value="1">男</Radio>
+                                    <Radio value="2">女</Radio>
+                                </RadioGroup>
                                 <div className="grid grid-cols-4 w-full gap-4 items-baseline">
                                     <Input
                                         className="col-span-3"
                                         isClearable
                                         label="唯一ID"
-                                        labelPlacement="outside"
+                                        labelPlacement="inside"
                                         name="handle"
                                         defaultValue={profile.profile.handle}
                                         value={handle}
@@ -284,47 +291,47 @@ export default function ProfileEditPage() {
                                 </div>
                                 <Input
                                     label="状态消息"
-                                    labelPlacement="outside"
+                                    labelPlacement="inside"
                                     name="statusMessage"
                                     defaultValue={profile.profile.statusMessage}
                                     type="text"
                                 />
                                 <Textarea
                                     label="个人简介"
-                                    labelPlacement="outside"
+                                    labelPlacement="inside"
                                     name="bio"
                                     defaultValue={profile.profile.bio}
                                     type="text"
                                 />
                                 <Textarea
                                     label="背景介绍"
-                                    labelPlacement="outside"
+                                    labelPlacement="inside"
                                     name="backgroundDescription"
                                     defaultValue={profile.profile.backgroundDescription}
                                 />
                                 <Textarea
                                     label="专业一句话介绍"
-                                    labelPlacement="outside"
+                                    labelPlacement="inside"
                                     name="expertiseSummary"
                                     defaultValue={profile.profile.expertiseSummary}
                                 />
                                 <Textarea
                                     label="加入原因"
-                                    labelPlacement="outside"
+                                    labelPlacement="inside"
                                     name="motivation"
                                     defaultValue={profile.profile.motivation}
                                     type="text"
                                 />
                                 <Textarea
                                     label="想要获得的帮助"
-                                    labelPlacement="outside"
+                                    labelPlacement="inside"
                                     name="expectations"
                                     defaultValue={profile.profile.expectations}
                                     type="text"
                                 />
                                 <Textarea
                                     label="可以提供的资源"
-                                    labelPlacement="outside"
+                                    labelPlacement="inside"
                                     name="canOffer"
                                     defaultValue={profile.profile.canOffer}
                                     type="text"
@@ -333,11 +340,17 @@ export default function ProfileEditPage() {
                                 <h2 className="text-lg font-bold">联系方式</h2>
                                 <Input
                                     label="微信"
-                                    labelPlacement="outside"
+                                    labelPlacement="inside"
                                     name="wechat"
                                     defaultValue={profile.profile.wechat}
                                     type="text"
                                 />
+                                <h3 className="text-md font-bold">地址显示精度</h3>
+                                <RadioGroup label="地址显示精度" name="locationVisibility" defaultValue={profile.profile.locationVisibility?.toString()}>
+                                    <Radio value="0">仅显示省份</Radio>
+                                    <Radio value="1">显示省份和城市</Radio>
+                                    <Radio value="2">显示省份、城市和区县</Radio>
+                                </RadioGroup>
                                 <h3 className="text-md font-bold">当前地址</h3>
                                 <p>{profile.profile.province} {profile.profile.city} {profile.profile.district}</p>
 
@@ -346,7 +359,7 @@ export default function ProfileEditPage() {
                                         className="col-span-1"
                                         label="省份"
                                         items={provinceList}
-                                        labelPlacement="outside"
+                                        labelPlacement="inside"
                                         name="province"
                                         onSelectionChange={(e) => {
                                             const province = e.currentKey;
@@ -359,7 +372,7 @@ export default function ProfileEditPage() {
                                         className="col-span-1"
                                         label="城市"
                                         items={cityList}
-                                        labelPlacement="outside"
+                                        labelPlacement="inside"
                                         name="city"
                                         onSelectionChange={(e) => {
                                             const city = e.currentKey;
@@ -372,7 +385,7 @@ export default function ProfileEditPage() {
                                         className="col-span-1"
                                         label="区县"
                                         items={districtList}
-                                        labelPlacement="outside"
+                                        labelPlacement="inside"
                                         name="district"
                                         onSelectionChange={(e) => {
                                             const district = e.currentKey;
@@ -389,7 +402,7 @@ export default function ProfileEditPage() {
                                 <h2 className="text-lg font-bold">可参与时间</h2>
                                 <div className="grid grid-cols-2 w-full gap-4">
                                     {Array.from({ length: 7 }, (_, i) => (
-                                        <div key={i} className="flex flex-row gap-12">
+                                        <div key={i} className="flex flex-row gap-6">
                                             <p>{getWeekdayText(i)}</p>
                                             <div className="flex flex-row gap-2">
                                                 {Array.from({ length: 3 }, (_, j) => (
