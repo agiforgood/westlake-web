@@ -4,11 +4,10 @@ import { addTag, deleteMyAvailability, deleteTag, getAllTags, getMyProfile, upda
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { authClient } from '@/lib/authClient';
-const { useSession } = authClient
 import { Spinner, Card, CardHeader, CardBody, Divider, Button, Form, Input, Textarea, Select, SelectItem, addToast, Checkbox, RadioGroup, Radio } from '@heroui/react';
 import { nanoid } from 'nanoid';
 import pca from '@/lib/pca.json';
+import { useLogto } from '@logto/react';
 
 interface UserProfile {
     profile: Profile;
@@ -19,6 +18,7 @@ interface UserProfile {
 interface Profile {
     userId: string;
     handle: string;
+    name: string;
     gender: number;
     avatarUrl?: string;
     bannerUrl?: string;
@@ -65,24 +65,24 @@ export default function ProfileEditPage() {
     const [provinceList, setProvinceList] = useState<{ key: string, label: string }[]>(pca.map(object => ({ key: object.name, label: object.name })));
     const [cityList, setCityList] = useState<{ key: string, label: string }[]>([]);
     const [districtList, setDistrictList] = useState<{ key: string, label: string }[]>([]);
-    const router = useRouter();
-    const {
-        data: session,
-    } = useSession()
+    const router = useRouter()
+    const { isAuthenticated } = useLogto()
+    const [token, setToken] = useState('');
 
     useEffect(() => {
-        getMyProfile().then(data => {
-            setProfile(data);
-            setLoading(false);
-            setHandle(data.profile.handle);
-        });
-    }, []);
-
-    useEffect(() => {
-        getAllTags().then(data => {
-            setTags(data.tags);
-        });
-    }, []);
+        if (isAuthenticated) {
+            const accessToken = localStorage.getItem('accessToken') ?? ""
+            setToken(accessToken)
+            getMyProfile(accessToken).then(data => {
+                setProfile(data);
+                setLoading(false);
+                setHandle(data.profile.handle);
+            });
+            getAllTags(accessToken).then(data => {
+                setTags(data.tags);
+            });
+        }
+    }, [isAuthenticated, router]);
 
     const getWeekdayText = (weekday: number) => {
         return ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][weekday];
@@ -121,7 +121,7 @@ export default function ProfileEditPage() {
                         timeSlot: timeSlot,
                     }
                 ]
-            })
+            }, token)
             if (response) {
                 addToast({
                     title: '保存成功',
@@ -136,7 +136,7 @@ export default function ProfileEditPage() {
                 })
             }
         } else {
-            const response = await deleteMyAvailability(weekday, timeSlot)
+            const response = await deleteMyAvailability(weekday, timeSlot, token)
             if (response) {
                 addToast({
                     title: '保存成功',
@@ -155,7 +155,7 @@ export default function ProfileEditPage() {
 
     const handleTagChange = async (tagId: string, isSelected: boolean) => {
         if (isSelected) {
-            const response = await addTag(tagId)
+            const response = await addTag(tagId, token)
             if (response) {
                 addToast({
                     title: '保存成功',
@@ -170,7 +170,7 @@ export default function ProfileEditPage() {
                 })
             }
         } else {
-            const response = await deleteTag(tagId)
+            const response = await deleteTag(tagId, token)
             if (response) {
                 addToast({
                     title: '保存成功',
@@ -195,6 +195,7 @@ export default function ProfileEditPage() {
         const snapshot = {
             handle: handle,
             gender: parseInt(data.gender as string),
+            name: data.name,
             avatarUrl: profile?.profile.avatarUrl,
             bannerUrl: profile?.profile.bannerUrl,
             statusMessage: data.statusMessage,
@@ -211,7 +212,7 @@ export default function ProfileEditPage() {
             district: district,
         }
 
-        const response = await updateMyProfile({ snapshot })
+        const response = await updateMyProfile({ snapshot }, token)
         if (response) {
             addToast({
                 title: '保存成功',
@@ -258,11 +259,10 @@ export default function ProfileEditPage() {
                         <div className="p-4">
                             <Form onSubmit={handleSubmitProfile}>
                                 <Input
-                                    isDisabled
                                     label="姓名"
                                     labelPlacement="inside"
                                     name="name"
-                                    value={session?.user.name}
+                                    defaultValue={profile.profile.name}
                                     type="text"
                                 />
                                 <RadioGroup label="性别" orientation="horizontal" name="gender" defaultValue={profile.profile.gender.toString()}>

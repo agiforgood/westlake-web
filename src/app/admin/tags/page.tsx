@@ -40,9 +40,12 @@ const columns = [
 export default function AdminTagsPage() {
     const [tags, setTags] = useState<Tag[]>([]);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const [token, setToken] = useState("");
 
     useEffect(() => {
-        adminGetTags().then((data) => {
+        const accessToken = localStorage.getItem("accessToken") ?? "";
+        setToken(accessToken);
+        adminGetTags(accessToken).then((data) => {
             setTags(data.tags);
         });
     }, []);
@@ -59,9 +62,9 @@ export default function AdminTagsPage() {
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
         const data = Object.fromEntries(formData);
-        const response = await adminAddTag(data);
+        const response = await adminAddTag(data, token);
         if (response) {
-            const refreshedTags = await adminGetTags();
+            const refreshedTags = await adminGetTags(token);
             setTags(refreshedTags.tags);
             addToast({
                 title: "添加标签成功",

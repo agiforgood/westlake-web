@@ -5,8 +5,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { usePathname } from 'next/navigation';
 import { Spinner, Card, CardHeader, CardBody, Divider, Image } from '@heroui/react';
-import Avatar, { genConfig } from 'react-nice-avatar'
-
+import Avatar from "boring-avatars"
+import { useLogto } from '@logto/react';
 interface UserProfile {
     profile: Profile;
     tags: UserTag[];
@@ -50,34 +50,23 @@ export default function UserProfilePage() {
     const [loading, setLoading] = useState(true);
     const pathname = usePathname()
     const userId = pathname.split('/').pop()
+    const { isAuthenticated } = useLogto()
 
     useEffect(() => {
-        getUserProfile(userId as string).then(data => {
-            console.log(data);
-            setProfile(data);
-            setLoading(false);
-        });
-    }, [userId]);
+        if (isAuthenticated) {
+            const token = localStorage.getItem('accessToken') ?? ""
+            getUserProfile(userId as string, token).then(data => {
+                console.log(data);
+                setProfile(data);
+                setLoading(false);
+            });
+        }
+    }, [userId, isAuthenticated]);
 
     const getAvailabilityText = (weekDay: number, timeSlot: number) => {
         const weekdayText = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
         const timeSlotText = ["上午", "下午", "晚上"];
         return `${weekdayText[weekDay]} ${timeSlotText[timeSlot]}`;
-    }
-
-    const getAvatarConfig = (userId: string, gender: number) => {
-        if (gender == 0) {
-            return genConfig(userId)
-        }
-        const config = genConfig(userId)
-        let sex: 'man' | 'woman' = 'man'
-        if (gender == 1) {
-            sex = 'woman'
-        }
-        return {
-            ...config,
-            sex: sex
-        }
     }
 
     if (loading) return (
@@ -107,7 +96,7 @@ export default function UserProfilePage() {
                             {profile.profile.avatarUrl ?
                                 <Image src={profile.profile.avatarUrl} alt="头像" className="w-24 h-24 rounded-full border" />
                                 :
-                                <Avatar className="w-24 h-24 rounded-full border" {...getAvatarConfig(profile.profile.userId, profile.profile.gender)} />
+                                <Avatar className="w-24 h-24 rounded-full border" name={profile.profile.userId} variant="beam" />
                             }
                             <div className="flex flex-col">
                                 <div className="text-2xl font-bold">{profile.profile.name}</div>

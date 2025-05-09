@@ -2,51 +2,33 @@
 
 import { Navbar as HeroNavbar, NavbarBrand, NavbarContent, NavbarItem, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem } from '@heroui/react';
 import Link from 'next/link';
-import Avatar, { genConfig } from 'react-nice-avatar'
-import { authClient } from '@/lib/authClient';
-import { useRouter } from 'next/navigation';
+import Avatar from "boring-avatars"
 import { useEffect, useState } from 'react';
 import { getMyProfile } from '@/lib/userProfileApi';
-const { useSession } = authClient
+import { useLogto } from '@logto/react';
 
 interface Profile {
     userId: string,
     gender: number,
+    handle: string,
+    role: string,
 }
 
 export default function Navbar() {
-    const { data: session } = useSession()
-    const router = useRouter()
+    const { signIn, signOut, isAuthenticated, getAccessToken } = useLogto()
     const [profile, setProfile] = useState<Profile | null>(null)
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
-        if (session) {
-            getMyProfile().then((data) => {
-                setProfile(data.profile)
+        if (isAuthenticated) {
+            getAccessToken('https://api.westlakeaiforgood.com').then((token) => {
+                localStorage.setItem('accessToken', token ?? "")
+                getMyProfile(token ?? "").then((data) => {
+                    setProfile(data.profile)
+                })
             })
         }
-    }, [session])
-
-    const getAvatarConfig = (userId: string, gender: number | undefined) => {
-        if (gender == undefined || gender == 0) {
-            return genConfig(userId)
-        }
-        const config = genConfig(userId)
-        let sex: 'man' | 'woman' = 'man'
-        if (gender == 1) {
-            sex = 'woman'
-        }
-        return {
-            ...config,
-            sex: sex
-        }
-    }
-
-    const handleLogout = async () => {
-        await authClient.signOut();
-        router.push('/')
-    };
+    }, [isAuthenticated, getAccessToken])
 
     return (
         <HeroNavbar onMenuOpenChange={setIsMenuOpen}>
@@ -74,12 +56,12 @@ export default function Navbar() {
                     </Link>
                 </NavbarItem>
                 <NavbarItem>
-                    {session?.user ? (
+                    {isAuthenticated ? (
                         <Link color="foreground" href="/network">
                             志愿者网络
                         </Link>
                     ) : (
-                        <Link color="foreground" href="/login">
+                        <Link color="foreground" href="/">
                             志愿者网络
                         </Link>
                     )}
@@ -87,32 +69,34 @@ export default function Navbar() {
             </NavbarContent>
 
             <NavbarContent as="div" justify="end">
-                {session?.user ? (
+                {isAuthenticated ? (
                     <Dropdown placement="bottom-end">
                         <DropdownTrigger>
-                            <Button variant="light" color="secondary" size="sm" radius="full" className="w-24" isIconOnly>
+                            <Button variant="light" color="secondary" size="sm" radius="full" className="w-8" isIconOnly>
                                 <div className="flex items-center gap-2">
-                                    <Avatar className="w-8 h-8" {...getAvatarConfig(session?.user?.id, profile?.gender)} />
-                                    <p className="text-sm">{session?.user?.name}</p>
+                                    <Avatar className="w-8 h-8" name={profile?.userId ?? ""} variant="beam" />
                                 </div>
                             </Button>
                         </DropdownTrigger>
                         <DropdownMenu aria-label="Profile Actions" variant="flat">
                             <DropdownItem key="user" className="h-14 gap-2">
                                 <p className="font-semibold">已登录</p>
-                                <p className="font-semibold">{session?.user?.email}</p>
+                                <p className="font-semibold">{profile?.handle}</p>
                             </DropdownItem>
                             <DropdownItem key="profile" href="/profile">个人资料</DropdownItem>
-                            {session?.user?.role === 'admin' ? (
+                            {profile?.role == "admin" ? (
                                 <DropdownItem key="admin" href="/admin">管理后台</DropdownItem>
                             ) : null}
-                            <DropdownItem key="logout" color="danger" onPress={handleLogout}>
+                            <DropdownItem key="logout" color="danger" onPress={() => {
+                                signOut("https://westlakeaiforgood.com/")
+                                localStorage.removeItem('accessToken')
+                            }}>
                                 退出登录
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 ) : (
-                    <Button color="secondary" variant="flat" as="a" href="/login">登录</Button>
+                    <Button color="secondary" variant="flat" onPress={() => signIn("https://westlakeaiforgood.com/callback")}>登录</Button>
                 )}
             </NavbarContent>
 
@@ -128,12 +112,12 @@ export default function Navbar() {
                     </Link>
                 </NavbarMenuItem>
                 <NavbarMenuItem>
-                    {session?.user ? (
+                    {isAuthenticated ? (
                         <Link color="foreground" href="/network">
                             志愿者网络
                         </Link>
                     ) : (
-                        <Link color="foreground" href="/login">
+                        <Link color="foreground" href="/">
                             志愿者网络
                         </Link>
                     )}

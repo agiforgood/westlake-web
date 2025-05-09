@@ -84,9 +84,12 @@ const columns = [
 
 export default function AdminProfilesPage() {
     const [profiles, setProfiles] = useState<Profile[]>([]);
+    const [token, setToken] = useState("");
     // const [rows, setRows] = useState<Profile[]>([]);
     useEffect(() => {
-        adminGetWaitingProfiles().then((data) => {
+        const accessToken = localStorage.getItem("accessToken") ?? "";
+        setToken(accessToken);
+        adminGetWaitingProfiles(accessToken).then((data) => {
             setProfiles(data.profiles);
         });
     }, []);
@@ -100,7 +103,7 @@ export default function AdminProfilesPage() {
     );
 
     const handleAuditProfile = async (userId: string, isApproved: boolean) => {
-        const response = await adminAuditProfile(userId, isApproved);
+        const response = await adminAuditProfile(userId, isApproved, token);
         if (response) {
             addToast({
                 title: "审核成功",

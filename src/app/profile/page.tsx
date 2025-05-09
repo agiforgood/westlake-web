@@ -1,13 +1,12 @@
 'use client'
 import { useEffect, useState } from 'react';
 import { getMyProfile } from '@/lib/userProfileApi';
-import { authClient } from '@/lib/authClient';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useRouter } from 'next/navigation';
-const { useSession } = authClient
 import { Spinner, Card, CardHeader, CardBody, Divider, Image, Button } from '@heroui/react';
-import Avatar, { genConfig } from 'react-nice-avatar'
+import Avatar from "boring-avatars"
+import { useLogto } from '@logto/react';
 
 interface UserProfile {
     profile: Profile;
@@ -18,6 +17,7 @@ interface UserProfile {
 interface Profile {
     userId: string;
     handle: string;
+    name: string;
     gender: number;
     avatarUrl?: string;
     bannerUrl?: string;
@@ -50,19 +50,21 @@ export default function ProfilePage() {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
-    const {
-        data: session,
-    } = useSession()
+    const { isAuthenticated } = useLogto()
 
     useEffect(() => {
-        if (session?.session) {
-            getMyProfile().then(data => {
+        if (isAuthenticated) {
+            const token = localStorage.getItem('accessToken') ?? ""
+            if (token == "") {
+                router.push('/');
+            }
+            getMyProfile(token).then(data => {
                 console.log(data);
                 setProfile(data);
                 setLoading(false);
             });
         }
-    }, [session, router]);
+    }, [isAuthenticated, router]);
 
     const getAvailabilityText = (weekDay: number, timeSlot: number) => {
         const weekdayText = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
@@ -87,21 +89,6 @@ export default function ProfilePage() {
         </div>
     );
 
-    const getAvatarConfig = (userId: string, gender: number) => {
-        if (gender == 0) {
-            return genConfig(userId)
-        }
-        const config = genConfig(userId)
-        let sex: 'man' | 'woman' = 'man'
-        if (gender == 1) {
-            sex = 'woman'
-        }
-        return {
-            ...config,
-            sex: sex
-        }
-    }
-
     return (
         <div className="flex flex-col min-h-screen">
             <Navbar />
@@ -112,10 +99,10 @@ export default function ProfilePage() {
                             {profile.profile.avatarUrl ?
                                 <Image src={profile.profile.avatarUrl} alt="头像" className="w-24 h-24 rounded-full border" />
                                 :
-                                <Avatar className="w-24 h-24 rounded-full border" {...getAvatarConfig(profile.profile.userId, profile.profile.gender)} />
+                                <Avatar className="w-24 h-24 rounded-full border" name={profile.profile.userId} variant="beam" />
                             }
                             <div className="flex flex-col">
-                                <div className="text-2xl font-bold">{session?.user.name}
+                                <div className="text-2xl font-bold">{profile.profile.name}
                                 </div>
                                 <div className="text-gray-400 text-base">ID: {profile.profile.handle}</div>
                                 <div className="text-gray-400 text-base">性别：{profile.profile.gender == 0 ? "保密" : profile.profile.gender == 1 ? "男" : "女"}</div>

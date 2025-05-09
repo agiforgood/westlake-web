@@ -5,9 +5,9 @@ import Navbar from "@/components/Navbar";
 import { getAllProfiles } from "@/lib/userProfileApi";
 import { Card, CardBody, CardHeader, Divider, Image } from "@heroui/react";
 import { useEffect, useState } from "react";
-import Avatar, { genConfig } from 'react-nice-avatar'
+import Avatar from "boring-avatars"
 import { useRouter } from "next/navigation";
-
+import { useLogto } from '@logto/react';
 interface UserProfile {
     profile: Profile;
     tags: Tag[];
@@ -38,13 +38,17 @@ interface Profile {
 export default function NetworkPage() {
     const [profiles, setProfiles] = useState<UserProfile[]>([]);
     const router = useRouter();
+    const { isAuthenticated } = useLogto()
 
     useEffect(() => {
-        getAllProfiles().then((data) => {
-            console.log(data);
-            setProfiles(data.profiles);
-        });
-    }, []);
+        if (isAuthenticated) {
+            const token = localStorage.getItem('accessToken') ?? ""
+            getAllProfiles(token).then((data) => {
+                console.log(data);
+                setProfiles(data.profiles);
+            });
+        }
+    }, [isAuthenticated]);
 
     return (
         <>
@@ -61,7 +65,7 @@ export default function NetworkPage() {
                                             {profile.profile.avatarUrl ?
                                                 <Image src={profile.profile.avatarUrl} alt="头像" className="w-24 h-24 rounded-full border" />
                                                 :
-                                                <Avatar className="w-24 h-24 rounded-full border" {...genConfig(profile.profile.userId)} />
+                                                <Avatar className="w-24 h-24 rounded-full border" name={profile.profile.userId} variant="beam" />
                                             }
                                             <div className="flex flex-col items-start">
                                                 <div className="text-2xl font-bold">{profile.profile.name}</div>
