@@ -183,7 +183,7 @@ const ProfileFormComponent = ({
       return (
         <AgCheckBox
           name={name}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue as string[]}
           onChange={onChange}
         />
       );
