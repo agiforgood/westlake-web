@@ -42,11 +42,11 @@ export default function ProfilePage() {
           <div className="flex flex-col flex-1 mt-2">
             <div className="flex flex-col sm:flex-col items-start gap-2 sm:gap-4">
               <span className="text-2xl  leading-tight">
-                {profile?.profile.name || profile?.profile.newSnapshot.name}
+                {profile?.profile.name || profile?.profile.newSnapshot?.name}
               </span>
               <span className="text-gray-400 text-base font-normal">
                 ID:
-                {profile?.profile.handle || profile?.profile.newSnapshot.handle}
+                {profile?.profile.handle || profile?.profile.newSnapshot?.handle}
               </span>
             </div>
             {/* <div className="flex flex-row flex-wrap gap-2 sm:gap-3 mt-3 sm:mt-4">
@@ -58,7 +58,7 @@ export default function ProfilePage() {
               </span>
             </div> */}
             <div className="mt-6 text-base text-gray-800 leading-relaxed font-normal">
-              {profile?.profile.bio || profile?.profile.newSnapshot.bio}
+              {profile?.profile.bio || profile?.profile.newSnapshot?.bio}
             </div>
           </div>
           {/* 编辑按钮 */}
@@ -85,7 +85,7 @@ export default function ProfilePage() {
             </div>
             <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
               {profile?.profile.backgroundDescription ||
-                profile?.profile.newSnapshot.backgroundDescription}
+                profile?.profile.newSnapshot?.backgroundDescription}
             </div>
           </div>
           <div className="mb-6 sm:mb-8">
@@ -94,7 +94,7 @@ export default function ProfilePage() {
             </div>
             <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
               {profile?.profile.achievements ||
-                profile?.profile.newSnapshot.achievements}
+                profile?.profile.newSnapshot?.achievements}
             </div>
           </div>
           <div>
@@ -103,7 +103,7 @@ export default function ProfilePage() {
             </div>
             <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
               {profile?.profile.otherSocialIssues ||
-                profile?.profile.newSnapshot.otherSocialIssues}
+                profile?.profile.newSnapshot?.otherSocialIssues}
             </div>
           </div>
         </CardBody>
@@ -121,7 +121,7 @@ export default function ProfilePage() {
             </div>
             <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
               {profile?.profile.motivation ||
-                profile?.profile.newSnapshot.motivation}
+                profile?.profile.newSnapshot?.motivation}
             </div>
           </div>
           <div className="mb-6 sm:mb-8">
@@ -130,7 +130,7 @@ export default function ProfilePage() {
             </div>
             <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
               {profile?.profile.expectations ||
-                profile?.profile.newSnapshot.expectations}
+                profile?.profile.newSnapshot?.expectations}
             </div>
           </div>
           <div className="mb-6 sm:mb-8">
@@ -138,7 +138,7 @@ export default function ProfilePage() {
               除了专业技能外，我的其他兴趣爱好
             </div>
             <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
-              {profile?.profile.hobbies || profile?.profile.newSnapshot.hobbies}
+              {profile?.profile.hobbies || profile?.profile.newSnapshot?.hobbies}
             </div>
           </div>
           <div>
@@ -147,7 +147,7 @@ export default function ProfilePage() {
             </div>
             <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
               {profile?.profile.inspirations ||
-                profile?.profile.newSnapshot.inspirations}
+                profile?.profile.newSnapshot?.inspirations}
             </div>
           </div>
         </CardBody>
