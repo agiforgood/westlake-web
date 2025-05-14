@@ -29,7 +29,7 @@ interface Profile {
   role: string;
 }
 
-const DefaultRoutes = [
+const routes = [
   {
     label: "路线图",
     href: "https://westlakeaiforgood.feishu.cn/wiki/JNXXwuhMairUVxk1wfocW2lcnkc",
@@ -42,7 +42,7 @@ const DefaultRoutes = [
   },
   {
     label: "志愿者",
-    href: "/",
+    href: "/network",
     isExternal: false,
   },
 ];
@@ -53,8 +53,6 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // 获取当前路径
   const pathname = usePathname();
-  //将routes设置为状态
-  const [routes, setRoutes] = useState(DefaultRoutes);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -64,7 +62,6 @@ export default function Navbar() {
           setProfile(data.profile);
         });
       });
-      setRoutes([...DefaultRoutes]);
     }
   }, [isAuthenticated, getAccessToken]);
 
@@ -76,7 +73,7 @@ export default function Navbar() {
           className="sm:hidden"
         ></NavbarMenuToggle>
         <NavbarBrand className="hidden sm:flex">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" color="foreground" className="flex items-center gap-2">
             <Image src="/agi_logo.svg" alt="logo" width={36} height={36} />
             <p className="font-bold text-inherit">智能向善</p>
           </Link>
@@ -87,7 +84,7 @@ export default function Navbar() {
         {routes.map((route) => (
           <NavbarItem key={route.label}>
             <Link
-              className="text-lg"
+              // className="text-lg"
               color={pathname === route.href ? "primary" : "foreground"}
               href={route.href}
               isExternal={route.isExternal}
@@ -96,39 +93,6 @@ export default function Navbar() {
             </Link>
           </NavbarItem>
         ))}
-
-        {/* <NavbarItem>
-          <Link
-            className="text-lg"
-            color="foreground"
-            href="https://westlakeaiforgood.feishu.cn/wiki/JNXXwuhMairUVxk1wfocW2lcnkc"
-            target="_blank"
-            isExternal
-          >
-            路线图
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link
-            color="foreground"
-            href="https://westlakeaiforgood.feishu.cn/wiki/E88hwBpPeiOE6vkDumxcvRITnIe"
-            target="_blank"
-            isExternal
-          >
-            任务
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          {isAuthenticated ? (
-            <Link color="foreground" href="/network">
-              志愿者网络
-            </Link>
-          ) : (
-            <Link color="foreground" href="/">
-              志愿者网络
-            </Link>
-          )}
-        </NavbarItem> */}
 
         <NavbarContent as="div" justify="end">
           {isAuthenticated ? (

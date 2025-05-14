@@ -1,180 +1,157 @@
-'use client'
-import { useEffect, useState } from 'react';
-import { getMyProfile } from '@/lib/userProfileApi';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import { useRouter } from 'next/navigation';
-import { Spinner, Card, CardHeader, CardBody, Divider, Image, Button } from '@heroui/react';
-import Avatar from "boring-avatars"
-import { useLogto } from '@logto/react';
+"use client";
+import { useState, useEffect } from "react";
+import { Card, CardBody, Button } from "@heroui/react";
+import { useRouter } from "next/navigation";
+import { useLogto } from "@logto/react";
+import { getMyProfile } from "@/lib/userProfileApi";
 
-interface UserProfile {
-    profile: Profile;
-    tags: UserTag[];
-    availability: UserAvailability[];
-}
-
-interface Profile {
-    userId: string;
-    handle: string;
-    name: string;
-    gender: number;
-    avatarUrl?: string;
-    bannerUrl?: string;
-    statusMessage?: string;
-    expertiseSummary?: string;
-    bio?: string;
-    backgroundDescription?: string;
-    motivation?: string;
-    expectations?: string;
-    canOffer?: string;
-    wechat?: string;
-    locationVisibility?: number;
-    province?: string;
-    city?: string;
-    district?: string;
-}
-
-interface UserTag {
-    id: string;
-    content: string;
-    category: string;
-}
-
-interface UserAvailability {
-    weekDay: number;
-    timeSlot: number;
-}
+import { UserProfile } from "@/type";
 
 export default function ProfilePage() {
-    const [profile, setProfile] = useState<UserProfile | null>(null);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
-    const { isAuthenticated } = useLogto()
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { isAuthenticated } = useLogto();
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            const token = localStorage.getItem('accessToken') ?? ""
-            if (token == "") {
-                router.push('/');
-            }
-            getMyProfile(token).then(data => {
-                console.log(data);
-                setProfile(data);
-                setLoading(false);
-            });
-        }
-    }, [isAuthenticated, router]);
-
-    const getAvailabilityText = (weekDay: number, timeSlot: number) => {
-        const weekdayText = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
-        const timeSlotText = ["上午", "下午", "晚上"];
-        return `${weekdayText[weekDay]} ${timeSlotText[timeSlot]}`;
+  useEffect(() => {
+    if (isAuthenticated) {
+      const token = localStorage.getItem("accessToken") ?? "";
+      if (token == "") {
+        router.push("/");
+      }
+      getMyProfile(token).then((data) => {
+        console.log(data);
+        setProfile(data);
+        setLoading(false);
+      });
     }
+  }, [isAuthenticated, router]);
 
-    if (loading) return (
-        <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <div className="flex-grow text-center mt-10">
-                <Spinner label="加载中..." />
+  return (
+    <div className="flex flex-col items-center bg-gray-50 min-h-screen py-8 px-2 sm:px-0">
+      {/* 个人信息卡片 */}
+      <Card className="w-full max-w-3xl bg-white shadow-lg rounded-3xl mb-10 px-2 sm:px-6 py-6">
+        <div className="flex flex-col sm:flex-row items-start gap-6 relative">
+          {/* 头像 */}
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gray-200 flex items-center justify-center text-4xl sm:text-5xl shrink-0 ml-0 sm:ml-2 mt-2">
+            <span role="img" aria-label="avatar">
+              👤
+            </span>
+          </div>
+          {/* 主要信息区 */}
+          <div className="flex flex-col flex-1 mt-2">
+            <div className="flex flex-col sm:flex-col items-start gap-2 sm:gap-4">
+              <span className="text-2xl  leading-tight">
+                {profile?.profile.name || profile?.profile.newSnapshot.name}
+              </span>
+              <span className="text-gray-400 text-base font-normal">
+                ID:
+                {profile?.profile.handle || profile?.profile.newSnapshot.handle}
+              </span>
             </div>
-            <Footer />
-        </div>
-    );
-    if (!profile) return (
-        <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <div className="flex-grow text-center mt-10">未找到用户信息</div>
-            <Footer />
-        </div>
-    );
-
-    return (
-        <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <div className="flex-grow py-12">
-                <Card className="max-w-3xl mx-auto">
-                    <CardHeader>
-                        <div className="p-4 flex flex-row items-center gap-4 w-full">
-                            {profile.profile.avatarUrl ?
-                                <Image src={profile.profile.avatarUrl} alt="头像" className="w-24 h-24 rounded-full border" />
-                                :
-                                <Avatar className="w-24 h-24 rounded-full border" name={profile.profile.userId} variant="beam" />
-                            }
-                            <div className="flex flex-col">
-                                <div className="text-2xl font-bold">{profile.profile.name}
-                                </div>
-                                <div className="text-gray-400 text-base">ID: {profile.profile.handle}</div>
-                                <div className="text-gray-400 text-base">性别：{profile.profile.gender == 0 ? "保密" : profile.profile.gender == 1 ? "男" : "女"}</div>
-                                <div className="text-gray-400 text-base">{profile.profile.statusMessage}</div>
-                            </div>
-                            <div className="ml-auto">
-                                <Button onPress={() => router.push('/profile/edit')} >编辑</Button>
-                            </div>
-                        </div>
-                    </CardHeader>
-                    <Divider />
-                    <CardBody>
-                        <div className="flex flex-col gap-4 p-4">
-                            <h3 className="font-semibold">专业一句话介绍</h3>
-                            <div className="text-gray-600 mt-1">{profile.profile.expertiseSummary || "未填写"}</div>
-                            <h3 className="font-semibold">个人简介</h3>
-                            <div className="text-gray-600 mt-1">{profile.profile.bio || "未填写"}</div>
-                            <h3 className="font-semibold">背景介绍</h3>
-                            <div className="text-gray-600 mt-1">{profile.profile.backgroundDescription || "未填写"}</div>
-                            <h3 className="font-semibold">加入原因</h3>
-                            <div className="text-gray-600 mt-1">{profile.profile.motivation || "未填写"}</div>
-                            <h3 className="font-semibold">想要获得的帮助</h3>
-                            <div className="text-gray-600 mt-1">{profile.profile.expectations || "未填写"}</div>
-                            <h3 className="font-semibold">可以提供的资源</h3>
-                            <div className="text-gray-600 mt-1">{profile.profile.canOffer || "未填写"}</div>
-                        </div>
-                        <Divider />
-                        <div className="flex flex-col gap-4 p-4">
-                            <h3 className="font-semibold">地址</h3>
-                            <div className="text-gray-600 mt-1">{profile.profile.province} {profile.profile.city} {profile.profile.district || "未填写"}</div>
-                        </div>
-                        <Divider />
-                        <div className="flex flex-col gap-4 p-4">
-                            <h3 className="font-semibold">联系方式</h3>
-                            <div className="text-gray-600 mt-1">{profile.profile.wechat || "未填写"}</div>
-                        </div>
-                        <Divider />
-                        <div className="flex flex-col gap-4 p-4">
-                            <h3 className="font-semibold">标签</h3>
-                            <div className="flex flex-wrap gap-2">
-                                {profile.tags.length > 0 ?
-                                    profile.tags.map(tag => (
-                                        <div key={tag.id} className="bg-gray-100 px-2 py-1 rounded-full text-sm">
-                                            {tag.content}
-                                        </div>
-                                    ))
-                                    :
-                                    <div className="text-gray-400">未填写</div>
-                                }
-                            </div>
-                        </div>
-                        <Divider />
-                        <div className="flex flex-col gap-4 p-4">
-                            <h3 className="font-semibold">可参与时间</h3>
-                            <div className="flex flex-wrap gap-2">
-                                {profile.availability.length > 0 ?
-                                    profile.availability.map(availability => (
-                                        <div key={availability.weekDay} className="bg-gray-100 px-2 py-1 rounded-full text-sm">
-                                            {getAvailabilityText(availability.weekDay, availability.timeSlot)}
-                                        </div>
-                                    ))
-                                    :
-                                    <div className="text-gray-400">未填写</div>
-                                }
-                            </div>
-                        </div>
-                    </CardBody>
-
-                </Card>
-
+            {/* <div className="flex flex-row flex-wrap gap-2 sm:gap-3 mt-3 sm:mt-4">
+              <span className="bg-purple-50 text-purple-600 text-sm sm:text-base rounded-xl px-2 sm:px-3 py-1 font-medium">
+                全栈工程师
+              </span>
+              <span className="bg-gray-100 text-gray-500 text-sm sm:text-base rounded-xl px-2 sm:px-3 py-1 font-medium">
+                正在参与齐家AI项目开发
+              </span>
+            </div> */}
+            <div className="mt-6 text-base text-gray-800 leading-relaxed font-normal">
+              {profile?.profile.bio || profile?.profile.newSnapshot.bio}
             </div>
-            <Footer />
+          </div>
+          {/* 编辑按钮 */}
+          <Button
+            size="md"
+            variant="bordered"
+            className="absolute right-4 top-4 sm:right-0 sm:top-0 rounded-full border-1 text-base px-4 py-2 font-medium min-w-[48px]"
+            onPress={() => router.push("/profile/edit")}
+          >
+            编辑
+          </Button>
         </div>
-    );
-} 
+      </Card>
+
+      {/* 专业能力与贡献意向 */}
+      <Card className="w-full max-w-3xl bg-white shadow-lg rounded-3xl mb-10 px-2 sm:px-6 py-8">
+        <CardBody className="px-2 sm:px-6 py-4">
+          <div className="text-xl sm:text-2xl  mb-6 sm:mb-8 text-left">
+            专业能力与贡献意向
+          </div>
+          <div className="mb-6 sm:mb-8">
+            <div className="text-blue-600  mb-1 sm:mb-2 text-base sm:text-lg text-left">
+              我的专业背景介绍
+            </div>
+            <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
+              {profile?.profile.backgroundDescription ||
+                profile?.profile.newSnapshot.backgroundDescription}
+            </div>
+          </div>
+          <div className="mb-6 sm:mb-8">
+            <div className="text-blue-600  mb-1 sm:mb-2 text-base sm:text-lg text-left">
+              我干过哪些令人印象深刻的事情
+            </div>
+            <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
+              {profile?.profile.achievements ||
+                profile?.profile.newSnapshot.achievements}
+            </div>
+          </div>
+          <div>
+            <div className="text-blue-600  mb-1 sm:mb-2 text-base sm:text-lg text-left">
+              除了家庭心理健康外，我还想或正在解决哪些社会问题
+            </div>
+            <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
+              {profile?.profile.otherSocialIssues ||
+                profile?.profile.newSnapshot.otherSocialIssues}
+            </div>
+          </div>
+        </CardBody>
+      </Card>
+
+      {/* 价值观与期望连接 */}
+      <Card className="w-full max-w-3xl bg-white shadow-lg rounded-3xl px-2 sm:px-6 py-8">
+        <CardBody className="px-2 sm:px-6 py-4">
+          <div className="text-xl sm:text-2xl  mb-6 sm:mb-8 text-left">
+            价值观与期望连接
+          </div>
+          <div className="mb-6 sm:mb-8">
+            <div className="text-blue-600  mb-1 sm:mb-2 text-base sm:text-lg text-left">
+              为什么选择加入智能向善社会创新网络和亲友AI家庭心理联络
+            </div>
+            <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
+              {profile?.profile.motivation ||
+                profile?.profile.newSnapshot.motivation}
+            </div>
+          </div>
+          <div className="mb-6 sm:mb-8">
+            <div className="text-blue-600  mb-1 sm:mb-2 text-base sm:text-lg text-left">
+              我的心愿清单或希望从智能向善网络获得的支持
+            </div>
+            <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
+              {profile?.profile.expectations ||
+                profile?.profile.newSnapshot.expectations}
+            </div>
+          </div>
+          <div className="mb-6 sm:mb-8">
+            <div className="text-blue-600  mb-1 sm:mb-2 text-base sm:text-lg text-left">
+              除了专业技能外，我的其他兴趣爱好
+            </div>
+            <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
+              {profile?.profile.hobbies || profile?.profile.newSnapshot.hobbies}
+            </div>
+          </div>
+          <div>
+            <div className="text-blue-600  mb-1 sm:mb-2 text-base sm:text-lg text-left">
+              我的思想和灵感的来源
+            </div>
+            <div className="text-gray-700 text-sm sm:text-base leading-7 text-left">
+              {profile?.profile.inspirations ||
+                profile?.profile.newSnapshot.inspirations}
+            </div>
+          </div>
+        </CardBody>
+      </Card>
+    </div>
+  );
+}
