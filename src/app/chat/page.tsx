@@ -44,7 +44,7 @@ interface Message {
 
 export default function ChatPage() {
   const searchParams = useSearchParams();
-  const chatId = searchParams.get("chatId");
+  const userId = searchParams.get("userId");
 
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -92,7 +92,7 @@ export default function ChatPage() {
             new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
         ) || []
       );
-      setSelectedId(chatId as string);
+      setSelectedId(userId as string);
     } catch (error) {
       console.error("Failed to load chat sessions:", error);
     }
@@ -103,7 +103,7 @@ export default function ChatPage() {
     if (token) {
       loadSessions(token);
     }
-  }, [token, chatId]);
+  }, [token, userId]);
 
   const loadMessages = async (selectedId: string, token: string) => {
     if (selectedId && token) {
@@ -212,7 +212,7 @@ export default function ChatPage() {
                           window.history.pushState(
                             {},
                             "",
-                            `/chat?chatId=${targetId}`
+                            `/chat?userId=${targetId}`
                           );
                         }}
                       >
