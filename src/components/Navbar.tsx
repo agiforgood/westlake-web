@@ -85,6 +85,15 @@ export default function Navbar() {
         </NavbarBrand>
       </NavbarContent>
 
+      <NavbarContent className="sm:hidden">
+      <NavbarBrand >
+          <Link href="/" color="foreground" className="flex items-center gap-2">
+            <Image src="/agi_logo.svg" alt="logo" width={36} height={36} />
+            <p className="font-bold text-inherit">智能向善</p>
+          </Link>
+        </NavbarBrand>
+      </NavbarContent>
+
       <NavbarContent className="hidden sm:flex gap-15" justify="center">
         {routes.map((route) => (
           <NavbarItem key={route.label}>
