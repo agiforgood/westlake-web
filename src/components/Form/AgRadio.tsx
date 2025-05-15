@@ -18,7 +18,6 @@ export default function AgRadio({
   onChange?: (value: string) => void;
   defaultValue?: string;
 }) {
-  console.log(defaultValue);
   const [value, setValue] = useState(defaultValue);
 
   const handleValueChange = (newValue: string) => {

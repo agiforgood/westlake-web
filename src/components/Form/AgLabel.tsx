@@ -13,12 +13,13 @@ export default function AgLabel({
 }) {
   return (
     <div className="text-sm text-gray-500">
-      <span>{label}</span>
-      {isRequired && <span className="text-red-500 ml-1 text-xs">*</span>}
-      {content && <AgPopover content={content} />}
-      <br />
+      <div className="flex items-center">
+        <span>{label}</span>
+        {isRequired && <span className="text-red-500 ml-1 text-xs">*</span>}
+        <div>{content && <AgPopover content={content} />}</div>
+      </div>
       {description && (
-        <span className="text-gray-400 text-xs">{description}</span>
+        <div className="text-gray-400 text-xs">{description}</div>
       )}
     </div>
   );
