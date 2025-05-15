@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { RadioGroup, Radio, cn } from "@heroui/react";
 
+import AgLabel from "./AgLabel";
+
 export default function AgRadio({
   label,
   name,
@@ -16,6 +18,7 @@ export default function AgRadio({
   onChange?: (value: string) => void;
   defaultValue?: string;
 }) {
+  console.log(defaultValue);
   const [value, setValue] = useState(defaultValue);
 
   const handleValueChange = (newValue: string) => {
@@ -28,10 +31,9 @@ export default function AgRadio({
       classNames={{
         label: "text-foreground text-sm",
       }}
-      label={label}
+      label={<AgLabel label={label} isRequired={isRequired} />}
       name={name}
       orientation="horizontal"
-      isRequired={isRequired}
       value={value}
       onValueChange={handleValueChange}
       defaultValue={defaultValue}

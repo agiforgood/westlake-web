@@ -7,6 +7,7 @@ export default function AgInput({
   label,
   name,
   placeholder = " ",
+  description,
   type = "text",
   labelPlacement = "outside",
   errorMessage = " ",
@@ -18,6 +19,7 @@ export default function AgInput({
   label: string;
   name: string;
   placeholder?: string;
+  description?: string;
   type?: string;
   labelPlacement?: "outside" | "inside";
   errorMessage?: string;
@@ -49,7 +51,13 @@ export default function AgInput({
       }}
       // isRequired={isRequired}
       errorMessage={errorMessage}
-      label={<AgLabel label={label} isRequired={isRequired} />}
+      label={
+        <AgLabel
+          label={label}
+          isRequired={isRequired}
+          description={description}
+        />
+      }
       labelPlacement={labelPlacement}
       name={name}
       placeholder={placeholder}

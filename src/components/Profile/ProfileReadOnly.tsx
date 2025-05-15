@@ -60,9 +60,9 @@ const profileForm: FormItem[] = [
     name: "locationVisibility",
     type: "radio",
     options: [
-      { label: "仅显示省份", value: "1" },
-      { label: "显示省份和城市", value: "2" },
-      { label: "显示省份、城市和区县", value: "3" },
+      { label: "仅显示省份", value: "0" },
+      { label: "显示省份和城市", value: "1" },
+      { label: "显示省份、城市和区县", value: "2" },
     ],
     isRequired: true,
   },
@@ -130,10 +130,10 @@ const ProfileReadOnlyComponent = ({ item }: { item: FormItem }) => {
   } else if (item.type === "textarea") {
     value = item.defaultValue as string;
   } else if (item.type === "radio") {
-    value =
-      item.options?.find(
-        (option) => option.value === item.defaultValue?.toString()
-      )?.label ?? "未填写";
+    const aItem = item.options?.find((option) => {
+      return option.value === item.defaultValue?.toString();
+    });
+    value = aItem?.label || "未填写";
   } else if (item.type === "checkbox") {
     value = item.defaultValue?.toString().split(",").join(", ") as string;
   } else if (item.type === "address") {
@@ -164,15 +164,10 @@ export default function ProfileReadOnly({
   const updateProfileFormData = (data: UserProfile) => {
     const updatedForm = profileForm.map((item) => {
       const newItem = { ...item };
-      if (
-        (data.profile as any)[item.name] ||
-        ((data.profile as any).newSnapshot &&
-          (data.profile as any).newSnapshot[item.name])
-      ) {
-        newItem.defaultValue =
-          (data.profile as any)[item.name] ||
-          ((data.profile as any).newSnapshot &&
-            (data.profile as any).newSnapshot[item.name]);
+      console.log("gender", (data.profile as any)["gender"]);
+
+      if ((data.profile as any)[item.name] != null) {
+        newItem.defaultValue = (data.profile as any)[item.name];
       }
       if (item.name == "address") {
         newItem.defaultValue = [
@@ -183,6 +178,7 @@ export default function ProfileReadOnly({
             (data.profile as any).newSnapshot?.district,
         ];
       }
+      console.log("newItem", newItem);
 
       return newItem;
     });

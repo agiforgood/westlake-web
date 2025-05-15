@@ -14,7 +14,7 @@ export default function AgPopover({
   placement?: "top" | "bottom" | "left" | "right";
 }) {
   return (
-    <Popover color="primary" placement={placement}>
+    <Popover color="primary" placement={placement} className="z-10">
       <PopoverTrigger>
         <Button isIconOnly variant="light" size="sm">
           <Image src="/tips.svg" alt="info" width={16} height={16} />

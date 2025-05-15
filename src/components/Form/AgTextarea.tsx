@@ -12,6 +12,7 @@ export default function AgTextarea({
   defaultValue,
   onChange,
   popoverContent,
+  description,
 }: {
   label: string;
   name: string;
@@ -22,6 +23,7 @@ export default function AgTextarea({
   onChange?: (value: string) => void;
   defaultValue?: string;
   popoverContent?: string;
+  description?: string;
 }) {
   const [value, setValue] = useState(defaultValue);
   const handleChange = (value: string) => {
@@ -49,6 +51,7 @@ export default function AgTextarea({
           label={label}
           isRequired={isRequired}
           content={popoverContent}
+          description={description}
         />
       }
       name={name}
