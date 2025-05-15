@@ -216,7 +216,7 @@ export default function ProfileReadOnly({
             radius="full"
             onPress={() => {
               if (profile?.profile.userId) {
-                router.push(`/chat/${profile.profile.userId}`);
+                router.push(`/chat/?userId=${profile.profile.userId}`);
               } else {
                 router.push(`/chat`);
               }
