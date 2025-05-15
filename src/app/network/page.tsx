@@ -2,7 +2,7 @@
 
 import Footer from "@/components/Footer";
 import { getAllProfiles } from "@/lib/userProfileApi";
-import { Card, CardBody, CardHeader, Divider, Image } from "@heroui/react";
+import { Card, CardBody, CardHeader, Divider, Image, Spinner } from "@heroui/react";
 import { useEffect, useState } from "react";
 import Avatar from "boring-avatars";
 import { useRouter } from "next/navigation";
@@ -38,6 +38,7 @@ export default function NetworkPage() {
   const [profiles, setProfiles] = useState<UserProfile[]>([]);
   const router = useRouter();
   const { isAuthenticated } = useLogto();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -45,10 +46,24 @@ export default function NetworkPage() {
       getAllProfiles(token).then((data) => {
         console.log(data);
         setProfiles(data.profiles);
+        setLoading(false);
       });
     }
   }, [isAuthenticated]);
 
+  if (loading)
+    return (
+      <div className="flex flex-col min-h-screen">
+        <div className="flex-grow text-center mt-10">
+          <Spinner label="加载中..." />
+        </div>
+      </div>
+    );
+    if(!profiles){
+     return  <div className="flex flex-col min-h-screen">
+        <div className="flex-grow text-center mt-10">暂时无法访问，请等待用户认证完成</div>
+      </div>
+    }
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -56,7 +71,8 @@ export default function NetworkPage() {
           <div className="flex flex-col gap-4">
             <h2 className="text-2xl font-bold">志愿者网络</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {profiles.map((profile) => (
+             
+              {profiles&&profiles.map((profile) => (
                 <Card
                   key={profile.profile.userId}
                   onPress={() =>
