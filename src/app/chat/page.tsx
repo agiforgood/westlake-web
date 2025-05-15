@@ -197,15 +197,14 @@ export default function ChatPage() {
                       session.receiver_id === profile?.userId
                         ? session.sender_id
                         : session.receiver_id;
+
                     const userProfile = getUserProfile(targetId);
 
                     return (
                       <div
                         key={session.id}
                         className={`flex items-center px-4 py-3 cursor-pointer ${
-                          selectedId === session.receiver_id
-                            ? "bg-gray-100"
-                            : ""
+                          selectedId === targetId ? "bg-gray-100" : ""
                         }`}
                         onClick={() => {
                           setSelectedId(targetId);
@@ -237,7 +236,9 @@ export default function ChatPage() {
                         </div>
                         <div className="flex-1">
                           <div className="font-medium">
-                            {userProfile?.name || session.name}
+                            {userProfile?.name ||
+                              session.name ||
+                              userProfile?.userId}
                           </div>
                           <div className="text-xs text-gray-400">
                             {userProfile?.role || session.role}
@@ -246,7 +247,7 @@ export default function ChatPage() {
                         <div className="text-xs text-gray-400">
                           {formatChatTime(session.updated_at || "")}
                         </div>
-                        {session.updated_at !== session.created_at && (
+                        {session.updated_at === session.created_at && (
                           <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
                         )}
                       </div>
@@ -441,7 +442,9 @@ export default function ChatPage() {
                             </div>
                             <div className="flex-1">
                               <div className="font-medium">
-                                {userProfile?.name || session.name}
+                                {userProfile?.name ||
+                                  session.name ||
+                                  userProfile?.userId}
                               </div>
                               <div className="text-xs text-gray-400">
                                 {userProfile?.role || session.role}
@@ -450,7 +453,7 @@ export default function ChatPage() {
                             <div className="text-xs text-gray-400">
                               {formatChatTime(session.updated_at || "")}
                             </div>
-                            {session.updated_at !== session.created_at && (
+                            {session.updated_at === session.created_at && (
                               <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
                             )}
                           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-const DEV_API_BASE = "http://localhost:3000";
+const DEV_API_BASE = "https://api.westlakeaiforgood.com";
 const PRO_API_BASE = "https://api.westlakeaiforgood.com";
 const API_BASE =
   process.env.NODE_ENV === "development" ? DEV_API_BASE : PRO_API_BASE;
