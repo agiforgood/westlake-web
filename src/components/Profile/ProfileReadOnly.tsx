@@ -198,6 +198,14 @@ export default function ProfileReadOnly({
     }
   }, [profile]);
 
+  const getWeekdayText = (weekday: number) => {
+    return ["周日", "周一", "周二", "周三", "周四", "周五", "周六"][weekday];
+  };
+
+  const getTimeSlotText = (timeSlot: number) => {
+    return ["上午", "下午", "晚上"][timeSlot];
+  };
+
   return (
     <div className="w-full space-y-8">
       <div className="flex items-center justify-between gap-2">
@@ -224,6 +232,24 @@ export default function ProfileReadOnly({
         }
         return <ProfileReadOnlyComponent key={item.name} item={item} />;
       })}
+
+      <div id="weekDay" className="space-y-2">
+        <div className="text-sm text-[#333]">
+          <span>可参与时间</span>
+        </div>
+        <div className="text-xs text-[#666]">
+          {Array.from({ length: 7 }, (_, i) => (
+            <div key={i} className="flex flex-row gap-6">
+              <p>{getWeekdayText(i)}</p>
+              <div className="flex flex-row gap-2">
+                {Array.from({ length: 3 }, (_, j) => (
+                  <span key={j}>{getTimeSlotText(j)}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
