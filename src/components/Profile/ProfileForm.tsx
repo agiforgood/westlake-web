@@ -239,14 +239,18 @@ export default function ProfileForm() {
       if (item.name == "address") {
         newItem.defaultValue = [
           (data.profile as any).province ||
-            (data.profile as any).newSnapshot?.province,
+          (data.profile as any).newSnapshot?.province,
           (data.profile as any).city || (data.profile as any).newSnapshot?.city,
           (data.profile as any).district ||
-            (data.profile as any).newSnapshot?.district,
+          (data.profile as any).newSnapshot?.district,
         ];
       }
       if (item.name == "coreSkills") {
-        setCoreSkills((data.profile as any).newSnapshot?.coreSkills ?? []);
+        const coreSkills =
+          (data.profile as any).coreSkills ||
+          (data.profile as any).newSnapshot?.coreSkills ||
+          [];
+        setCoreSkills(coreSkills);
       }
       return newItem;
     });
