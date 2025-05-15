@@ -7,7 +7,7 @@ import Image from "next/image";
 import { getChatSessions, getMessages, sendMessage } from "@/lib/chatApi";
 import { useLogto } from "@logto/react";
 import Link from "next/link";
-import { getMyProfile } from "@/lib/userProfileApi";
+import { getMyProfile, getAllProfiles } from "@/lib/userProfileApi";
 import { Textarea } from "@heroui/react";
 import { formatChatTime } from "@/utils";
 import {
@@ -17,6 +17,7 @@ import {
   DrawerBody,
   useDisclosure,
 } from "@heroui/react";
+import Avatar from "boring-avatars";
 
 interface ChatSession {
   id: string;
@@ -49,11 +50,12 @@ export default function ChatPage() {
   const [newMessage, setNewMessage] = useState("");
   const { isAuthenticated } = useLogto();
   const [profile, setProfile] = useState<any>(null);
-  const [token, setToken] = useState(""); // 从你的认证系统获取token
+  const [token, setToken] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isMobile, setIsMobile] = useState(false);
   const MAX_MESSAGE_LENGTH = 1000;
+  const [userProfiles, setUserProfiles] = useState([]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -70,6 +72,10 @@ export default function ChatPage() {
       setToken(accessToken);
       getMyProfile(accessToken ?? "").then((data) => {
         setProfile(data.profile);
+      });
+      // 获取所有用户信息
+      getAllProfiles(accessToken).then((data) => {
+        setUserProfiles(data.profiles || []);
       });
     }
   }, [isAuthenticated]);
@@ -144,6 +150,15 @@ export default function ChatPage() {
     }
   };
 
+  // 获取用户信息的辅助函数
+  const getUserProfile = (userId: string): any => {
+    const profile = userProfiles.find(
+      (profile: any) => profile?.profile?.userId === userId
+    );
+    //@ts-ignore
+    return profile?.profile || {};
+  };
+
   return (
     <div className="h-screen bg-gray-50">
       <Navbar />
@@ -173,36 +188,60 @@ export default function ChatPage() {
           {!isMobile && (
             <div className="w-80 bg-white flex flex-col rounded-[16px]">
               <div className="flex-1 overflow-y-auto rounded-[16px] max-h-[450px]">
-                {sessions?.map((session) => (
-                  <div
-                    key={session.id}
-                    className={`flex items-center px-4 py-3 cursor-pointer ${
-                      selectedId === session.receiver_id ? "bg-gray-100" : ""
-                    }`}
-                    onClick={() => {
-                      setSelectedId(session.receiver_id);
-                      window.history.pushState(
-                        {},
-                        "",
-                        `/chat/${session.receiver_id}`
-                      );
-                    }}
-                  >
-                    <div className="w-10 h-10 rounded-full bg-gray-200 mr-3" />
-                    <div className="flex-1">
-                      <div className="font-medium">{session.name}</div>
-                      <div className="text-xs text-gray-400">
-                        {session.role}
+                {sessions?.map((session) => {
+                  const userProfile = getUserProfile(session.receiver_id);
+                  console.log(222, userProfile);
+                  return (
+                    <div
+                      key={session.id}
+                      className={`flex items-center px-4 py-3 cursor-pointer ${
+                        selectedId === session.receiver_id ? "bg-gray-100" : ""
+                      }`}
+                      onClick={() => {
+                        setSelectedId(session.receiver_id);
+                        window.history.pushState(
+                          {},
+                          "",
+                          `/chat/${session.receiver_id}`
+                        );
+                      }}
+                    >
+                      <div className="mr-3 overflow-hidden">
+                        {userProfile?.avatar ? (
+                          <Image
+                            src={userProfile.avatar}
+                            alt={userProfile.name}
+                            width={40}
+                            height={40}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Avatar
+                              className="w-8 h-8"
+                              name={userProfile?.userId ?? ""}
+                              variant="beam"
+                            />
+                          </div>
+                        )}
                       </div>
+                      <div className="flex-1">
+                        <div className="font-medium">
+                          {userProfile?.name || session.name}
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          {userProfile?.role || session.role}
+                        </div>
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        {formatChatTime(session.updated_at || "")}
+                      </div>
+                      {session.updated_at !== session.created_at && (
+                        <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
+                      )}
                     </div>
-                    <div className="text-xs text-gray-400">
-                      {formatChatTime(session.updated_at || "")}
-                    </div>
-                    {session.updated_at !== session.created_at && (
-                      <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -214,6 +253,7 @@ export default function ChatPage() {
               {messages.map((msg) => {
                 const currentUserId = profile?.userId;
                 const isMe = msg.senderId === currentUserId;
+                const senderProfile = getUserProfile(msg.senderId);
                 return (
                   <div
                     key={msg.id}
@@ -222,7 +262,25 @@ export default function ChatPage() {
                     }`}
                   >
                     {!isMe && (
-                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gray-200 mr-2 md:mr-4" />
+                      <div className="mr-2 md:mr-4 overflow-hidden">
+                        {senderProfile?.avatar ? (
+                          <Image
+                            src={senderProfile.avatar}
+                            alt={senderProfile.name}
+                            width={48}
+                            height={48}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Avatar
+                              className="w-8 h-8"
+                              name={senderProfile?.userId ?? ""}
+                              variant="beam"
+                            />
+                          </div>
+                        )}
+                      </div>
                     )}
                     <div>
                       <div
@@ -231,7 +289,9 @@ export default function ChatPage() {
                         }`}
                       >
                         {!isMe && (
-                          <span className="font-medium">{msg.sender}</span>
+                          <span className="font-medium">
+                            {senderProfile?.name || msg.sender}
+                          </span>
                         )}
                         <span className={`ml-2 text-xs text-gray-400`}>
                           {formatChatTime(msg.updatedAt)}
@@ -248,8 +308,24 @@ export default function ChatPage() {
                       </div>
                     </div>
                     {isMe && (
-                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gray-200 ml-2 md:ml-4 flex items-center justify-center">
-                        Me
+                      <div className="ml-2 md:ml-4 overflow-hidden">
+                        {profile?.avatar ? (
+                          <Image
+                            src={profile.avatar}
+                            alt={profile.name}
+                            width={48}
+                            height={48}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Avatar
+                              className="w-8 h-8"
+                              name={profile?.userId ?? ""}
+                              variant="beam"
+                            />
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -299,39 +375,62 @@ export default function ChatPage() {
                 </DrawerHeader>
                 <DrawerBody>
                   <div className="overflow-y-auto">
-                    {sessions?.map((session) => (
-                      <div
-                        key={session.id}
-                        className={`flex items-center px-4 py-3 cursor-pointer ${
-                          selectedId === session.receiver_id
-                            ? "bg-gray-100"
-                            : ""
-                        }`}
-                        onClick={() => {
-                          setSelectedId(session.receiver_id);
-                          onClose();
-                          window.history.pushState(
-                            {},
-                            "",
-                            `/chat/${session.receiver_id}`
-                          );
-                        }}
-                      >
-                        <div className="w-10 h-10 rounded-full bg-gray-200 mr-3" />
-                        <div className="flex-1">
-                          <div className="font-medium">{session.name}</div>
-                          <div className="text-xs text-gray-400">
-                            {session.role}
+                    {sessions?.map((session) => {
+                      const userProfile = getUserProfile(session.receiver_id);
+                      return (
+                        <div
+                          key={session.id}
+                          className={`flex items-center px-4 py-3 cursor-pointer ${
+                            selectedId === session.receiver_id
+                              ? "bg-gray-100"
+                              : ""
+                          }`}
+                          onClick={() => {
+                            setSelectedId(session.receiver_id);
+                            onClose();
+                            window.history.pushState(
+                              {},
+                              "",
+                              `/chat/${session.receiver_id}`
+                            );
+                          }}
+                        >
+                          <div className="mr-3 overflow-hidden">
+                            {userProfile?.avatar ? (
+                              <Image
+                                src={userProfile.avatar}
+                                alt={userProfile.name}
+                                width={40}
+                                height={40}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Avatar
+                                  className="w-8 h-8"
+                                  name={userProfile?.userId ?? ""}
+                                  variant="beam"
+                                />
+                              </div>
+                            )}
                           </div>
+                          <div className="flex-1">
+                            <div className="font-medium">
+                              {userProfile?.name || session.name}
+                            </div>
+                            <div className="text-xs text-gray-400">
+                              {userProfile?.role || session.role}
+                            </div>
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            {formatChatTime(session.updated_at || "")}
+                          </div>
+                          {session.updated_at !== session.created_at && (
+                            <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
+                          )}
                         </div>
-                        <div className="text-xs text-gray-400">
-                          {formatChatTime(session.updated_at || "")}
-                        </div>
-                        {session.updated_at !== session.created_at && (
-                          <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
-                        )}
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </DrawerBody>
               </>
