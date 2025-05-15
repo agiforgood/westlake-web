@@ -112,8 +112,8 @@ function ChatPageContent() {
           id: userId as string,
           //@ts-ignore
           name: userProfile?.profile?.name || "",
-          updated_at: new Date().toISOString(),
-          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString().replace('T'," ").replace("Z",""),
+          created_at: new Date().toISOString().replace('T'," ").replace("Z",""),
           sender_id: loggedInUserId as string,
           receiver_id: userId as string,
         });
