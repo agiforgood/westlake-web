@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 import { getMyProfile } from "@/lib/userProfileApi";
 import { useLogto } from "@logto/react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 interface Profile {
   userId: string;
   gender: number;
@@ -52,6 +52,7 @@ export default function Navbar() {
   const { signIn, signOut, isAuthenticated, getAccessToken } = useLogto();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
   // 获取当前路径
   const pathname = usePathname();
 
@@ -86,7 +87,7 @@ export default function Navbar() {
       </NavbarContent>
 
       <NavbarContent className="sm:hidden">
-      <NavbarBrand >
+      <NavbarBrand>
           <Link href="/" color="foreground" className="flex items-center gap-2">
             <Image src="/agi_logo.svg" alt="logo" width={36} height={36} />
             <p className="font-bold text-inherit">智能向善</p>
@@ -111,7 +112,7 @@ export default function Navbar() {
       
       <NavbarContent justify="end">
           {isAuthenticated ? (
-            <Dropdown placement="bottom-end" as='button'>
+            <Dropdown placement="bottom-end">
               <DropdownTrigger>
                   <Button isIconOnly variant="light" className="flex items-center gap-2">
                   {profile?.avatarUrl ? (
@@ -122,6 +123,7 @@ export default function Navbar() {
                         />
                       ) : (
                         <Avatar
+                          as="button"
                           className="w-8 h-8"
                           name={profile?.userId??""}
                           variant="beam"
@@ -134,14 +136,20 @@ export default function Navbar() {
                   <p className="font-semibold">已登录</p>
                   <p className="font-semibold">{profile?.handle}</p>
                 </DropdownItem>
-                <DropdownItem key="profile" href="/profile">
+                <DropdownItem onPress={()=>{
+                  router.push('/profile')
+                }} key="profile">
                   志愿者说明书
                 </DropdownItem>
-                <DropdownItem key="chat" href="/chat">
+                <DropdownItem onPress={()=>{
+                    router.push('/chat')
+                  }} key="chat">
                   我的私信
                 </DropdownItem>
                 {profile?.role == "admin" ? (
-                  <DropdownItem key="admin" href="/admin">
+                  <DropdownItem onPress={()=>{
+                    router.push('/admin')
+                  }} key="admin">
                     管理后台
                   </DropdownItem>
                 ) : null}
