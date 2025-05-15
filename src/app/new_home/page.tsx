@@ -26,7 +26,7 @@ export default function NewHomePage() {
           onSlideChange={swiper => setCurrentIndex(swiper.activeIndex)}
           mousewheel={{
             releaseOnEdges: true,
-            thresholdDelta: 40,
+            thresholdDelta: 10,
             thresholdTime: 500,
           }}
           pagination={{
