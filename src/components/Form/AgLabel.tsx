@@ -16,7 +16,7 @@ export default function AgLabel({
       <div className="flex items-center">
         <span>{label}</span>
         {isRequired && <span className="text-red-500 ml-1 text-xs">*</span>}
-        <div className="z-50">{content && <AgPopover content={content} />}</div>
+        <div>{content && <AgPopover content={content} />}</div>
       </div>
       {description && (
         <div className="text-gray-400 text-xs">{description}</div>
