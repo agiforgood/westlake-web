@@ -296,7 +296,11 @@ export default function ChatPage() {
                           </div>
                         </div>
                         <div className="text-xs text-gray-400">
-                          {formatChatTime(session.updated_at || "")}
+                          {formatChatTime(
+                            session.updated_at
+                              .replace(" ", "T")
+                              .replace(/(\.\d{3})\d{3}$/, "$1") + "Z"
+                          )}
                         </div>
                         {session.updated_at === session.created_at &&
                           loggedInUserId !== session.sender_id && (
@@ -519,7 +523,11 @@ export default function ChatPage() {
                               </div>
                             </div>
                             <div className="text-xs text-gray-400">
-                              {formatChatTime(session.updated_at || "")}
+                              {formatChatTime(
+                                session.updated_at
+                                  .replace(" ", "T")
+                                  .replace(/(\.\d{3})\d{3}$/, "$1") + "Z"
+                              )}
                             </div>
                             {session.updated_at === session.created_at &&
                               loggedInUserId !== session.sender_id && (
