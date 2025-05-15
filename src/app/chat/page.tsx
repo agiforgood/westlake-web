@@ -89,12 +89,30 @@ export default function ChatPage() {
     try {
       const { sessions } = await getChatSessions(token);
       //按updated_at排序，最新的在最前面
-      setSessions(
+      const newSessions =
         sessions?.sort(
           (a: ChatSession, b: ChatSession) =>
             new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-        ) || []
-      );
+        ) || [];
+
+      //如果newSessions中没有userId，则将userId添加到newSessions中。放在最前面
+      if (!newSessions.find((session: ChatSession) => session.id === userId)) {
+        const userProfile = userProfiles.find(
+          (profile: any) => profile?.profile?.userId === userId
+        );
+        newSessions.unshift({
+          id: userId as string,
+          //@ts-ignore
+          name: userProfile?.profile?.name || "",
+          updated_at: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          sender_id: loggedInUserId as string,
+          receiver_id: userId as string,
+        });
+      }
+
+      setSessions(newSessions);
+
       setSelectedId(userId as string);
     } catch (error) {
       console.error("Failed to load chat sessions:", error);
