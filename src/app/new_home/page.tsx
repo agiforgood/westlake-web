@@ -43,7 +43,7 @@ export default function NewHomePage() {
                 animate={currentIndex === 0 ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6 }}
                 className="flex items-center justify-center w-full">
-                <span className="text-[#1a2341] text-3xl md:text-5xl font-semibold tracking-[.25em]">
+                <span className="text-[#1a2341] text-center text-3xl md:text-5xl font-semibold tracking-[.25em]">
                     智 能 向 善 社 会 创 新 网 络
                 </span>
             </motion.div>
