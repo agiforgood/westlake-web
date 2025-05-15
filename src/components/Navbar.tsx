@@ -63,6 +63,8 @@ export default function Navbar() {
         getMyProfile(token ?? "").then((data) => {
           localStorage.setItem("userId", data.profile?.userId||"")
           setProfile(data.profile);
+        }).catch((ex)=>{
+            console.error('loading profile failed',ex);
         });
       });
     }
