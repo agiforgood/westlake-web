@@ -47,9 +47,9 @@ export default function AgInput({
           "data-[focus=true]:bg-[#F8F9FB]",
         ],
       }}
-      isRequired={isRequired}
+      // isRequired={isRequired}
       errorMessage={errorMessage}
-      label={label}
+      label={<AgLabel label={label} isRequired={isRequired} />}
       labelPlacement={labelPlacement}
       name={name}
       placeholder={placeholder}

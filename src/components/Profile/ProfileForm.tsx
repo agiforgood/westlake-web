@@ -280,7 +280,6 @@ export default function ProfileForm() {
       inspirations: data.inspirations,
       coreSkills: coreSkills,
     };
-    return;
     const response = await updateMyProfile({ snapshot }, token);
     if (response) {
       addToast({
