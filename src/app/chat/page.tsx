@@ -7,7 +7,7 @@ import { getChatSessions, getMessages, sendMessage } from "@/lib/chatApi";
 import { useLogto } from "@logto/react";
 import Link from "next/link";
 import { getMyProfile, getAllProfiles } from "@/lib/userProfileApi";
-import { Textarea } from "@heroui/react";
+import { Spinner, Textarea } from "@heroui/react";
 import { formatChatTime } from "@/utils";
 import {
   Drawer,
@@ -58,6 +58,7 @@ export default function ChatPage() {
   const [isMobile, setIsMobile] = useState(false);
   const MAX_MESSAGE_LENGTH = 1000;
   const [userProfiles, setUserProfiles] = useState([]);
+  const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -133,6 +134,7 @@ export default function ChatPage() {
       newMessage.length > MAX_MESSAGE_LENGTH
     )
       return;
+    setIsSending(true);
 
     try {
       await sendMessage(token, selectedId, newMessage);
@@ -142,6 +144,8 @@ export default function ChatPage() {
       loadSessions(token);
     } catch (error) {
       console.error("Failed to send message:", error);
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -197,15 +201,14 @@ export default function ChatPage() {
                       session.receiver_id === profile?.userId
                         ? session.sender_id
                         : session.receiver_id;
+
                     const userProfile = getUserProfile(targetId);
 
                     return (
                       <div
                         key={session.id}
                         className={`flex items-center px-4 py-3 cursor-pointer ${
-                          selectedId === session.receiver_id
-                            ? "bg-gray-100"
-                            : ""
+                          selectedId === targetId ? "bg-gray-100" : ""
                         }`}
                         onClick={() => {
                           setSelectedId(targetId);
@@ -237,7 +240,9 @@ export default function ChatPage() {
                         </div>
                         <div className="flex-1">
                           <div className="font-medium">
-                            {userProfile?.name || session.name}
+                            {userProfile?.name ||
+                              session.name ||
+                              userProfile?.userId}
                           </div>
                           <div className="text-xs text-gray-400">
                             {userProfile?.role || session.role}
@@ -246,9 +251,10 @@ export default function ChatPage() {
                         <div className="text-xs text-gray-400">
                           {formatChatTime(session.updated_at || "")}
                         </div>
-                        {session.updated_at !== session.created_at && (
-                          <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
-                        )}
+                        {session.updated_at === session.created_at &&
+                          profile?.userId !== session.sender_id && (
+                            <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
+                          )}
                       </div>
                     );
                   })}
@@ -363,6 +369,7 @@ export default function ChatPage() {
                   value={newMessage}
                   onChange={handleMessageChange}
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                  disabled={isSending}
                 />
                 <button
                   className={`w-10 h-10 rounded-full flex items-center justify-center text-white cursor-pointer ml-2 ${
@@ -371,9 +378,13 @@ export default function ChatPage() {
                       : "bg-blue-500"
                   }`}
                   onClick={handleSendMessage}
-                  disabled={newMessage.length > MAX_MESSAGE_LENGTH}
+                  disabled={newMessage.length > MAX_MESSAGE_LENGTH || isSending}
                 >
-                  <Image src="/send.svg" alt="send" width={20} height={20} />
+                  {isSending ? (
+                    <Spinner size="sm" />
+                  ) : (
+                    <Image src="/send.svg" alt="send" width={20} height={20} />
+                  )}
                 </button>
               </div>
               <div className="text-xs text-gray-400 mt-1 pl-4">
@@ -441,7 +452,9 @@ export default function ChatPage() {
                             </div>
                             <div className="flex-1">
                               <div className="font-medium">
-                                {userProfile?.name || session.name}
+                                {userProfile?.name ||
+                                  session.name ||
+                                  userProfile?.userId}
                               </div>
                               <div className="text-xs text-gray-400">
                                 {userProfile?.role || session.role}
@@ -450,9 +463,10 @@ export default function ChatPage() {
                             <div className="text-xs text-gray-400">
                               {formatChatTime(session.updated_at || "")}
                             </div>
-                            {session.updated_at !== session.created_at && (
-                              <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
-                            )}
+                            {session.updated_at === session.created_at &&
+                              profile?.userId !== session.sender_id && (
+                                <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
+                              )}
                           </div>
                         );
                       })}
