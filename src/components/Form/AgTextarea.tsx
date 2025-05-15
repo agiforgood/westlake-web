@@ -5,7 +5,7 @@ import AgLabel from "./AgLabel";
 export default function AgTextarea({
   label,
   name,
-  placeholder,
+  placeholder = " ",
   variant = "flat",
   labelPlacement = "outside",
   isRequired,
