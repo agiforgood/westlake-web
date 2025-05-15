@@ -7,7 +7,7 @@ import { getChatSessions, getMessages, sendMessage } from "@/lib/chatApi";
 import { useLogto } from "@logto/react";
 import Link from "next/link";
 import { getMyProfile, getAllProfiles } from "@/lib/userProfileApi";
-import { Textarea } from "@heroui/react";
+import { Spinner, Textarea } from "@heroui/react";
 import { formatChatTime } from "@/utils";
 import {
   Drawer,
@@ -58,6 +58,7 @@ export default function ChatPage() {
   const [isMobile, setIsMobile] = useState(false);
   const MAX_MESSAGE_LENGTH = 1000;
   const [userProfiles, setUserProfiles] = useState([]);
+  const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -133,6 +134,7 @@ export default function ChatPage() {
       newMessage.length > MAX_MESSAGE_LENGTH
     )
       return;
+    setIsSending(true);
 
     try {
       await sendMessage(token, selectedId, newMessage);
@@ -142,6 +144,8 @@ export default function ChatPage() {
       loadSessions(token);
     } catch (error) {
       console.error("Failed to send message:", error);
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -364,6 +368,7 @@ export default function ChatPage() {
                   value={newMessage}
                   onChange={handleMessageChange}
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                  disabled={isSending}
                 />
                 <button
                   className={`w-10 h-10 rounded-full flex items-center justify-center text-white cursor-pointer ml-2 ${
@@ -372,9 +377,13 @@ export default function ChatPage() {
                       : "bg-blue-500"
                   }`}
                   onClick={handleSendMessage}
-                  disabled={newMessage.length > MAX_MESSAGE_LENGTH}
+                  disabled={newMessage.length > MAX_MESSAGE_LENGTH || isSending}
                 >
-                  <Image src="/send.svg" alt="send" width={20} height={20} />
+                  {isSending ? (
+                    <Spinner size="sm" />
+                  ) : (
+                    <Image src="/send.svg" alt="send" width={20} height={20} />
+                  )}
                 </button>
               </div>
               <div className="text-xs text-gray-400 mt-1 pl-4">
