@@ -425,8 +425,12 @@ function ChatPageContent() {
                   variant="faded"
                   value={newMessage}
                   onChange={handleMessageChange}
-                  onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                  disabled={isSending}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSendMessage();
+                    }
+                  }}
+                  disabled={isSending || !selectedId}
                   aria-label="消息输入框"
                 />
                 <button
@@ -436,7 +440,11 @@ function ChatPageContent() {
                       : "bg-blue-500"
                   }`}
                   onClick={handleSendMessage}
-                  disabled={newMessage.length > MAX_MESSAGE_LENGTH || isSending}
+                  disabled={
+                    newMessage.length > MAX_MESSAGE_LENGTH ||
+                    isSending ||
+                    !selectedId
+                  }
                   aria-label="发送消息"
                 >
                   {isSending ? (

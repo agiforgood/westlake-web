@@ -98,8 +98,9 @@ export default function Navbar() {
             </Link>
           </NavbarItem>
         ))}
-
-        <NavbarContent as="div" justify="end">
+      </NavbarContent>
+      
+      <NavbarContent as="div" justify="end">
           {isAuthenticated ? (
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
@@ -134,7 +135,7 @@ export default function Navbar() {
                   <p className="font-semibold">{profile?.handle}</p>
                 </DropdownItem>
                 <DropdownItem key="profile" href="/profile">
-                  个人资料
+                  志愿者说明书
                 </DropdownItem>
                 <DropdownItem key="chat" href="/chat">
                   我的私信
@@ -167,7 +168,6 @@ export default function Navbar() {
             </Button>
           )}
         </NavbarContent>
-      </NavbarContent>
 
       <NavbarMenu>
         <NavbarMenuItem>
