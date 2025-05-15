@@ -216,6 +216,14 @@ export default function ChatPage() {
                   ?.filter(
                     (session) => session.receiver_id !== session?.sender_id
                   )
+                  //不能出现重复的receiver_id
+                  .filter(
+                    (session, index, self) =>
+                      index ===
+                      self.findIndex(
+                        (t) => t.receiver_id === session.receiver_id
+                      )
+                  )
                   .map((session) => {
                     const targetId =
                       session.receiver_id === loggedInUserId
@@ -429,6 +437,14 @@ export default function ChatPage() {
                     {sessions
                       ?.filter(
                         (session) => session.receiver_id !== session?.sender_id
+                      )
+                      //不能出现重复的receiver_id
+                      .filter(
+                        (session, index, self) =>
+                          index ===
+                          self.findIndex(
+                            (t) => t.receiver_id === session.receiver_id
+                          )
                       )
                       .map((session) => {
                         const targetId =
