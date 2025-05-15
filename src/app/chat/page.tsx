@@ -251,9 +251,10 @@ export default function ChatPage() {
                         <div className="text-xs text-gray-400">
                           {formatChatTime(session.updated_at || "")}
                         </div>
-                        {session.updated_at === session.created_at && (
-                          <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
-                        )}
+                        {session.updated_at === session.created_at &&
+                          profile?.userId !== session.sender_id && (
+                            <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
+                          )}
                       </div>
                     );
                   })}
@@ -462,9 +463,10 @@ export default function ChatPage() {
                             <div className="text-xs text-gray-400">
                               {formatChatTime(session.updated_at || "")}
                             </div>
-                            {session.updated_at === session.created_at && (
-                              <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
-                            )}
+                            {session.updated_at === session.created_at &&
+                              profile?.userId !== session.sender_id && (
+                                <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
+                              )}
                           </div>
                         );
                       })}
