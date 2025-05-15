@@ -132,6 +132,9 @@ export default function Navbar() {
                 <DropdownItem key="profile" href="/profile">
                   个人资料
                 </DropdownItem>
+                <DropdownItem key="profile" href="/chat">
+                  我的私信
+                </DropdownItem>
                 {profile?.role == "admin" ? (
                   <DropdownItem key="admin" href="/admin">
                     管理后台
