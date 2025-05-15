@@ -98,8 +98,9 @@ export default function Navbar() {
             </Link>
           </NavbarItem>
         ))}
-
-        <NavbarContent as="div" justify="end">
+      </NavbarContent>
+      
+      <NavbarContent as="div" justify="end">
           {isAuthenticated ? (
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
@@ -167,7 +168,6 @@ export default function Navbar() {
             </Button>
           )}
         </NavbarContent>
-      </NavbarContent>
 
       <NavbarMenu>
         <NavbarMenuItem>
