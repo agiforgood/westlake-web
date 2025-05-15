@@ -17,6 +17,7 @@ import {
 } from "@heroui/react";
 import Avatar from "boring-avatars";
 import { useSearchParams } from "next/navigation";
+import Footer from "@/components/Footer";
 
 interface ChatSession {
   id: string;
@@ -58,6 +59,7 @@ export default function ChatPage() {
   const [userProfiles, setUserProfiles] = useState([]);
   const [isSending, setIsSending] = useState(false);
   const [loggedInUserId, setLoggedInUserId] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loggedInUserId = localStorage.getItem("userId");
@@ -81,6 +83,7 @@ export default function ChatPage() {
       setToken(accessToken);
       getAllProfiles(accessToken).then((data) => {
         setUserProfiles(data.profiles || []);
+        setLoading(false);
       });
     }
   }, [isAuthenticated]);
@@ -184,6 +187,16 @@ export default function ChatPage() {
     //@ts-ignore
     return profile?.profile || {};
   };
+
+  if (loading)
+    return (
+      <div className="flex flex-col min-h-screen">
+        <div className="flex-grow text-center mt-10">
+          <Spinner label="加载中..." />
+        </div>
+        <Footer />
+      </div>
+    );
 
   return (
     <div className="h-screen bg-gray-50">
