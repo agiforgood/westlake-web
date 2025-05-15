@@ -98,8 +98,13 @@ export default function ChatPage() {
             new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
         ) || [];
 
-      //如果newSessions中没有userId，则将userId添加到newSessions中。放在最前面
-      if (!newSessions.find((session: ChatSession) => session.id === userId)) {
+      //如果newSessions中receiver_id和sender_id没有userId，则将userId添加到newSessions中。放在最前面
+      if (
+        newSessions.filter(
+          (session: ChatSession) =>
+            session.receiver_id !== userId || session.sender_id !== userId
+        ).length === 0
+      ) {
         const userProfile = userProfiles.find(
           (profile: any) => profile?.profile?.userId === userId
         );
