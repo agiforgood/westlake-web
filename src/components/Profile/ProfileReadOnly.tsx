@@ -60,9 +60,9 @@ const profileForm: FormItem[] = [
     name: "locationVisibility",
     type: "radio",
     options: [
-      { label: "仅显示省份", value: "0" },
-      { label: "显示省份和城市", value: "1" },
-      { label: "显示省份、城市和区县", value: "2" },
+      { label: "仅显示省份", value: "1" },
+      { label: "显示省份和城市", value: "2" },
+      { label: "显示省份、城市和区县", value: "3" },
     ],
     isRequired: true,
   },
