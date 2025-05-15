@@ -134,7 +134,7 @@ export default function Navbar() {
                   <p className="font-semibold">{profile?.handle}</p>
                 </DropdownItem>
                 <DropdownItem key="profile" href="/profile">
-                  个人资料
+                  志愿者说明书
                 </DropdownItem>
                 <DropdownItem key="chat" href="/chat">
                   我的私信
