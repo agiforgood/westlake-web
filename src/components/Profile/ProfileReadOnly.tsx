@@ -164,7 +164,6 @@ export default function ProfileReadOnly({
   const updateProfileFormData = (data: UserProfile) => {
     const updatedForm = profileForm.map((item) => {
       const newItem = { ...item };
-      console.log("gender", (data.profile as any)["gender"]);
 
       if ((data.profile as any)[item.name] != null) {
         newItem.defaultValue = (data.profile as any)[item.name];
@@ -178,7 +177,6 @@ export default function ProfileReadOnly({
             (data.profile as any).newSnapshot?.district,
         ];
       }
-      console.log("newItem", newItem);
 
       return newItem;
     });
