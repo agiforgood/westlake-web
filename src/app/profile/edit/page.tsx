@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Card, Divider } from "@heroui/react";
 import ProfileForm from "@/components/Profile/ProfileForm";
+import ProfileAnchor from "@/components/Profile/ProfileAnchor";
 export default function ProfileEditPage() {
   return (
     <div className="flex flex-col items-center bg-gray-50 min-h-screen py-8 px-2 sm:px-0">
@@ -14,10 +15,10 @@ export default function ProfileEditPage() {
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 mt-16">
-          {/* <div className="hidden sm:block col-span-3">
-            <div>111</div>
-          </div> */}
-          <div className="col-span-12">
+          <div className="hidden sm:block col-span-3">
+            <ProfileAnchor />
+          </div>
+          <div className="col-span-9">
             <ProfileForm />
           </div>
         </div>

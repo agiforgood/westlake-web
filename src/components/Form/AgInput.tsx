@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Form, Input, Button } from "@heroui/react";
 
+import AgLabel from "./AgLabel";
+
 export default function AgInput({
   label,
   name,

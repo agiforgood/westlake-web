@@ -204,8 +204,6 @@ export default function ProfileForm() {
 
   const updateProfileFormData = (data: UserProfile) => {
     const updatedForm = profileForm.map((item) => {
-      console.log(item);
-
       const newItem = { ...item };
       if (
         (data.profile as any)[item.name] ||
@@ -225,6 +223,9 @@ export default function ProfileForm() {
           (data.profile as any).district ||
             (data.profile as any).newSnapshot?.district,
         ];
+      }
+      if (item.name == "coreSkills") {
+        setCoreSkills((data.profile as any).newSnapshot?.coreSkills ?? []);
       }
       return newItem;
     });
@@ -254,6 +255,7 @@ export default function ProfileForm() {
 
     const data = Object.fromEntries(new FormData(e.currentTarget));
     console.log(data);
+    console.log(coreSkills);
     const snapshot = {
       handle: handle,
       gender: parseInt(data.gender as string),
@@ -278,7 +280,7 @@ export default function ProfileForm() {
       inspirations: data.inspirations,
       coreSkills: coreSkills,
     };
-
+    return;
     const response = await updateMyProfile({ snapshot }, token);
     if (response) {
       addToast({

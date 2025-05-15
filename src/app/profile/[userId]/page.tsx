@@ -10,9 +10,13 @@ import {
   CardBody,
   Divider,
   Image,
+  Button,
 } from "@heroui/react";
 import Avatar from "boring-avatars";
 import { useLogto } from "@logto/react";
+import ProfileAnchor from "@/components/Profile/ProfileAnchor";
+import ProfileReadOnly from "@/components/Profile/ProfileReadOnly";
+import { useRouter } from "next/navigation";
 interface UserProfile {
   profile: Profile;
   tags: UserTag[];
@@ -57,7 +61,7 @@ export default function UserProfilePage() {
   const pathname = usePathname();
   const userId = pathname.split("/").pop();
   const { isAuthenticated } = useLogto();
-
+  const router = useRouter();
   useEffect(() => {
     if (isAuthenticated) {
       const token = localStorage.getItem("accessToken") ?? "";
@@ -101,129 +105,17 @@ export default function UserProfilePage() {
     );
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="flex-grow py-12">
-        <Card className="max-w-3xl mx-auto">
-          <CardHeader>
-            <div className="p-4 flex flex-row items-center gap-4 w-full">
-              {profile.profile.avatarUrl ? (
-                <Image
-                  src={profile.profile.avatarUrl}
-                  alt="头像"
-                  className="w-24 h-24 rounded-full border"
-                />
-              ) : (
-                <Avatar
-                  className="w-24 h-24 rounded-full border"
-                  name={profile.profile.userId}
-                  variant="beam"
-                />
-              )}
-              <div className="flex flex-col">
-                <div className="text-2xl font-bold">{profile.profile.name}</div>
-                <div className="text-gray-400 text-base">
-                  ID: {profile.profile.handle}
-                </div>
-                <div className="text-gray-400 text-base">
-                  性别：
-                  {profile.profile.gender == 0
-                    ? "保密"
-                    : profile.profile.gender == 1
-                    ? "男"
-                    : "女"}
-                </div>
-                <div className="text-gray-400 text-base">
-                  {profile.profile.statusMessage}
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <Divider />
-          <CardBody>
-            <div className="flex flex-col gap-4 p-4">
-              <h3 className="font-semibold">专业一句话介绍</h3>
-              <div className="text-gray-600 mt-1">
-                {profile.profile.expertiseSummary || "未填写"}
-              </div>
-              <h3 className="font-semibold">个人简介</h3>
-              <div className="text-gray-600 mt-1">
-                {profile.profile.bio || "未填写"}
-              </div>
-              <h3 className="font-semibold">背景介绍</h3>
-              <div className="text-gray-600 mt-1">
-                {profile.profile.backgroundDescription || "未填写"}
-              </div>
-              <h3 className="font-semibold">加入原因</h3>
-              <div className="text-gray-600 mt-1">
-                {profile.profile.motivation || "未填写"}
-              </div>
-              <h3 className="font-semibold">想要获得的帮助</h3>
-              <div className="text-gray-600 mt-1">
-                {profile.profile.expectations || "未填写"}
-              </div>
-              <h3 className="font-semibold">可以提供的资源</h3>
-              <div className="text-gray-600 mt-1">
-                {profile.profile.canOffer || "未填写"}
-              </div>
-            </div>
-            <Divider />
-            <div className="flex flex-col gap-4 p-4">
-              <h3 className="font-semibold">地址</h3>
-              <div className="text-gray-600 mt-1">
-                {profile.profile.province} {profile.profile.city}{" "}
-                {profile.profile.district || "未填写"}
-              </div>
-            </div>
-            <Divider />
-            <div className="flex flex-col gap-4 p-4">
-              <h3 className="font-semibold">联系方式</h3>
-              <div className="text-gray-600 mt-1">
-                {profile.profile.wechat || "未填写"}
-              </div>
-            </div>
-            <Divider />
-            <div className="flex flex-col gap-4 p-4">
-              <h3 className="font-semibold">标签</h3>
-              <div className="flex flex-wrap gap-2">
-                {profile.tags.length > 0 ? (
-                  profile.tags.map((tag) => (
-                    <div
-                      key={tag.id}
-                      className="bg-gray-100 px-2 py-1 rounded-full text-sm"
-                    >
-                      {tag.content}
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-gray-400">未填写</div>
-                )}
-              </div>
-            </div>
-            <Divider />
-            <div className="flex flex-col gap-4 p-4">
-              <h3 className="font-semibold">可参与时间</h3>
-              <div className="flex flex-wrap gap-2">
-                {profile.availability.length > 0 ? (
-                  profile.availability.map((availability) => (
-                    <div
-                      key={availability.weekDay}
-                      className="bg-gray-100 px-2 py-1 rounded-full text-sm"
-                    >
-                      {getAvailabilityText(
-                        availability.weekDay,
-                        availability.timeSlot
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-gray-400">未填写</div>
-                )}
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-      </div>
-      <Footer />
+    <div className="flex flex-col items-center bg-gray-50 min-h-screen py-8 px-2 sm:px-0">
+      <Card className="w-full max-w-3xl bg-white shadow-lg rounded-3xl mb-10 px-2 sm:px-6 py-6">
+        <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 mt-4">
+          <div className="hidden sm:block col-span-3">
+            <ProfileAnchor />
+          </div>
+          <div className="col-span-9">
+            <ProfileReadOnly profile={profile} isOther={true} />
+          </div>
+        </div>
+      </Card>
     </div>
   );
 }
