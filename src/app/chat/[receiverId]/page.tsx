@@ -2,7 +2,6 @@
 
 import { useParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
-import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import { getChatSessions, getMessages, sendMessage } from "@/lib/chatApi";
 import { useLogto } from "@logto/react";
@@ -161,8 +160,6 @@ export default function ChatPage() {
 
   return (
     <div className="h-screen bg-gray-50">
-      <Navbar />
-
       <div className="py-12 max-w-5xl mx-auto px-4">
         {/* 顶部按钮 */}
         <div className="flex justify-between items-center p-4">
