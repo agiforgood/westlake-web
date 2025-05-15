@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Image from "next/image";
 import { getChatSessions, getMessages, sendMessage } from "@/lib/chatApi";
 import { useLogto } from "@logto/react";
@@ -42,7 +42,7 @@ interface Message {
   updatedAt: string;
 }
 
-export default function ChatPage() {
+function ChatPageContent() {
   const searchParams = useSearchParams();
   const userId = searchParams.get("userId");
 
@@ -212,6 +212,7 @@ export default function ChatPage() {
             <button
               onClick={onOpen}
               className="p-2 rounded-full hover:bg-gray-100"
+              aria-label="打开聊天列表"
             >
               Chat list
             </button>
@@ -219,7 +220,10 @@ export default function ChatPage() {
             <div></div>
           )}
           <Link href="/network">
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-full">
+            <button
+              className="px-4 py-2 bg-blue-500 text-white rounded-full"
+              aria-label="发起新对话"
+            >
               + 发起新对话
             </button>
           </Link>
@@ -423,6 +427,7 @@ export default function ChatPage() {
                   onChange={handleMessageChange}
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                   disabled={isSending}
+                  aria-label="消息输入框"
                 />
                 <button
                   className={`w-10 h-10 rounded-full flex items-center justify-center text-white cursor-pointer ml-2 ${
@@ -432,6 +437,7 @@ export default function ChatPage() {
                   }`}
                   onClick={handleSendMessage}
                   disabled={newMessage.length > MAX_MESSAGE_LENGTH || isSending}
+                  aria-label="发送消息"
                 >
                   {isSending ? (
                     <Spinner size="sm" />
@@ -544,5 +550,22 @@ export default function ChatPage() {
         </Drawer>
       </div>
     </div>
+  );
+}
+
+export default function ChatPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-col min-h-screen">
+          <div className="flex-grow text-center mt-10">
+            <Spinner label="加载中..." />
+          </div>
+          <Footer />
+        </div>
+      }
+    >
+      <ChatPageContent />
+    </Suspense>
   );
 }
