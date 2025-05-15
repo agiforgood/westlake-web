@@ -3,7 +3,7 @@
 const DEV_API_BASE = "http://localhost:3000";
 const PRO_API_BASE = "https://api.westlakeaiforgood.com";
 const API_BASE =
-  process.env.NODE_ENV === "development" ? PRO_API_BASE : PRO_API_BASE;
+  process.env.NODE_ENV === "development" ? DEV_API_BASE : PRO_API_BASE;
 
 export async function getMyProfile(token: string) {
   const res = await fetch(`${API_BASE}/api/profile`, {

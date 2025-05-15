@@ -238,14 +238,10 @@ export default function ProfileReadOnly({
           <span>可参与时间</span>
         </div>
         <div className="text-xs text-[#666]">
-          {Array.from({ length: 7 }, (_, i) => (
-            <div key={i} className="flex flex-row gap-6">
-              <p>{getWeekdayText(i)}</p>
-              <div className="flex flex-row gap-2">
-                {Array.from({ length: 3 }, (_, j) => (
-                  <span key={j}>{getTimeSlotText(j)}</span>
-                ))}
-              </div>
+          {profile?.availability.map((availability) => (
+            <div key={availability.weekDay} className="flex flex-row gap-2">
+              <span>{getWeekdayText(availability.weekDay)}</span>
+              <span>{getTimeSlotText(availability.timeSlot)}</span>
             </div>
           ))}
         </div>
