@@ -13,7 +13,7 @@ export default function NewHomePage() {
     <div
       className="absolute w-full h-screen overflow-hidden"
       style={{
-        backgroundImage: 'url(/home_bg.png)',
+        backgroundImage: 'url(/home_bg.webp)',
         backgroundSize: 'cover',
         top:0,
         backgroundPosition: 'center',
