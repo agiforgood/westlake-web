@@ -60,9 +60,9 @@ const profileForm: FormItem[] = [
     name: "locationVisibility",
     type: "radio",
     options: [
-      { label: "仅显示省份", value: "0" },
-      { label: "显示省份和城市", value: "1" },
-      { label: "显示省份、城市和区县", value: "2" },
+      { label: "仅显示省份", value: "1" },
+      { label: "显示省份和城市", value: "2" },
+      { label: "显示省份、城市和区县", value: "3" },
     ],
     isRequired: true,
   },
@@ -159,10 +159,8 @@ export default function ProfileReadOnly({
   profile: UserProfile | null;
   isOther?: boolean;
 }) {
-  console.log(profile);
   const router = useRouter();
   const [profileFormData, setProfileFormData] = useState<FormItem[]>([]);
-
   const updateProfileFormData = (data: UserProfile) => {
     const updatedForm = profileForm.map((item) => {
       const newItem = { ...item };
@@ -237,9 +235,12 @@ export default function ProfileReadOnly({
         <div className="text-sm text-[#333]">
           <span>可参与时间</span>
         </div>
-        <div className="text-xs text-[#666]">
+        <div className="text-xs text-[#666] flex flex-wrap gap-2">
           {profile?.availability.map((availability) => (
-            <div key={availability.weekDay} className="flex flex-row gap-2">
+            <div
+              key={availability.weekDay + availability.timeSlot}
+              className="flex flex-row"
+            >
               <span>{getWeekdayText(availability.weekDay)}</span>
               <span>{getTimeSlotText(availability.timeSlot)}</span>
             </div>
