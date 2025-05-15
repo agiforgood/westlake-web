@@ -100,19 +100,11 @@ export default function Navbar() {
         ))}
       </NavbarContent>
       
-      <NavbarContent as="div" justify="end">
+      <NavbarContent justify="end">
           {isAuthenticated ? (
-            <Dropdown placement="bottom-end">
+            <Dropdown placement="bottom-end" as='button'>
               <DropdownTrigger>
-                <Button
-                  variant="light"
-                  color="secondary"
-                  size="sm"
-                  radius="full"
-                  className="w-8"
-                  isIconOnly
-                >
-                  <div className="flex items-center gap-2">
+                  <Button isIconOnly variant="light" className="flex items-center gap-2">
                   {profile?.avatarUrl ? (
                         <Image
                           src={profile.avatarUrl}
@@ -126,8 +118,7 @@ export default function Navbar() {
                           variant="beam"
                         />
                       )}
-                  </div>
-                </Button>
+                  </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem key="user" className="h-14 gap-2">
