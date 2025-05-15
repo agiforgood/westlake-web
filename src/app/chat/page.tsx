@@ -1,6 +1,5 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { getChatSessions, getMessages, sendMessage } from "@/lib/chatApi";
@@ -51,7 +50,6 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const { isAuthenticated } = useLogto();
-  const [profile, setProfile] = useState<any>(null);
   const [token, setToken] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -59,6 +57,14 @@ export default function ChatPage() {
   const MAX_MESSAGE_LENGTH = 1000;
   const [userProfiles, setUserProfiles] = useState([]);
   const [isSending, setIsSending] = useState(false);
+  const [loggedInUserId, setLoggedInUserId] = useState("");
+
+  useEffect(() => {
+    const loggedInUserId = localStorage.getItem("userId");
+    if (loggedInUserId) {
+      setLoggedInUserId(loggedInUserId);
+    }
+  }, []);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -73,10 +79,6 @@ export default function ChatPage() {
     if (isAuthenticated) {
       const accessToken = localStorage.getItem("accessToken") ?? "";
       setToken(accessToken);
-      getMyProfile(accessToken ?? "").then((data) => {
-        setProfile(data.profile);
-      });
-      // 获取所有用户信息
       getAllProfiles(accessToken).then((data) => {
         setUserProfiles(data.profiles || []);
       });
@@ -198,7 +200,7 @@ export default function ChatPage() {
                   )
                   .map((session) => {
                     const targetId =
-                      session.receiver_id === profile?.userId
+                      session.receiver_id === loggedInUserId
                         ? session.sender_id
                         : session.receiver_id;
 
@@ -252,7 +254,7 @@ export default function ChatPage() {
                           {formatChatTime(session.updated_at || "")}
                         </div>
                         {session.updated_at === session.created_at &&
-                          profile?.userId !== session.sender_id && (
+                          loggedInUserId !== session.sender_id && (
                             <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
                           )}
                       </div>
@@ -273,9 +275,9 @@ export default function ChatPage() {
               ) : (
                 <>
                   {messages.map((msg) => {
-                    const currentUserId = profile?.userId;
-                    const isMe = msg.senderId === currentUserId;
+                    const isMe = msg.senderId === loggedInUserId;
                     const senderProfile = getUserProfile(msg.senderId);
+
                     return (
                       <div
                         key={msg.id}
@@ -294,7 +296,7 @@ export default function ChatPage() {
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center">
+                              <div className="w-full h-full flex items-start justify-center">
                                 <Avatar
                                   className="w-8 h-8"
                                   name={senderProfile?.userId ?? ""}
@@ -312,7 +314,9 @@ export default function ChatPage() {
                           >
                             {!isMe && (
                               <span className="font-medium">
-                                {senderProfile?.name || msg.sender}
+                                {senderProfile?.name ||
+                                  msg.sender ||
+                                  senderProfile?.userId}
                               </span>
                             )}
                             <span className={`ml-2 text-xs text-gray-400`}>
@@ -330,11 +334,11 @@ export default function ChatPage() {
                           </div>
                         </div>
                         {isMe && (
-                          <div className="ml-2 md:ml-4 overflow-hidden">
-                            {profile?.avatar ? (
+                          <div className="mr-2 md:mr-4 overflow-hidden ml-2">
+                            {senderProfile?.avatar ? (
                               <Image
-                                src={profile.avatar}
-                                alt={profile.name}
+                                src={senderProfile.avatar}
+                                alt={senderProfile.name}
                                 width={48}
                                 height={48}
                                 className="w-full h-full object-cover"
@@ -343,7 +347,7 @@ export default function ChatPage() {
                               <div className="w-full h-full flex items-center justify-center">
                                 <Avatar
                                   className="w-8 h-8"
-                                  name={profile?.userId ?? ""}
+                                  name={senderProfile?.userId ?? ""}
                                   variant="beam"
                                 />
                               </div>
@@ -410,7 +414,7 @@ export default function ChatPage() {
                       )
                       .map((session) => {
                         const targetId =
-                          session.receiver_id === profile?.userId
+                          session.receiver_id === loggedInUserId
                             ? session.sender_id
                             : session.receiver_id;
                         const userProfile = getUserProfile(targetId);
@@ -464,7 +468,7 @@ export default function ChatPage() {
                               {formatChatTime(session.updated_at || "")}
                             </div>
                             {session.updated_at === session.created_at &&
-                              profile?.userId !== session.sender_id && (
+                              loggedInUserId !== session.sender_id && (
                                 <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
                               )}
                           </div>
