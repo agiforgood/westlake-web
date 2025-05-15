@@ -5,7 +5,7 @@ import { Form, Button, addToast, Image } from "@heroui/react";
 import AgAvatar from "@/components/Form/AgAvatar";
 
 import { UserProfile } from "@/type";
-
+import { useRouter } from "next/navigation";
 type FormItem = {
   label: string;
   name: string;
@@ -160,6 +160,7 @@ export default function ProfileReadOnly({
   isOther?: boolean;
 }) {
   console.log(profile);
+  const router = useRouter();
   const [profileFormData, setProfileFormData] = useState<FormItem[]>([]);
 
   const updateProfileFormData = (data: UserProfile) => {
@@ -202,7 +203,17 @@ export default function ProfileReadOnly({
       <div className="flex items-center justify-between gap-2">
         <AgAvatar profile={profile} />
         {isOther && (
-          <Button variant="bordered" radius="full">
+          <Button
+            variant="bordered"
+            radius="full"
+            onPress={() => {
+              if (profile?.profile.userId) {
+                router.push(`/chat/${profile.profile.userId}`);
+              } else {
+                router.push(`/chat`);
+              }
+            }}
+          >
             私信
           </Button>
         )}
