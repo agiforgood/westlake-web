@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
-import { Form, Button, addToast } from "@heroui/react";
+import { Form, Button, addToast, Spinner } from "@heroui/react";
 import AgInput from "@/components/Form/AgInput";
 import AgRadio from "@/components/Form/AgRadio";
 import AgTextarea from "@/components/Form/AgTextarea";
@@ -275,8 +275,7 @@ export default function ProfileForm() {
     e.preventDefault();
 
     const data = Object.fromEntries(new FormData(e.currentTarget));
-    console.log(data);
-    console.log(coreSkills);
+
     const snapshot = {
       handle: handle,
       gender: parseInt(data.gender as string),
@@ -318,10 +317,25 @@ export default function ProfileForm() {
     }
   };
 
+  if (loading)
+    return (
+      <div className="flex flex-col min-h-screen">
+        <div className="flex-grow text-center mt-10">
+          <Spinner label="加载中..." />
+        </div>
+      </div>
+    );
+  if (!profile)
+    return (
+      <div className="flex flex-col min-h-screen">
+        <div className="flex-grow text-center mt-10">未找到用户信息</div>
+      </div>
+    );
+
   return (
     <Form className="w-full space-y-10" onSubmit={handleSubmitProfile}>
       {profileFormData.map((item) => (
-        <div className="w-full" id={item.name}>
+        <div className="w-full" key={item.name} id={item.name}>
           <ProfileFormComponent
             key={item.name}
             {...item}

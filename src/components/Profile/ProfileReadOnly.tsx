@@ -159,10 +159,8 @@ export default function ProfileReadOnly({
   profile: UserProfile | null;
   isOther?: boolean;
 }) {
-  console.log(profile);
   const router = useRouter();
   const [profileFormData, setProfileFormData] = useState<FormItem[]>([]);
-
   const updateProfileFormData = (data: UserProfile) => {
     const updatedForm = profileForm.map((item) => {
       const newItem = { ...item };
@@ -237,9 +235,12 @@ export default function ProfileReadOnly({
         <div className="text-sm text-[#333]">
           <span>可参与时间</span>
         </div>
-        <div className="text-xs text-[#666]">
+        <div className="text-xs text-[#666] flex flex-wrap gap-2">
           {profile?.availability.map((availability) => (
-            <div key={availability.weekDay} className="flex flex-row gap-2">
+            <div
+              key={availability.weekDay + availability.timeSlot}
+              className="flex flex-row"
+            >
               <span>{getWeekdayText(availability.weekDay)}</span>
               <span>{getTimeSlotText(availability.timeSlot)}</span>
             </div>

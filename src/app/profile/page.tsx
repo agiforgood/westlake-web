@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Card, Divider, Button } from "@heroui/react";
+import { Card, Divider, Button, Spinner } from "@heroui/react";
 import ProfileReadOnly from "@/components/Profile/ProfileReadOnly";
 import ProfileAnchor from "@/components/Profile/ProfileAnchor";
 import { useRouter } from "next/navigation";
@@ -27,6 +27,21 @@ export default function ProfileEditPage() {
       });
     }
   }, [isAuthenticated, router]);
+
+  if (loading)
+    return (
+      <div className="flex flex-col min-h-screen">
+        <div className="flex-grow text-center mt-10">
+          <Spinner label="加载中..." />
+        </div>
+      </div>
+    );
+  if (!profile)
+    return (
+      <div className="flex flex-col min-h-screen">
+        <div className="flex-grow text-center mt-10">未找到用户信息</div>
+      </div>
+    );
   return (
     <div className="flex flex-col items-center bg-gray-50 min-h-screen py-8 px-2 sm:px-0">
       <Card className="w-full max-w-3xl bg-white shadow-lg rounded-3xl mb-10 px-2 sm:px-6 py-6">

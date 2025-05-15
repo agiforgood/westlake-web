@@ -9,7 +9,6 @@ export default function AgLabel({
   isRequired?: boolean;
   content?: string;
 }) {
-  console.log(label);
   return (
     <div className="text-sm text-gray-500">
       <span>{label}</span>
