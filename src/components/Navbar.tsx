@@ -59,7 +59,9 @@ export default function Navbar() {
     if (isAuthenticated) {
       getAccessToken("https://api.westlakeaiforgood.com").then((token) => {
         localStorage.setItem("accessToken", token ?? "");
+        
         getMyProfile(token ?? "").then((data) => {
+          localStorage.setItem("userId", data.profile?.userId||"")
           setProfile(data.profile);
         });
       });
@@ -146,6 +148,7 @@ export default function Navbar() {
                   onPress={() => {
                     signOut("https://westlakeaiforgood.com/");
                     localStorage.removeItem("accessToken");
+                    localStorage.removeItem("userId");
                   }}
                 >
                   退出登录

@@ -57,6 +57,7 @@ interface UserAvailability {
 
 export default function UserProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [isOther, setIsOther] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
   const userId = pathname.split("/").pop();
@@ -67,6 +68,7 @@ export default function UserProfilePage() {
       const token = localStorage.getItem("accessToken") ?? "";
       getUserProfile(userId as string, token).then((data) => {
         console.log(data);
+        setIsOther(data.profile?.userId != localStorage.getItem('userId'));
         setProfile(data);
         setLoading(false);
       });
@@ -112,7 +114,7 @@ export default function UserProfilePage() {
             <ProfileAnchor />
           </div>
           <div className="col-span-9">
-            <ProfileReadOnly profile={profile} isOther={true} />
+            <ProfileReadOnly profile={profile} isOther={isOther} />
           </div>
         </div>
       </Card>
