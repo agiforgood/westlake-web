@@ -26,6 +26,7 @@ interface Profile {
   userId: string;
   gender: number;
   handle: string;
+  avatarUrl: string;
   role: string;
 }
 
@@ -107,11 +108,19 @@ export default function Navbar() {
                   isIconOnly
                 >
                   <div className="flex items-center gap-2">
-                    <Avatar
-                      className="w-8 h-8"
-                      name={profile?.userId ?? ""}
-                      variant="beam"
-                    />
+                  {profile?.avatarUrl ? (
+                        <Image
+                          src={profile.avatarUrl}
+                          alt="头像"
+                          className="w-8 h-8"
+                        />
+                      ) : (
+                        <Avatar
+                          className="w-8 h-8"
+                          name={profile?.userId??""}
+                          variant="beam"
+                        />
+                      )}
                   </div>
                 </Button>
               </DropdownTrigger>
