@@ -260,87 +260,95 @@ export default function ChatPage() {
           <div className="flex-1 flex flex-col rounded-[16px] bg-white">
             {/* 聊天内容 */}
             <div className="flex-1 overflow-y-auto p-4 md:p-8 rounded-[16px] max-h-[450px] min-h-[450px]">
-              {messages.map((msg) => {
-                const currentUserId = profile?.userId;
-                const isMe = msg.senderId === currentUserId;
-                const senderProfile = getUserProfile(msg.senderId);
-                return (
-                  <div
-                    key={msg.id}
-                    className={`mb-8 flex ${
-                      isMe ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    {!isMe && (
-                      <div className="mr-2 md:mr-4 overflow-hidden">
-                        {senderProfile?.avatar ? (
-                          <Image
-                            src={senderProfile.avatar}
-                            alt={senderProfile.name}
-                            width={48}
-                            height={48}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <Avatar
-                              className="w-8 h-8"
-                              name={senderProfile?.userId ?? ""}
-                              variant="beam"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    )}
-                    <div>
+              {!selectedId ? (
+                <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+                  您尚未选择联系人
+                </div>
+              ) : (
+                <>
+                  {messages.map((msg) => {
+                    const currentUserId = profile?.userId;
+                    const isMe = msg.senderId === currentUserId;
+                    const senderProfile = getUserProfile(msg.senderId);
+                    return (
                       <div
-                        className={`flex items-center mb-1 ${
-                          isMe ? "justify-end" : ""
+                        key={msg.id}
+                        className={`mb-8 flex ${
+                          isMe ? "justify-end" : "justify-start"
                         }`}
                       >
                         {!isMe && (
-                          <span className="font-medium">
-                            {senderProfile?.name || msg.sender}
-                          </span>
+                          <div className="mr-2 md:mr-4 overflow-hidden">
+                            {senderProfile?.avatar ? (
+                              <Image
+                                src={senderProfile.avatar}
+                                alt={senderProfile.name}
+                                width={48}
+                                height={48}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Avatar
+                                  className="w-8 h-8"
+                                  name={senderProfile?.userId ?? ""}
+                                  variant="beam"
+                                />
+                              </div>
+                            )}
+                          </div>
                         )}
-                        <span className={`ml-2 text-xs text-gray-400`}>
-                          {formatChatTime(msg.updatedAt)}
-                        </span>
-                      </div>
-                      <div
-                        className={`rounded-lg p-3 md:p-4 ${
-                          isMe
-                            ? "bg-blue-100 text-right text-blue-900 break-all"
-                            : "bg-gray-100 text-gray-700 break-all"
-                        }`}
-                      >
-                        {msg.content}
-                      </div>
-                    </div>
-                    {isMe && (
-                      <div className="ml-2 md:ml-4 overflow-hidden">
-                        {profile?.avatar ? (
-                          <Image
-                            src={profile.avatar}
-                            alt={profile.name}
-                            width={48}
-                            height={48}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <Avatar
-                              className="w-8 h-8"
-                              name={profile?.userId ?? ""}
-                              variant="beam"
-                            />
+                        <div>
+                          <div
+                            className={`flex items-center mb-1 ${
+                              isMe ? "justify-end" : ""
+                            }`}
+                          >
+                            {!isMe && (
+                              <span className="font-medium">
+                                {senderProfile?.name || msg.sender}
+                              </span>
+                            )}
+                            <span className={`ml-2 text-xs text-gray-400`}>
+                              {formatChatTime(msg.updatedAt)}
+                            </span>
+                          </div>
+                          <div
+                            className={`rounded-lg p-3 md:p-4 ${
+                              isMe
+                                ? "bg-blue-100 text-right text-blue-900 break-all"
+                                : "bg-gray-100 text-gray-700 break-all"
+                            }`}
+                          >
+                            {msg.content}
+                          </div>
+                        </div>
+                        {isMe && (
+                          <div className="ml-2 md:ml-4 overflow-hidden">
+                            {profile?.avatar ? (
+                              <Image
+                                src={profile.avatar}
+                                alt={profile.name}
+                                width={48}
+                                height={48}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Avatar
+                                  className="w-8 h-8"
+                                  name={profile?.userId ?? ""}
+                                  variant="beam"
+                                />
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
-                    )}
-                  </div>
-                );
-              })}
+                    );
+                  })}
+                </>
+              )}
               <div ref={messagesEndRef} />
             </div>
 
