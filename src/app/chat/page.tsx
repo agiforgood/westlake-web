@@ -17,6 +17,7 @@ import {
   useDisclosure,
 } from "@heroui/react";
 import Avatar from "boring-avatars";
+import { useSearchParams } from "next/navigation";
 
 interface ChatSession {
   id: string;
@@ -42,7 +43,9 @@ interface Message {
 }
 
 export default function ChatPage() {
-  const { receiverId } = useParams();
+  const searchParams = useSearchParams();
+  const chatId = searchParams.get("chatId");
+
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -89,7 +92,7 @@ export default function ChatPage() {
             new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
         ) || []
       );
-      setSelectedId(receiverId as string);
+      setSelectedId(chatId as string);
     } catch (error) {
       console.error("Failed to load chat sessions:", error);
     }
@@ -100,7 +103,7 @@ export default function ChatPage() {
     if (token) {
       loadSessions(token);
     }
-  }, [token, receiverId]);
+  }, [token, chatId]);
 
   const loadMessages = async (selectedId: string, token: string) => {
     if (selectedId && token) {
