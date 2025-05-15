@@ -229,6 +229,7 @@ export default function ChatPage() {
                   ?.filter(
                     (session) => session.receiver_id !== session?.sender_id
                   )
+                  ?.filter((session) => !!session.receiver_id)
                   //不能出现重复的receiver_id
                   .filter(
                     (session, index, self) =>
@@ -451,6 +452,7 @@ export default function ChatPage() {
                       ?.filter(
                         (session) => session.receiver_id !== session?.sender_id
                       )
+                      ?.filter((session) => !!session.receiver_id)
                       //不能出现重复的receiver_id
                       .filter(
                         (session, index, self) =>
