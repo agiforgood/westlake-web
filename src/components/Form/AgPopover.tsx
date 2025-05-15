@@ -1,21 +1,28 @@
-import { Popover, PopoverTrigger, PopoverContent, Button } from "@heroui/react";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  Image,
+  Button,
+} from "@heroui/react";
 
 export default function AgPopover({
   content,
-  placement = "top",
+  placement = "right",
 }: {
   content: string;
   placement?: "top" | "bottom" | "left" | "right";
 }) {
   return (
-    <Popover placement={placement}>
+    <Popover color="primary" placement={placement}>
       <PopoverTrigger>
-        <Button>Open Popover</Button>
+        <Button isIconOnly variant="light" size="sm">
+          <Image src="/tips.svg" alt="info" width={16} height={16} />
+        </Button>
       </PopoverTrigger>
       <PopoverContent>
         <div className="px-1 py-2">
-          <div className="text-small font-bold">Popover Content</div>
-          <div className="text-tiny">This is the popover content</div>
+          <div className="w-48 text-tiny">{content}</div>
         </div>
       </PopoverContent>
     </Popover>

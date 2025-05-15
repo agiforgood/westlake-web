@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Textarea } from "@heroui/react";
+import AgLabel from "./AgLabel";
 
 export default function AgTextarea({
   label,
@@ -10,6 +11,7 @@ export default function AgTextarea({
   isRequired,
   defaultValue,
   onChange,
+  popoverContent,
 }: {
   label: string;
   name: string;
@@ -19,6 +21,7 @@ export default function AgTextarea({
   isRequired?: boolean;
   onChange?: (value: string) => void;
   defaultValue?: string;
+  popoverContent?: string;
 }) {
   const [value, setValue] = useState(defaultValue);
   const handleChange = (value: string) => {
@@ -41,12 +44,17 @@ export default function AgTextarea({
         ],
       }}
       key={variant}
-      label={label}
+      label={
+        <AgLabel
+          label={label}
+          isRequired={isRequired}
+          content={popoverContent}
+        />
+      }
       name={name}
       labelPlacement={labelPlacement}
       placeholder={placeholder}
       variant={variant}
-      isRequired={isRequired}
       value={value}
       defaultValue={defaultValue}
       onValueChange={handleChange}

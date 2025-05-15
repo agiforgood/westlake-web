@@ -20,11 +20,11 @@ export default function ProfileAnchor({ className }: { className?: string }) {
     },
   ];
   return (
-    <nav className={cn("fixed", className)}>
+    <nav className={cn(className)}>
       <div className="flex flex-col gap-2">
-        <div className="text-sm text-primary">说明书</div>
+        <div className="text-lg text-primary">说明书</div>
         {anchorList.map((item) => (
-          <Link className="text-sm" key={item.href} href={item.href}>
+          <Link size="sm" color="foreground" key={item.href} href={item.href}>
             {item.label}
           </Link>
         ))}
