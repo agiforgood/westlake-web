@@ -183,7 +183,7 @@ export default function ChatPage() {
           </Link>
         </div>
 
-        <div className="flex gap-12">
+        <div className="flex gap-6">
           {/* 左侧会话列表 - 桌面端 */}
           {!isMobile && (
             <div className="w-80 bg-white flex flex-col rounded-[16px]">
