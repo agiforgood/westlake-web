@@ -93,7 +93,7 @@ export default function NewHomePage() {
           </SwiperSlide>
         </Swiper>
       </div>
-      <footer className="w-full absolute bottom-0 left-0 flex flex-col items-center pb-6 select-none">
+      <footer style={{zIndex:1}} className="w-full absolute bottom-0 left-0 flex flex-col items-center pb-6 select-none">
         <div className="text-[#444] text-lg font-normal">© 2025 智能向善社会创新网络. 保留所有权利</div>
         <a
           href="https://beian.miit.gov.cn/"
