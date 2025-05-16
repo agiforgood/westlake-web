@@ -8,17 +8,8 @@ import AgAddressSelect from "@/components/Form/AgAddressSelect";
 import AgCheckBox from "@/components/Form/AgCheckBox";
 import AgWeekCheckBox from "@/components/Form/AgWeekCheckBox";
 import { useRouter } from "next/navigation";
-import { useLogto } from "@logto/react";
 
-import {
-  addTag,
-  deleteMyAvailability,
-  deleteTag,
-  getAllTags,
-  getMyProfile,
-  updateMyAvailability,
-  updateMyProfile,
-} from "@/lib/userProfileApi";
+import { updateMyProfile } from "@/lib/userProfileApi";
 
 import { UserProfile } from "@/type";
 
@@ -122,6 +113,7 @@ const profileForm: FormItem[] = [
     label: "coreSkills",
     name: "coreSkills",
     type: "checkbox",
+    isRequired: true,
   },
   {
     label: "除了家庭心理健康外，我还想或正在解决哪些社会问题",
@@ -220,6 +212,7 @@ const ProfileFormComponent = ({
       return (
         <AgCheckBox
           name={name}
+          isRequired={isRequired}
           defaultValue={defaultValue as string[]}
           onChange={onChange}
         />
@@ -229,15 +222,20 @@ const ProfileFormComponent = ({
   }
 };
 
-export default function ProfileForm() {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+export default function ProfileForm({
+  profile,
+  loading,
+}: {
+  profile: UserProfile | null;
+  loading: boolean;
+}) {
   const [handle, setHandle] = useState("");
   const [coreSkills, setCoreSkills] = useState<string[]>([]);
   const [profileFormData, setProfileFormData] = useState<FormItem[]>([]);
   const router = useRouter();
-  const { isAuthenticated } = useLogto();
   const [token, setToken] = useState("");
+
+  const [isFormFinished, setIsFormFinished] = useState(false);
 
   const updateProfileFormData = (data: UserProfile) => {
     const updatedForm = profileForm.map((item) => {
@@ -248,10 +246,10 @@ export default function ProfileForm() {
       if (item.name == "address") {
         newItem.defaultValue = [
           (data.profile as any).province ||
-          (data.profile as any).newSnapshot?.province,
+            (data.profile as any).newSnapshot?.province,
           (data.profile as any).city || (data.profile as any).newSnapshot?.city,
           (data.profile as any).district ||
-          (data.profile as any).newSnapshot?.district,
+            (data.profile as any).newSnapshot?.district,
         ];
       }
       if (item.name == "coreSkills") {
@@ -273,17 +271,14 @@ export default function ProfileForm() {
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (profile) {
+      updateProfileFormData(profile);
+      setHandle(profile.profile.handle);
       const accessToken = localStorage.getItem("accessToken") ?? "";
       setToken(accessToken);
-      getMyProfile(accessToken).then((data) => {
-        setProfile(data);
-        setLoading(false);
-        setHandle(data.profile.handle);
-        updateProfileFormData(data);
-      });
+      setIsFormFinished(true);
     }
-  }, [isAuthenticated, router]);
+  }, [profile, router]);
 
   const handleSubmitProfile = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -331,7 +326,7 @@ export default function ProfileForm() {
     }
   };
 
-  if (loading)
+  if (loading || !isFormFinished)
     return (
       <div className="flex flex-col min-h-screen">
         <div className="flex-grow text-center mt-10">

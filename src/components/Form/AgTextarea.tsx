@@ -33,7 +33,7 @@ export default function AgTextarea({
   return (
     <Textarea
       classNames={{
-        label: "text-foreground",
+        label: "flex flex-row items-center after:hidden",
         input: ["bg-transparent"],
         innerWrapper: "bg-transparent",
         inputWrapper: [
@@ -59,6 +59,7 @@ export default function AgTextarea({
       placeholder={placeholder}
       variant={variant}
       value={value}
+      isRequired={isRequired}
       defaultValue={defaultValue}
       onValueChange={handleChange}
     />

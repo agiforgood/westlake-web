@@ -3,11 +3,16 @@ import { useEffect, useState } from "react";
 import { Card, Divider } from "@heroui/react";
 import ProfileForm from "@/components/Profile/ProfileForm";
 import ProfileAnchor from "@/components/Profile/ProfileAnchor";
+
+import { useProfile } from "@/app/providers/ProfileProvider";
+
 export default function ProfileEditPage() {
+  const { profile, loading } = useProfile();
+
   return (
     <div className="flex flex-col items-center bg-gray-50 min-h-screen py-8 px-2 sm:px-0">
       <Card className="w-full max-w-3xl bg-white shadow-lg rounded-3xl mb-10 px-2 sm:px-6 py-6">
-        <h1 className="">志愿者说明书</h1>
+        <h1 className="text-xl font-bold">志愿者说明书</h1>
         <Divider className="bg-primary/50 my-7" />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <p className="col-span-2 text-sm leading-7 text-gray-500">
@@ -19,7 +24,7 @@ export default function ProfileEditPage() {
             <ProfileAnchor />
           </div>
           <div className="col-span-9">
-            <ProfileForm />
+            <ProfileForm profile={profile} loading={loading} />
           </div>
         </div>
       </Card>

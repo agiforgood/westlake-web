@@ -58,10 +58,12 @@ export default function AgCheckBox({
   name,
   defaultValue,
   onChange,
+  isRequired,
 }: {
   name: string;
   defaultValue?: string[];
   onChange?: (value: string[]) => void;
+  isRequired?: boolean;
 }) {
   const [selected, setSelected] = useState<string[]>(defaultValue || []);
 
@@ -83,6 +85,7 @@ export default function AgCheckBox({
         onChange={handleChange}
         name={name}
         defaultValue={defaultValue}
+        isRequired={isRequired}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {skillGroups.map((group) => (

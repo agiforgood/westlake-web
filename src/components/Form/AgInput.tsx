@@ -10,7 +10,7 @@ export default function AgInput({
   description,
   type = "text",
   labelPlacement = "outside",
-  errorMessage = " ",
+  errorMessage,
   isRequired,
   defaultValue,
   disabled,
@@ -37,7 +37,7 @@ export default function AgInput({
   return (
     <Input
       classNames={{
-        label: "text-foreground",
+        label: "flex flex-row items-center after:hidden",
         input: ["bg-transparent"],
         innerWrapper: "bg-transparent",
         inputWrapper: [
@@ -49,7 +49,7 @@ export default function AgInput({
           "data-[focus=true]:bg-[#F8F9FB]",
         ],
       }}
-      // isRequired={isRequired}
+      isRequired={isRequired}
       errorMessage={errorMessage}
       label={
         <AgLabel

@@ -28,12 +28,13 @@ export default function AgRadio({
   return (
     <RadioGroup
       classNames={{
-        label: "text-foreground text-sm",
+        label: "flex flex-row items-center after:hidden",
       }}
       label={<AgLabel label={label} isRequired={isRequired} />}
       name={name}
       orientation="horizontal"
       value={value}
+      isRequired={isRequired}
       onValueChange={handleValueChange}
       defaultValue={defaultValue}
     >

@@ -4,29 +4,12 @@ import { Card, Divider, Button, Spinner } from "@heroui/react";
 import ProfileReadOnly from "@/components/Profile/ProfileReadOnly";
 import ProfileAnchor from "@/components/Profile/ProfileAnchor";
 import { useRouter } from "next/navigation";
-import { useLogto } from "@logto/react";
 
-import { getMyProfile } from "@/lib/userProfileApi";
-import { UserProfile } from "@/type";
+import { useProfile } from "@/app/providers/ProfileProvider";
 
 export default function ProfileEditPage() {
   const router = useRouter();
-  const { isAuthenticated } = useLogto();
-
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [token, setToken] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      const accessToken = localStorage.getItem("accessToken") ?? "";
-      setToken(accessToken);
-      getMyProfile(accessToken).then((data) => {
-        setProfile(data);
-        setLoading(false);
-      });
-    }
-  }, [isAuthenticated, router]);
+  const { profile, loading, error } = useProfile();
 
   if (loading)
     return (
@@ -46,7 +29,7 @@ export default function ProfileEditPage() {
     <div className="flex flex-col items-center bg-gray-50 min-h-screen py-8 px-2 sm:px-0">
       <Card className="w-full max-w-3xl bg-white shadow-lg rounded-3xl mb-10 px-2 sm:px-6 py-6">
         <div className="flex justify-between items-center">
-          <h1 className="">智能向善社会创新网络志愿者说明书</h1>
+          <p className="text-xl font-bold">智能向善社会创新网络志愿者说明书</p>
           <Button
             variant="bordered"
             radius="full"

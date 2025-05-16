@@ -16,19 +16,14 @@ import {
   Link,
 } from "@heroui/react";
 // import Link from "next/link";
+
 import Avatar from "boring-avatars";
 import { useEffect, useState } from "react";
-import { getMyProfile } from "@/lib/userProfileApi";
 import { useLogto } from "@logto/react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-interface Profile {
-  userId: string;
-  gender: number;
-  handle: string;
-  avatarUrl: string;
-  role: string;
-}
+
+import { useProfile } from "@/app/providers/ProfileProvider";
 
 const routes = [
   {
@@ -49,27 +44,14 @@ const routes = [
 ];
 
 export default function Navbar() {
-  const { signIn, signOut, isAuthenticated, getAccessToken } = useLogto();
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const { signIn, signOut, isAuthenticated } = useLogto();
+  // const [profile, setProfile] = useState<Profile | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { profile, loading, error } = useProfile();
+
   const router = useRouter();
   // 获取当前路径
   const pathname = usePathname();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      getAccessToken("https://api.westlakeaiforgood.com").then((token) => {
-        localStorage.setItem("accessToken", token ?? "");
-        
-        getMyProfile(token ?? "").then((data) => {
-          localStorage.setItem("userId", data.profile?.userId||"")
-          setProfile(data.profile);
-        }).catch((ex)=>{
-            console.error('loading profile failed',ex);
-        });
-      });
-    }
-  }, [isAuthenticated, getAccessToken]);
 
   return (
     <HeroNavbar onMenuOpenChange={setIsMenuOpen}>
@@ -87,7 +69,7 @@ export default function Navbar() {
       </NavbarContent>
 
       <NavbarContent className="sm:hidden">
-      <NavbarBrand>
+        <NavbarBrand>
           <Link href="/" color="foreground" className="flex items-center gap-2">
             <Image src="/agi_logo.svg" alt="logo" width={36} height={36} />
             <p className="font-bold text-inherit">智能向善</p>
@@ -109,73 +91,86 @@ export default function Navbar() {
           </NavbarItem>
         ))}
       </NavbarContent>
-      
+
       <NavbarContent justify="end">
-          {isAuthenticated ? (
-            <Dropdown placement="bottom-end">
-              <DropdownTrigger>
-                  <Button isIconOnly variant="light" className="flex items-center gap-2">
-                  {profile?.avatarUrl ? (
-                        <Image
-                          src={profile.avatarUrl}
-                          alt="头像"
-                          className="w-8 h-8"
-                        />
-                      ) : (
-                        <Avatar
-                          as="button"
-                          className="w-8 h-8"
-                          name={profile?.userId??""}
-                          variant="beam"
-                        />
-                      )}
-                  </Button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Profile Actions" variant="flat">
-                <DropdownItem key="user" className="h-14 gap-2">
-                  <p className="font-semibold">已登录</p>
-                  <p className="font-semibold">{profile?.handle}</p>
-                </DropdownItem>
-                <DropdownItem onPress={()=>{
-                  router.push('/profile')
-                }} key="profile">
-                  志愿者说明书
-                </DropdownItem>
-                <DropdownItem onPress={()=>{
-                    router.push('/chat')
-                  }} key="chat">
-                  我的私信
-                </DropdownItem>
-                {profile?.role == "admin" ? (
-                  <DropdownItem onPress={()=>{
-                    router.push('/admin')
-                  }} key="admin">
-                    管理后台
-                  </DropdownItem>
-                ) : null}
+        {isAuthenticated ? (
+          <Dropdown placement="bottom-end">
+            <DropdownTrigger>
+              <Button
+                isIconOnly
+                variant="light"
+                className="flex items-center gap-2"
+              >
+                {profile?.profile?.avatarUrl ? (
+                  <Image
+                    src={profile.profile.avatarUrl}
+                    alt="头像"
+                    className="w-8 h-8"
+                  />
+                ) : (
+                  <Avatar
+                    as="button"
+                    className="w-8 h-8"
+                    name={profile?.profile?.userId ?? ""}
+                    variant="beam"
+                  />
+                )}
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Profile Actions" variant="flat">
+              <DropdownItem key="user" className="h-14 gap-2">
+                <p className="font-semibold">已登录</p>
+                <p className="font-semibold">{profile?.profile?.handle}</p>
+              </DropdownItem>
+              <DropdownItem
+                onPress={() => {
+                  router.push("/profile");
+                }}
+                key="profile"
+              >
+                志愿者说明书
+              </DropdownItem>
+              <DropdownItem
+                onPress={() => {
+                  router.push("/chat");
+                }}
+                key="chat"
+              >
+                我的私信
+              </DropdownItem>
+              {profile?.profile?.role == "admin" ? (
                 <DropdownItem
-                  key="logout"
-                  color="danger"
                   onPress={() => {
-                    signOut("https://westlakeaiforgood.com/");
-                    localStorage.removeItem("accessToken");
-                    localStorage.removeItem("userId");
+                    router.push("/admin");
                   }}
+                  key="admin"
                 >
-                  退出登录
+                  管理后台
                 </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          ) : (
-            <Button
-              color="secondary"
-              variant="flat"
-              onPress={() => signIn("https://westlakeaiforgood.com/callback")}
-            >
-              登录
-            </Button>
-          )}
-        </NavbarContent>
+              ) : null}
+              <DropdownItem
+                key="logout"
+                color="danger"
+                onPress={() => {
+                  signOut("https://westlakeaiforgood.com/");
+                  localStorage.removeItem("accessToken");
+                  localStorage.removeItem("userId");
+                }}
+              >
+                退出登录
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        ) : (
+          <Button
+            color="secondary"
+            variant="flat"
+            onPress={() => signIn("https://westlakeaiforgood.com/callback")}
+          >
+            登录
+          </Button>
+        )}
+      </NavbarContent>
 
       <NavbarMenu>
         <NavbarMenuItem>
