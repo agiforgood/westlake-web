@@ -3,8 +3,8 @@ import { Image } from "@heroui/react";
 import { UserProfile } from "@/type";
 export default function AgAvatar({
   profile,
-  width = 18,
-  height = 18,
+  width = 80,
+  height = 80,
 }: {
   profile: UserProfile | null;
   width?: number;
@@ -14,13 +14,17 @@ export default function AgAvatar({
     <div>
       {profile?.profile.avatarUrl ? (
         <Image
+          width={width}
+          height={height}
           src={profile.profile.avatarUrl}
           alt="头像"
-          className={`w-${width} h-${height} rounded-full border`}
+          className={`rounded-full border`}
         />
       ) : (
         <Avatar
-          className={`w-${width} h-${height} rounded-full border`}
+          width={width}
+          height={height}
+          className={`rounded-full border`}
           name={profile?.profile.userId ?? ""}
           variant="beam"
         />
