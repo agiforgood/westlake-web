@@ -88,6 +88,7 @@ export default function Navbar() {
               onPress={() => {
                 if (route.label == "志愿者" && !isAuthenticated) {
                   signIn("https://westlakeaiforgood.com/callback");
+                  return false; // 阻止默认行为
                 }
               }}
             >
