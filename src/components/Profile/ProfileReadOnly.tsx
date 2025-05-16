@@ -55,17 +55,17 @@ const profileForm: FormItem[] = [
     type: "text",
     isRequired: true,
   },
-  {
-    label: "地址显示精度",
-    name: "locationVisibility",
-    type: "radio",
-    options: [
-      { label: "仅显示省份", value: "0" },
-      { label: "显示省份和城市", value: "1" },
-      { label: "显示省份、城市和区县", value: "2" },
-    ],
-    isRequired: true,
-  },
+  // {
+  //   label: "地址显示精度",
+  //   name: "locationVisibility",
+  //   type: "radio",
+  //   options: [
+  //     { label: "仅显示省份", value: "0" },
+  //     { label: "显示省份和城市", value: "1" },
+  //     { label: "显示省份、城市和区县", value: "2" },
+  //   ],
+  //   isRequired: true,
+  // },
   {
     label: "当前地址",
     name: "address",
@@ -91,8 +91,8 @@ const profileForm: FormItem[] = [
     label: "我能贡献的核心技能",
     name: "coreSkills",
     type: "checkbox",
-    description:
-      "为了更好地发挥您的专长并确保项目资源的有效配置，请您在以下核心技能清单中，仅勾选您确实具备专业水平并愿意贡献的技能领域）",
+    // description:
+    //   "为了更好地发挥您的专长并确保项目资源的有效配置，请您在以下核心技能清单中，仅勾选您确实具备专业水平并愿意贡献的技能领域）",
     isRequired: true,
   },
   {
