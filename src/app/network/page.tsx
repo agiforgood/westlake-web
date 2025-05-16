@@ -92,9 +92,10 @@ export default function NetworkPage() {
                     <Card
                       className="p-2"
                       key={profile.profile.userId}
-                      onPress={() =>
-                        router.push(`/profile/${profile.profile.userId}`)
-                      }
+                      onPress={() => {
+                        router.push(`/profile/${profile.profile.userId}`);
+                        window.scrollTo(0, 0);
+                      }}
                       isPressable
                     >
                       <CardHeader>
