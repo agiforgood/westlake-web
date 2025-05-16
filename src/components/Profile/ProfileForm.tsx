@@ -313,12 +313,13 @@ export default function ProfileForm({
     };
     const response = await updateMyProfile({ snapshot }, token);
     if (response) {
-      updateProfile();
       addToast({
         title: "保存成功",
         color: "success",
       });
       router.push("/profile");
+      window.scrollTo(0, 0);
+      updateProfile();
     } else {
       addToast({
         title: "保存失败",
