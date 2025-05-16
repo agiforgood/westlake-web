@@ -315,6 +315,7 @@ export default function ProfileForm({
     if (response) {
       addToast({
         title: "保存成功",
+        description: "内容审核立即生效",
         color: "success",
       });
       router.push("/profile");

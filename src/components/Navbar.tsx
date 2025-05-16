@@ -85,6 +85,11 @@ export default function Navbar() {
               color={pathname === route.href ? "primary" : "foreground"}
               href={route.href}
               isExternal={route.isExternal}
+              onPress={() => {
+                if (route.label == "志愿者" && !isAuthenticated) {
+                  signIn("https://westlakeaiforgood.com/callback");
+                }
+              }}
             >
               {route.label}
             </Link>
@@ -163,8 +168,9 @@ export default function Navbar() {
           </Dropdown>
         ) : (
           <Button
-            color="secondary"
+            color="primary"
             variant="flat"
+            radius="full"
             onPress={() => signIn("https://westlakeaiforgood.com/callback")}
           >
             登录
@@ -194,11 +200,11 @@ export default function Navbar() {
         <NavbarMenuItem>
           {isAuthenticated ? (
             <Link color="foreground" href="/network">
-              志愿者网络
+              志愿者
             </Link>
           ) : (
             <Link color="foreground" href="/">
-              志愿者网络
+              志愿者
             </Link>
           )}
         </NavbarMenuItem>
