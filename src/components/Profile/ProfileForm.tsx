@@ -225,9 +225,11 @@ const ProfileFormComponent = ({
 export default function ProfileForm({
   profile,
   loading,
+  updateProfile,
 }: {
   profile: UserProfile | null;
   loading: boolean;
+  updateProfile: () => void;
 }) {
   const [handle, setHandle] = useState("");
   const [coreSkills, setCoreSkills] = useState<string[]>([]);
@@ -278,7 +280,7 @@ export default function ProfileForm({
       setToken(accessToken);
       setIsFormFinished(true);
     }
-  }, [profile, router]);
+  }, [profile]);
 
   const handleSubmitProfile = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -311,10 +313,10 @@ export default function ProfileForm({
     };
     const response = await updateMyProfile({ snapshot }, token);
     if (response) {
+      updateProfile();
       addToast({
         title: "保存成功",
-        description: "等待审核后生效",
-        color: "warning",
+        color: "success",
       });
       router.push("/profile");
     } else {

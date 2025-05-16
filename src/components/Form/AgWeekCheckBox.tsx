@@ -4,12 +4,15 @@ import { Checkbox, addToast } from "@heroui/react";
 import { useLogto } from "@logto/react";
 import { UserProfile } from "@/type";
 
+import { useProfile } from "@/app/providers/ProfileProvider";
 import {
   deleteMyAvailability,
   updateMyAvailability,
 } from "@/lib/userProfileApi";
 
 export default function AgWeekCheckBox({ profile }: { profile: UserProfile }) {
+  const { updateProfile } = useProfile();
+
   const { isAuthenticated } = useLogto();
 
   const [token, setToken] = useState("");
@@ -47,6 +50,7 @@ export default function AgWeekCheckBox({ profile }: { profile: UserProfile }) {
         token
       );
       if (response) {
+        // updateProfile();
         addToast({
           title: "保存成功",
           description: "可参与时间已更新",

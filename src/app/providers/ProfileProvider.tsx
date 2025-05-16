@@ -14,6 +14,7 @@ interface ProfileContextType {
   setProfile: (profile: UserProfile | null) => void;
   loading: boolean;
   error: Error | null;
+  updateProfile: () => Promise<void>;
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
@@ -26,28 +27,34 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  const updateProfile = async () => {
+    try {
+      setLoading(true);
+      const token = await getAccessToken("https://api.westlakeaiforgood.com");
+      localStorage.setItem("accessToken", token ?? "");
+
+      const data = await getMyProfile(token ?? "");
+      localStorage.setItem("userId", data.profile?.userId || "");
+      setProfile(data);
+      setError(null);
+    } catch (ex) {
+      console.error("updating profile failed", ex);
+      setError(ex as Error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
-      if (isAuthenticated) {
-        getAccessToken("https://api.westlakeaiforgood.com").then((token) => {
-          localStorage.setItem("accessToken", token ?? "");
-
-          getMyProfile(token ?? "")
-            .then((data) => {
-              localStorage.setItem("userId", data.profile?.userId || "");
-              setProfile(data);
-              setLoading(false);
-            })
-            .catch((ex) => {
-              console.error("loading profile failed", ex);
-            });
-        });
-      }
+      updateProfile();
     }
   }, [isAuthenticated, router]);
 
   return (
-    <ProfileContext.Provider value={{ profile, setProfile, loading, error }}>
+    <ProfileContext.Provider
+      value={{ profile, setProfile, loading, error, updateProfile }}
+    >
       {children}
     </ProfileContext.Provider>
   );

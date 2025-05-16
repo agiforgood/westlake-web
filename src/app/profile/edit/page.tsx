@@ -7,7 +7,7 @@ import ProfileAnchor from "@/components/Profile/ProfileAnchor";
 import { useProfile } from "@/app/providers/ProfileProvider";
 
 export default function ProfileEditPage() {
-  const { profile, loading } = useProfile();
+  const { profile, loading, updateProfile } = useProfile();
 
   return (
     <div className="flex flex-col items-center bg-gray-50 min-h-screen py-8 px-2 sm:px-0">
@@ -24,7 +24,11 @@ export default function ProfileEditPage() {
             <ProfileAnchor />
           </div>
           <div className="col-span-9">
-            <ProfileForm profile={profile} loading={loading} />
+            <ProfileForm
+              profile={profile}
+              loading={loading}
+              updateProfile={updateProfile}
+            />
           </div>
         </div>
       </Card>
