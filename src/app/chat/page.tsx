@@ -99,12 +99,12 @@ function ChatPageContent() {
         ) || [];
 
       //如果newSessions数组中receiver_id和sender_id都不为userId，则将userId添加到newSessions中。放在最前面
-      const newSessionsWithoutUserId = newSessions.filter(
+      const newSessionsWithUserId = newSessions.filter(
         (session: ChatSession) =>
-          session.receiver_id !== userId && session.sender_id !== userId
+          session.receiver_id === userId || session.sender_id === userId
       );
 
-      if (newSessionsWithoutUserId.length > 0) {
+      if (newSessionsWithUserId.length === 0) {
         const userProfile = userProfiles.find(
           (profile: any) => profile?.profile?.userId === userId
         );
@@ -283,11 +283,11 @@ function ChatPageContent() {
                         }`}
                         onClick={() => {
                           setSelectedId(targetId);
-                          window.history.pushState(
-                            {},
-                            "",
-                            `/chat?userId=${targetId}`
-                          );
+                          // window.history.pushState(
+                          //   {},
+                          //   "",
+                          //   `/chat?userId=${targetId}`
+                          // );
                         }}
                       >
                         <div className="mr-3 overflow-hidden">
@@ -356,7 +356,9 @@ function ChatPageContent() {
                         key={msg.id}
                         className={`mb-8 flex ${
                           isMe ? "justify-end" : "justify-start"
-                        }`}
+                        }
+                        ${isMe ? "pl-[49px]" : "pr-[54px]"}
+                        `}
                       >
                         {!isMe && (
                           <div className="mr-2 md:mr-4 overflow-hidden">
@@ -396,7 +398,11 @@ function ChatPageContent() {
                               {formatChatTime(msg.updatedAt)}
                             </span>
                           </div>
-                          <div className="flex justify-end">
+                          <div
+                            className={`flex ${
+                              isMe ? "justify-end" : "justify-start"
+                            }`}
+                          >
                             <div
                               className={`rounded-lg p-3 md:p-4 ${
                                 isMe
@@ -522,11 +528,11 @@ function ChatPageContent() {
                             }`}
                             onClick={() => {
                               setSelectedId(targetId);
-                              window.history.pushState(
-                                {},
-                                "",
-                                `/chat?chatId=${targetId}`
-                              );
+                              // window.history.pushState(
+                              //   {},
+                              //   "",
+                              //   `/chat?chatId=${targetId}`
+                              // );
                             }}
                           >
                             <div className="mr-3 overflow-hidden">
