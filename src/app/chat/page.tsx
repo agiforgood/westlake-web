@@ -98,13 +98,13 @@ function ChatPageContent() {
             new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
         ) || [];
 
-      //如果newSessions中receiver_id和sender_id没有userId，则将userId添加到newSessions中。放在最前面
-      if (
-        newSessions.filter(
-          (session: ChatSession) =>
-            session.receiver_id !== userId || session.sender_id !== userId
-        ).length === 0
-      ) {
+      //如果newSessions数组中receiver_id和sender_id都不为userId，则将userId添加到newSessions中。放在最前面
+      const newSessionsWithoutUserId = newSessions.filter(
+        (session: ChatSession) =>
+          session.receiver_id !== userId && session.sender_id !== userId
+      );
+
+      if (newSessionsWithoutUserId.length > 0) {
         const userProfile = userProfiles.find(
           (profile: any) => profile?.profile?.userId === userId
         );
@@ -112,8 +112,14 @@ function ChatPageContent() {
           id: userId as string,
           //@ts-ignore
           name: userProfile?.profile?.name || "",
-          updated_at: new Date().toISOString().replace('T'," ").replace("Z",""),
-          created_at: new Date().toISOString().replace('T'," ").replace("Z",""),
+          updated_at: new Date()
+            .toISOString()
+            .replace("T", " ")
+            .replace("Z", ""),
+          created_at: new Date()
+            .toISOString()
+            .replace("T", " ")
+            .replace("Z", ""),
           sender_id: loggedInUserId as string,
           receiver_id: userId as string,
         });
@@ -373,7 +379,7 @@ function ChatPageContent() {
                             )}
                           </div>
                         )}
-                        <div>
+                        <div className="flex-1">
                           <div
                             className={`flex items-center mb-1 ${
                               isMe ? "justify-end" : ""
@@ -390,14 +396,16 @@ function ChatPageContent() {
                               {formatChatTime(msg.updatedAt)}
                             </span>
                           </div>
-                          <div
-                            className={`rounded-lg p-3 md:p-4 ${
-                              isMe
-                                ? "bg-blue-100 text-right text-blue-900 break-all"
-                                : "bg-gray-100 text-gray-700 break-all"
-                            }`}
-                          >
-                            {msg.content}
+                          <div className="flex justify-end">
+                            <div
+                              className={`rounded-lg p-3 md:p-4 ${
+                                isMe
+                                  ? "bg-blue-100 text-right text-blue-900 break-all"
+                                  : "bg-gray-100 text-gray-700 break-all"
+                              }`}
+                            >
+                              {msg.content}
+                            </div>
                           </div>
                         </div>
                         {isMe && (
@@ -411,7 +419,7 @@ function ChatPageContent() {
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center">
+                              <div className="w-full h-full flex items-start justify-center">
                                 <Avatar
                                   className="w-8 h-8"
                                   name={senderProfile?.userId ?? ""}
