@@ -180,7 +180,7 @@ function ChatPageContent() {
   }, [selectedId, token]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
   }, [messages]);
 
   // 发送消息
@@ -198,7 +198,6 @@ function ChatPageContent() {
       setNewMessage("");
       await getMessages(token, selectedId);
       loadMessages(selectedId as string, token);
-      loadSessions(token);
     } catch (error) {
       console.error("Failed to send message:", error);
     } finally {
