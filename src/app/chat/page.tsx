@@ -91,7 +91,6 @@ function ChatPageContent() {
   const loadSessions = async (token: string) => {
     try {
       const { sessions } = await getChatSessions(token);
-      //按updated_at排序，最新的在最前面
       const newSessions = (sessions || [])
         ?.filter(
           (session: ChatSession) => session.receiver_id !== session?.sender_id
