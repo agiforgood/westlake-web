@@ -53,7 +53,7 @@ function ChatPageContent() {
   const { isAuthenticated } = useLogto();
   const [token, setToken] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [isMobile, setIsMobile] = useState(false);
   const MAX_MESSAGE_LENGTH = 1000;
   const [userProfiles, setUserProfiles] = useState([]);
@@ -92,11 +92,23 @@ function ChatPageContent() {
     try {
       const { sessions } = await getChatSessions(token);
       //按updated_at排序，最新的在最前面
-      const newSessions =
-        sessions?.sort(
+      const newSessions = (sessions || [])
+        ?.sort(
           (a: ChatSession, b: ChatSession) =>
             new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-        ) || [];
+        )
+        ?.filter(
+          (session: ChatSession) => session.receiver_id !== session?.sender_id
+        )
+        ?.filter((session: ChatSession) => !!session.receiver_id)
+        //不能出现重复的receiver_id
+        .filter(
+          (session: ChatSession, index: number, self: ChatSession[]) =>
+            index ===
+            self.findIndex(
+              (t: ChatSession) => t.receiver_id === session.receiver_id
+            )
+        );
 
       //如果newSessions数组中receiver_id和sender_id都不为userId，则将userId添加到newSessions中。放在最前面
       const newSessionsWithUserId = newSessions.filter(
@@ -209,6 +221,73 @@ function ChatPageContent() {
       </div>
     );
 
+  const ChatSessions = () => {
+    return (
+      <>
+        {sessions.map((session) => {
+          const targetId =
+            session.receiver_id === loggedInUserId
+              ? session.sender_id
+              : session.receiver_id;
+
+          const userProfile = getUserProfile(targetId);
+
+          return (
+            <div
+              key={session.id}
+              className={`flex items-center px-4 py-3 cursor-pointer ${
+                selectedId === targetId ? "bg-gray-100" : ""
+              }`}
+              onClick={() => {
+                setSelectedId(targetId);
+                onClose?.();
+              }}
+            >
+              <div className="mr-3 overflow-hidden">
+                {userProfile?.avatar ? (
+                  <Image
+                    src={userProfile.avatar}
+                    alt={userProfile.name}
+                    width={40}
+                    height={40}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Avatar
+                      className="w-8 h-8"
+                      name={userProfile?.userId ?? ""}
+                      variant="beam"
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="flex-1">
+                <div className="font-medium">
+                  {userProfile?.name || session.name || userProfile?.userId}
+                </div>
+                <div className="text-xs text-gray-400">
+                  {userProfile?.role || session.role}
+                </div>
+              </div>
+              <div className="text-xs text-gray-400">
+                {formatChatTime(
+                  session.updated_at
+                    .replace(" ", "T")
+                    .replace(/(\.\d{3})\d{3}$/, "$1") + "Z"
+                )}
+              </div>
+              {session.updated_at === session.created_at &&
+                loggedInUserId !== session.sender_id && (
+                  <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
+                )}
+            </div>
+          );
+        })}
+      </>
+    );
+  };
+
   return (
     <div className="h-screen bg-gray-50">
       <div className="py-12 max-w-5xl mx-auto px-4">
@@ -254,85 +333,7 @@ function ChatPageContent() {
           {!isMobile && (
             <div className="w-80 bg-white flex flex-col rounded-[16px]">
               <div className="flex-1 overflow-y-auto rounded-[16px] max-h-[450px] min-h-[450px]">
-                {sessions
-                  ?.filter(
-                    (session) => session.receiver_id !== session?.sender_id
-                  )
-                  ?.filter((session) => !!session.receiver_id)
-                  //不能出现重复的receiver_id
-                  .filter(
-                    (session, index, self) =>
-                      index ===
-                      self.findIndex(
-                        (t) => t.receiver_id === session.receiver_id
-                      )
-                  )
-                  .map((session) => {
-                    const targetId =
-                      session.receiver_id === loggedInUserId
-                        ? session.sender_id
-                        : session.receiver_id;
-
-                    const userProfile = getUserProfile(targetId);
-
-                    return (
-                      <div
-                        key={session.id}
-                        className={`flex items-center px-4 py-3 cursor-pointer ${
-                          selectedId === targetId ? "bg-gray-100" : ""
-                        }`}
-                        onClick={() => {
-                          setSelectedId(targetId);
-                          // window.history.pushState(
-                          //   {},
-                          //   "",
-                          //   `/chat?userId=${targetId}`
-                          // );
-                        }}
-                      >
-                        <div className="mr-3 overflow-hidden">
-                          {userProfile?.avatar ? (
-                            <Image
-                              src={userProfile.avatar}
-                              alt={userProfile.name}
-                              width={40}
-                              height={40}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <Avatar
-                                className="w-8 h-8"
-                                name={userProfile?.userId ?? ""}
-                                variant="beam"
-                              />
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <div className="font-medium">
-                            {userProfile?.name ||
-                              session.name ||
-                              userProfile?.userId}
-                          </div>
-                          <div className="text-xs text-gray-400">
-                            {userProfile?.role || session.role}
-                          </div>
-                        </div>
-                        <div className="text-xs text-gray-400">
-                          {formatChatTime(
-                            session.updated_at
-                              .replace(" ", "T")
-                              .replace(/(\.\d{3})\d{3}$/, "$1") + "Z"
-                          )}
-                        </div>
-                        {session.updated_at === session.created_at &&
-                          loggedInUserId !== session.sender_id && (
-                            <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
-                          )}
-                      </div>
-                    );
-                  })}
+                <ChatSessions />
               </div>
             </div>
           )}
@@ -499,85 +500,7 @@ function ChatPageContent() {
                 </DrawerHeader>
                 <DrawerBody>
                   <div className="overflow-y-auto">
-                    {sessions
-                      ?.filter(
-                        (session) => session.receiver_id !== session?.sender_id
-                      )
-                      ?.filter((session) => !!session.receiver_id)
-                      //不能出现重复的receiver_id
-                      .filter(
-                        (session, index, self) =>
-                          index ===
-                          self.findIndex(
-                            (t) => t.receiver_id === session.receiver_id
-                          )
-                      )
-                      .map((session) => {
-                        const targetId =
-                          session.receiver_id === loggedInUserId
-                            ? session.sender_id
-                            : session.receiver_id;
-                        const userProfile = getUserProfile(targetId);
-                        return (
-                          <div
-                            key={session.id}
-                            className={`flex items-center px-4 py-3 cursor-pointer ${
-                              selectedId === session.receiver_id
-                                ? "bg-gray-100"
-                                : ""
-                            }`}
-                            onClick={() => {
-                              setSelectedId(targetId);
-                              // window.history.pushState(
-                              //   {},
-                              //   "",
-                              //   `/chat?chatId=${targetId}`
-                              // );
-                            }}
-                          >
-                            <div className="mr-3 overflow-hidden">
-                              {userProfile?.avatar ? (
-                                <Image
-                                  src={userProfile.avatar}
-                                  alt={userProfile.name}
-                                  width={40}
-                                  height={40}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center">
-                                  <Avatar
-                                    className="w-8 h-8"
-                                    name={userProfile?.userId ?? ""}
-                                    variant="beam"
-                                  />
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex-1">
-                              <div className="font-medium">
-                                {userProfile?.name ||
-                                  session.name ||
-                                  userProfile?.userId}
-                              </div>
-                              <div className="text-xs text-gray-400">
-                                {userProfile?.role || session.role}
-                              </div>
-                            </div>
-                            <div className="text-xs text-gray-400">
-                              {formatChatTime(
-                                session.updated_at
-                                  .replace(" ", "T")
-                                  .replace(/(\.\d{3})\d{3}$/, "$1") + "Z"
-                              )}
-                            </div>
-                            {session.updated_at === session.created_at &&
-                              loggedInUserId !== session.sender_id && (
-                                <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full" />
-                              )}
-                          </div>
-                        );
-                      })}
+                    <ChatSessions />
                   </div>
                 </DrawerBody>
               </>
