@@ -93,21 +93,33 @@ function ChatPageContent() {
       const { sessions } = await getChatSessions(token);
       //按updated_at排序，最新的在最前面
       const newSessions = (sessions || [])
-        ?.sort(
-          (a: ChatSession, b: ChatSession) =>
-            new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-        )
         ?.filter(
           (session: ChatSession) => session.receiver_id !== session?.sender_id
         )
         ?.filter((session: ChatSession) => !!session.receiver_id)
-        //不能出现重复的receiver_id
-        .filter(
-          (session: ChatSession, index: number, self: ChatSession[]) =>
-            index ===
-            self.findIndex(
-              (t: ChatSession) => t.receiver_id === session.receiver_id
-            )
+        //如果数组中，有那一组的receiver_id和sender_id是一样的，则保留updated_at最新的那一条数据
+        .filter((session: ChatSession, index: number, self: ChatSession[]) => {
+          const isLatest =
+            self.findIndex((t: ChatSession) => {
+              // 检查是否是相同的发送者和接收者组合
+              const isSamePair =
+                (t.receiver_id === session.receiver_id &&
+                  t.sender_id === session.sender_id) ||
+                (t.receiver_id === session.sender_id &&
+                  t.sender_id === session.receiver_id);
+
+              // 如果是相同的组合，检查是否有更新的消息
+              if (isSamePair) {
+                return new Date(t.updated_at) > new Date(session.updated_at);
+              }
+              return false;
+            }) === -1;
+
+          return isLatest;
+        })
+        ?.sort(
+          (a: ChatSession, b: ChatSession) =>
+            new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
         );
 
       //如果newSessions数组中receiver_id和sender_id都不为userId，则将userId添加到newSessions中。放在最前面
