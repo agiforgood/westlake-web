@@ -128,7 +128,7 @@ function ChatPageContent() {
           session.receiver_id === userId || session.sender_id === userId
       );
 
-      if (newSessionsWithUserId.length === 0) {
+      if (newSessionsWithUserId.length === 0 && userId) {
         const userProfile = userProfiles.find(
           (profile: any) => profile?.profile?.userId === userId
         );
