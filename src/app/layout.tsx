@@ -24,7 +24,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh">
+    <html
+      lang="zh"
+      style={{ scrollBehavior: "smooth", scrollPaddingTop: "80px" }}
+    >
       <body className={inter.className}>
         <Providers>
           <main className="min-h-screen">

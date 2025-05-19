@@ -27,6 +27,9 @@ export default function ProfileEditPage() {
     );
   return (
     <div className="flex flex-col items-center bg-gray-50 min-h-screen py-8 px-2 sm:px-0">
+      <div className="hidden sm:block col-span-3 fixed top-28 left-28">
+        <ProfileAnchor />
+      </div>
       <Card className="w-full max-w-3xl bg-white shadow-lg rounded-3xl mb-10 px-2 sm:px-6 py-6">
         <div className="flex justify-between items-center">
           <p className="text-xl font-bold">智能向善社会创新网络志愿者说明书</p>
@@ -42,10 +45,7 @@ export default function ProfileEditPage() {
         </div>
         <Divider className="bg-primary/50 my-7" />
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 mt-4">
-          <div className="hidden sm:block col-span-3">
-            <ProfileAnchor />
-          </div>
-          <div className="col-span-9">
+          <div className="col-span-12">
             <ProfileReadOnly profile={profile} />
           </div>
         </div>
