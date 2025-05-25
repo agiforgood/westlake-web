@@ -51,6 +51,11 @@ export default function NetworkPage() {
   const { isAuthenticated } = useLogto();
   const [loading, setLoading] = useState(true);
 
+  // Function to handle clearing the search input
+  const handleClearSearch = () => {
+    setSearchQuery('');
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       const token = localStorage.getItem('accessToken') ?? '';
@@ -71,21 +76,23 @@ export default function NetworkPage() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const filteredProfiles = profiles.filter((profile) => {
+  const filteredProfiles = profiles?.filter((profile) => {
     if (!debouncedQuery) return true;
 
     const name = profile.profile.name || '';
     const statusMessage = profile.profile.statusMessage || '';
+    const handle = profile.profile.handle || '';
     const query = debouncedQuery.toLowerCase();
 
     return (
       name.toLowerCase().includes(query) ||
-      statusMessage.toLowerCase().includes(query)
+      statusMessage.toLowerCase().includes(query) ||
+      handle.toLowerCase().includes(query)
     );
   });
 
   const hasResults =
-    filteredProfiles.filter((profile) => profile.profile.name !== '').length >
+    filteredProfiles?.filter((profile) => profile.profile.name !== '').length >
     0;
 
   if (loading)
@@ -131,11 +138,12 @@ export default function NetworkPage() {
                 </div>
                 <Input
                   type="text"
-                  placeholder="搜索昵称或自我介绍..."
+                  placeholder="搜索昵称、ID或自我介绍..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10"
                   isClearable
+                  onClear={handleClearSearch}
                 />
               </div>
             </div>
