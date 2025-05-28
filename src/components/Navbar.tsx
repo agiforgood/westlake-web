@@ -33,7 +33,7 @@ const routes = [
   },
   {
     label: "任务",
-    href: "https://westlakeaiforgood.feishu.cn/wiki/E88hwBpPeiOE6vkDumxcvRITnIe",
+    href: "https://docs.westlakeaiforgood.com/",
     isExternal: true,
   },
   {
@@ -192,7 +192,7 @@ export default function Navbar() {
         <NavbarMenuItem>
           <Link
             color="foreground"
-            href="https://westlakeaiforgood.feishu.cn/wiki/E88hwBpPeiOE6vkDumxcvRITnIe"
+            href="https://docs.westlakeaiforgood.com/"
             target="_blank"
           >
             任务
