@@ -171,10 +171,10 @@ export default function ProfileReadOnly({
       if (item.name == "address") {
         newItem.defaultValue = [
           (data.profile as any).province ||
-            (data.profile as any).newSnapshot?.province,
+          (data.profile as any).newSnapshot?.province,
           (data.profile as any).city || (data.profile as any).newSnapshot?.city,
           (data.profile as any).district ||
-            (data.profile as any).newSnapshot?.district,
+          (data.profile as any).newSnapshot?.district,
         ];
       }
 
@@ -219,9 +219,9 @@ export default function ProfileReadOnly({
         )}
       </div>
       {profileFormData.map((item) => {
-        if (isOther && item.name === "wechat") {
-          return null;
-        }
+        // if (isOther && item.name === "wechat") {
+        //   return null;
+        // }
         return <ProfileReadOnlyComponent key={item.name} item={item} />;
       })}
 
