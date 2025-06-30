@@ -9,6 +9,11 @@ import {
   Image,
   Spinner,
   Input,
+  Select,
+  SelectItem,
+  CheckboxGroup,
+  Checkbox,
+  Button,
 } from '@heroui/react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -41,12 +46,74 @@ interface Profile {
   avatarUrl?: string;
   statusMessage?: string;
   expertiseSummary?: string;
+  createdAt?: string;
+  coreSkills?: string[];
 }
+
+// 技能分组数据，与AgCheckBox中的skillGroups保持一致
+const skillGroups = [
+  {
+    title: "AI相关",
+    options: ["提示词工程", "大模型训练", "AI学术研究专家"],
+  },
+  {
+    title: "伦理与安全",
+    options: ["AI伦理与治理研究者", "法律/合规专家", "数据安全与隐私专家"],
+  },
+  {
+    title: "产品和设计",
+    options: [
+      "UI/UX设计",
+      "产品经理",
+      "VI平面设计/视觉传达",
+      "顶尖开发者/全栈工程师",
+      "开源技术架构管理",
+    ],
+  },
+  {
+    title: "媒体传播",
+    options: [
+      "纪录片制作",
+      "内容创作/写作",
+      "市场/传播/品牌",
+      "研究/数据分析",
+      "算力资源募集",
+    ],
+  },
+  {
+    title: "心理和家庭教育",
+    options: [
+      "心理咨询师",
+      "精神科医生",
+      "心理学家",
+      "家庭教育/青少年发展专家",
+      "高认知家长",
+    ],
+  },
+  {
+    title: "社区",
+    options: [
+      "激励机制设计",
+      "志愿者关系管理",
+      "社群运营",
+      "用户增长",
+      "游戏策划",
+      "开源社区管理",
+      "开源文档与知识管理",
+    ],
+  },
+];
+
+// 获取所有技能选项的扁平数组
+// const allSkills = skillGroups.flatMap(group => group.options);
 
 export default function NetworkPage() {
   const [profiles, setProfiles] = useState<UserProfile[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [showFilters, setShowFilters] = useState(false);
   const router = useRouter();
   const { isAuthenticated } = useLogto();
   const [loading, setLoading] = useState(true);
@@ -76,24 +143,48 @@ export default function NetworkPage() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const filteredProfiles = profiles?.filter((profile) => {
-    if (!debouncedQuery) return true;
+  // 筛选和排序逻辑
+  const filteredAndSortedProfiles = profiles
+    ?.filter((profile) => {
+      // 搜索过滤
+      if (debouncedQuery) {
+        const name = profile.profile.name || '';
+        const statusMessage = profile.profile.statusMessage || '';
+        const handle = profile.profile.handle || '';
+        const query = debouncedQuery.toLowerCase();
 
-    const name = profile.profile.name || '';
-    const statusMessage = profile.profile.statusMessage || '';
-    const handle = profile.profile.handle || '';
-    const query = debouncedQuery.toLowerCase();
+        const matchesSearch = name.toLowerCase().includes(query) ||
+                            statusMessage.toLowerCase().includes(query) ||
+                            handle.toLowerCase().includes(query);
 
-    return (
-      name.toLowerCase().includes(query) ||
-      statusMessage.toLowerCase().includes(query) ||
-      handle.toLowerCase().includes(query)
-    );
-  });
+        if (!matchesSearch) return false;
+      }
 
-  const hasResults =
-    filteredProfiles?.filter((profile) => profile.profile.name !== '').length >
-    0;
+      // 技能过滤
+      if (selectedSkills.length > 0) {
+        const profileSkills = profile.profile.coreSkills || [];
+        const hasAllSkills = selectedSkills.every(selectedSkill =>
+          profileSkills.includes(selectedSkill)
+        );
+        if (!hasAllSkills) return false;
+      }
+
+      return true;
+    })
+    ?.sort((a, b) => {
+      // 按照创建时间排序
+      const timeA = new Date(a.profile.createdAt || '').getTime();
+
+      const timeB = new Date(b.profile.createdAt || '').getTime();
+
+      if (sortOrder === 'newest') {
+        return timeB - timeA; // 最新的在前
+      } else {
+        return timeA - timeB; // 最早的在前
+      }
+    }) || [];
+
+  const hasResults = filteredAndSortedProfiles.filter(profile => profile.profile.name !== '').length > 0;
 
   if (loading)
     return (
@@ -118,6 +209,8 @@ export default function NetworkPage() {
         <div className="flex-grow flex py-12 px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col gap-4">
             <h2 className="text-2xl font-bold">志愿者网络</h2>
+
+            {/* 搜索框 */}
             <div className="mb-4">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -148,102 +241,154 @@ export default function NetworkPage() {
               </div>
             </div>
 
-            {debouncedQuery && (
-              <div className="text-sm text-gray-500 mb-2">
-                找到{' '}
-                {
-                  filteredProfiles.filter(
-                    (profile) => profile.profile.name !== ''
-                  ).length
-                }{' '}
-                个匹配结果
+            {/* 排序和筛选控件 */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-4">
+              {/* 排序选择器 */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">排序：</span>
+                <Select
+                  selectedKeys={[sortOrder]}
+                  onSelectionChange={(keys) => {
+                    const key = Array.from(keys)[0] as string;
+                    setSortOrder(key as 'newest' | 'oldest');
+                  }}
+                  className="w-48"
+                  size="sm"
+                >
+                  <SelectItem key="newest">最近加入</SelectItem>
+                  <SelectItem key="oldest">最早加入</SelectItem>
+                </Select>
               </div>
-            )}
 
-            {debouncedQuery && !hasResults && (
-              <div className="text-center py-8">
-                <div className="text-gray-500">未找到匹配结果</div>
-              </div>
-            )}
+              {/* 筛选按钮 */}
+              <Button
+                variant="bordered"
+                size="sm"
+                onPress={() => setShowFilters(!showFilters)}
+                className="self-start"
+              >
+                技能筛选 {selectedSkills.length > 0 && `(${selectedSkills.length})`}
+              </Button>
 
-            {(!debouncedQuery || hasResults) && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {filteredProfiles &&
-                  filteredProfiles
-                    .filter((profile) => profile.profile.name !== '')
-                    .map((profile) => (
-                      <Card
-                        className="p-2"
-                        key={profile.profile.userId}
-                        onPress={() => {
-                          router.push(`/profile/${profile.profile.userId}`);
-                          window.scrollTo(0, 0);
-                        }}
-                        isPressable
-                      >
-                        <CardHeader>
-                          <div className="flex flex-row gap-4 items-center">
-                            <AgAvatar profile={profile} />
-                            <div className="flex flex-col gap-2 items-start justify-start">
-                              <div className="text-2xl font-bold flex items-center gap-2">
-                                <span className="line-clamp-1">
-                                  {profile.profile.name}
-                                </span>
-                                <span className="text-gray-500 text-sm">
-                                  {profile.profile.gender === 1 && (
-                                    <Image
-                                      width={16}
-                                      height={16}
-                                      src="/male.svg"
-                                      alt="male"
-                                    />
-                                  )}
-                                  {profile.profile.gender === 2 && (
-                                    <Image
-                                      width={16}
-                                      height={16}
-                                      src="/female.svg"
-                                      alt="female"
-                                    />
-                                  )}
-                                </span>
-                              </div>
-                              <div className="text-gray-300 text-sm break-all">
-                                ID: {profile.profile.handle}
-                              </div>
-                              {/* <div className="text-gray-400 text-sm text-left line-clamp-3">
-                                {profile.profile.statusMessage}
-                              </div> */}
-                            </div>
-                          </div>
-                        </CardHeader>
-                        <CardBody>
-                          {/* <div className="text-gray-400 text-base">
-                            {profile.profile.expertiseSummary}
-                          </div>
-                          <Divider />
-                          <div className="flex flex-col gap-4 p-4">
-                            <div className="flex flex-wrap gap-2">
-                              {profile.tags.length > 0
-                                ? profile.tags.map((tag) => (
-                                    <div
-                                      key={tag.id}
-                                      className="bg-gray-100 px-2 py-1 rounded-full text-sm"
-                                    >
-                                      {tag.content}
-                                    </div>
-                                  ))
-                                : null}
-                            </div>
-                          </div> */}
-                          <div className="text-gray-500 text-sm text-left line-clamp-3">
-                            {profile.profile.statusMessage || '暂无自我介绍...'}
-                          </div>
-                        </CardBody>
-                      </Card>
+              {/* 清除筛选 */}
+              {selectedSkills.length > 0 && (
+                <Button
+                  variant="light"
+                  size="sm"
+                  onPress={() => setSelectedSkills([])}
+                  className="self-start text-gray-500"
+                >
+                  清除筛选
+                </Button>
+              )}
+            </div>
+
+            {/* 技能筛选面板 */}
+            {showFilters && (
+              <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                <div className="mb-3">
+                  <span className="text-sm font-medium">选择技能：</span>
+                </div>
+                <CheckboxGroup
+                  value={selectedSkills}
+                  onChange={setSelectedSkills}
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {skillGroups.map((group) => (
+                      <div key={group.title}>
+                        <div className="font-semibold text-sm mb-2 text-gray-700">{group.title}</div>
+                        <div className="flex flex-col gap-1">
+                          {group.options.map((option) => (
+                            <Checkbox
+                              key={option}
+                              value={option}
+                              size="sm"
+                            >
+                              <span className="text-xs">{option}</span>
+                            </Checkbox>
+                          ))}
+                        </div>
+                      </div>
                     ))}
+                  </div>
+                </CheckboxGroup>
               </div>
             )}
+
+            {/* 结果统计 */}
+            {(debouncedQuery || selectedSkills.length > 0) && (
+              <div className="text-sm text-gray-500 mb-2">
+                找到 {filteredAndSortedProfiles.filter(profile => profile.profile.name !== '').length} 个匹配结果
+                {selectedSkills.length > 0 && ` (已选择 ${selectedSkills.length} 个技能筛选条件)`}
+              </div>
+            )}
+
+            {/* 志愿者卡片网格 - 始终渲染同一个容器 */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {/* 无结果提示 */}
+              {(debouncedQuery || selectedSkills.length > 0) && !hasResults && (
+                <div className="col-span-full text-center py-8">
+                  <div className="text-gray-500">未找到匹配结果</div>
+                </div>
+              )}
+
+              {/* 志愿者卡片 */}
+              {((!debouncedQuery && selectedSkills.length === 0) || hasResults) &&
+                filteredAndSortedProfiles &&
+                filteredAndSortedProfiles
+                  .filter((profile) => profile.profile.name !== '')
+                  .map((profile) => (
+                    <Card
+                      className="p-2"
+                      key={profile.profile.userId}
+                      onPress={() => {
+                        router.push(`/profile/${profile.profile.userId}`);
+                        window.scrollTo(0, 0);
+                      }}
+                      isPressable
+                    >
+                      <CardHeader>
+                        <div className="flex flex-row gap-4 items-center">
+                          <AgAvatar profile={profile} />
+                          <div className="flex flex-col gap-2 items-start justify-start">
+                            <div className="text-2xl font-bold flex items-center gap-2">
+                              <span className="line-clamp-1">
+                                {profile.profile.name}
+                              </span>
+                              <span className="text-gray-500 text-sm">
+                                {profile.profile.gender === 1 && (
+                                  <Image
+                                    width={16}
+                                    height={16}
+                                    src="/male.svg"
+                                    alt="male"
+                                  />
+                                )}
+                                {profile.profile.gender === 2 && (
+                                  <Image
+                                    width={16}
+                                    height={16}
+                                    src="/female.svg"
+                                    alt="female"
+                                  />
+                                )}
+                              </span>
+                            </div>
+                            <div className="text-gray-300 text-sm break-all">
+                              ID: {profile.profile.handle}
+                            </div>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardBody>
+                        <div className="text-gray-500 text-sm text-left line-clamp-3">
+                          {profile.profile.statusMessage || '暂无自我介绍...'}
+                        </div>
+                      </CardBody>
+                    </Card>
+                  ))
+              }
+            </div>
           </div>
         </div>
         <Footer />
