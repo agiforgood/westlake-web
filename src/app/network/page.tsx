@@ -207,7 +207,7 @@ export default function NetworkPage() {
     <>
       <div className="flex flex-col min-h-screen">
         <div className="flex-grow flex py-12 px-4 sm:px-6 lg:px-12">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 w-full">
             <h2 className="text-2xl font-bold">志愿者网络</h2>
 
             {/* 搜索框 */}
