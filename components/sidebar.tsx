@@ -108,7 +108,7 @@ export function Sidebar() {
                   ) : (
                     <Link
                       href={href}
-                      className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+                      className={`flex items-center gap-3 rounded-lg transition-colors px-0 py-2.5 ${
                         isActive
                           ? "bg-[#004cd7] text-white"
                           : theme === "dark"
