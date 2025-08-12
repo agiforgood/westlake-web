@@ -61,11 +61,9 @@ export default function LeaderboardPage() {
       <div className="sidebar-margin p-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">{t("leaderboard.title")}</h1>
-              <p className={theme === "dark" ? "text-slate-400" : "text-gray-600"}>{t("leaderboard.topPerformers")}</p>
-            </div>
+          <div>
+            <h1 className="text-3xl font-bold mb-2">{t("leaderboard.title")}</h1>
+            <p className={theme === "dark" ? "text-slate-400" : "text-gray-600"}>{t("leaderboard.topPerformers")}</p>
           </div>
           <HeaderButtons />
         </div>
