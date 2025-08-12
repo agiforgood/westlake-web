@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import './globals.css'
+import { ThemeProvider } from '@/components/theme-provider'
+import { LanguageProvider } from '@/components/language-provider'
 
 export const metadata: Metadata = {
   title: 'WestLake Platform',
@@ -25,7 +27,13 @@ html {
 }
         `}</style>
       </head>
-      <body>{children}</body>
+      <body className={`${GeistSans.variable} ${GeistMono.variable}`}>
+        <ThemeProvider>
+          <LanguageProvider>
+            <div>{children}</div>
+          </LanguageProvider>
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

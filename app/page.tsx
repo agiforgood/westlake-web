@@ -6,9 +6,9 @@ import { Sidebar } from "@/components/sidebar"
 import { useLanguage } from "@/components/language-provider"
 import { useTheme } from "@/components/theme-provider"
 import { HeaderButtons } from "@/components/header-buttons"
-import type { Locale } from "@/lib/i18n"
 
-export default function Dashboard({ params }: { params: { locale: Locale } }) {
+
+export default function Dashboard() {
   const { t } = useLanguage()
   const { theme } = useTheme()
 

@@ -8,12 +8,12 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Sidebar } from "@/components/sidebar"
 import { Play, Save, Copy, DollarSign, FolderOpen, Calendar } from "lucide-react"
-import type { Locale } from "@/lib/i18n"
+
 import { HeaderButtons } from "@/components/header-buttons"
 import { useTheme } from "@/components/theme-provider"
 import { useLanguage } from "@/components/language-provider"
 
-export default function PromptEngineering({ params }: { params: { locale: Locale } }) {
+export default function PromptEngineering() {
   const [activeTab, setActiveTab] = useState("workspace")
   const [promptTitle, setPromptTitle] = useState("")
   const [promptContent, setPromptContent] = useState("")

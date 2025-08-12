@@ -15,11 +15,10 @@ import {
   Moon,
   ChevronLeft,
   ChevronRight,
-  Languages,
 } from "lucide-react"
 import { useTheme } from "./theme-provider"
 import { useLanguage } from "./language-provider"
-import { getLocaleFromPathname, removeLocaleFromPathname } from "@/lib/i18n"
+
 
 const navigationItems = [
   {
@@ -62,31 +61,17 @@ const navigationItems = [
 export function Sidebar() {
   const pathname = usePathname()
   const { theme, toggleTheme } = useTheme()
-  const { language, toggleLanguage, t } = useLanguage()
+  const { t } = useLanguage()
   const [isCollapsed, setIsCollapsed] = useState(false)
 
-  const currentLocale = getLocaleFromPathname(pathname)
   const createLocalizedHref = (href: string) => {
     if (href === "#") return href
-    return `/${currentLocale}${href}`
+    return href
   }
 
   const isActiveItem = (href: string) => {
     if (href === "#") return false
-    const localizedHref = createLocalizedHref(href)
-    return pathname === localizedHref
-  }
-
-  const handleLanguageToggle = () => {
-    const newLocale = language === "en" ? "zh" : "en"
-    const pathWithoutLocale = removeLocaleFromPathname(pathname)
-    const newPath = `/${newLocale}${pathWithoutLocale}`
-
-    // Update language in context
-    toggleLanguage()
-
-    // Navigate to new locale URL
-    window.location.href = newPath
+    return pathname === href
   }
 
   return (
@@ -165,23 +150,9 @@ export function Sidebar() {
             })}
           </nav>
 
-          {/* Theme and Language Toggle Buttons */}
+          {/* Theme Toggle Button */}
           <div className="space-y-2">
-          {/*
-            <button
-              onClick={handleLanguageToggle}
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors w-full ${
-                theme === "dark"
-                  ? "text-slate-400 hover:text-white hover:bg-slate-800"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              } ${isCollapsed ? "justify-center" : ""}`}
-              title={isCollapsed ? (language === "en" ? t("sidebar.chinese") : t("sidebar.english")) : undefined}
-            >
-              <Languages className="w-5 h-5" />
-              {!isCollapsed && <span>{language === "en" ? t("sidebar.chinese") : t("sidebar.english")}</span>}
-            </button>
-            -->
-          */}
+
 
             <button
               onClick={toggleTheme}

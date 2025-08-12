@@ -3,12 +3,12 @@
 import { useState } from "react"
 import { Sidebar } from "@/components/sidebar"
 import { Trophy, Medal, Award, Star, Filter, ChevronDown } from "lucide-react"
-import type { Locale } from "@/lib/i18n"
+
 import { HeaderButtons } from "@/components/header-buttons"
 import { useTheme } from "@/components/theme-provider"
 import { useLanguage } from "@/components/language-provider"
 
-export default function LeaderboardPage({ params }: { params: { locale: Locale } }) {
+export default function LeaderboardPage() {
   const [activeTab, setActiveTab] = useState("prompt-engineering")
   const [selectedModel, setSelectedModel] = useState("all")
   const [isFilterOpen, setIsFilterOpen] = useState(false)

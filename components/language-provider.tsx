@@ -1,124 +1,17 @@
 "use client"
 
 import type React from "react"
-import { createContext, useContext, useEffect, useState } from "react"
-import { useRouter, usePathname } from "next/navigation"
+import { createContext, useContext } from "react"
 import type { Locale } from "@/lib/i18n"
-import { getLocaleFromPathname, removeLocaleFromPathname } from "@/lib/i18n"
 
 interface LanguageContextType {
   language: Locale
-  toggleLanguage: () => void
   t: (key: string) => string
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
 const translations = {
-  en: {
-    // Sidebar
-    "sidebar.dashboard": "Dashboard",
-    "sidebar.promptEngineering": "Prompt Engineering",
-    "sidebar.psychologistEvaluation": "Psychologist Evaluation",
-    "sidebar.leaderboard": "Leaderboard",
-    "sidebar.badge": "Badge",
-    "sidebar.network": "Network",
-    "sidebar.profile": "Profile",
-    "sidebar.lightMode": "Light Mode",
-    "sidebar.darkMode": "Dark Mode",
-    "sidebar.english": "English",
-    "sidebar.chinese": "中文",
-
-    // Profile Dropdown
-    "profile.myProfile": "My Profile",
-    "profile.myMessages": "My Messages",
-    "profile.logout": "Logout",
-
-    // Dashboard
-    "dashboard.title": "Dashboard Overview",
-    "dashboard.totalUsers": "Total Users",
-    "dashboard.activePrompts": "Active Prompts",
-    "dashboard.completedEvaluations": "Completed Evaluations",
-    "dashboard.totalAnnotations": "Total Annotations",
-    "dashboard.promptLeaderboard": "Prompt Leaderboard",
-    "dashboard.topPerformers": "Top Performers",
-    "dashboard.psychologyAnnotations": "Psychology Annotations",
-    "dashboard.recentActivity": "Recent Activity",
-    "dashboard.viewAll": "View All",
-    "dashboard.points": "points",
-    "dashboard.annotations": "annotations",
-    "dashboard.anxiety": "Anxiety",
-    "dashboard.depression": "Depression",
-    "dashboard.stress": "Stress",
-    "dashboard.relationships": "Relationships",
-    "dashboard.selfEsteem": "Self-esteem",
-    "dashboard.monthlyGrowth": "+12.5% from last month",
-    "dashboard.weeklyGrowth": "+8.2% from last week",
-    "dashboard.qualityScore": "Quality Score: 94.2%",
-    "dashboard.weeklyCompleted": "156 completed this week",
-    "dashboard.monthlyContributors": "Leading contributors this month",
-    "dashboard.contributor1Name": "Chen Zhiming",
-    "dashboard.contributor1Role": "Family Psychology Coach",
-    "dashboard.contributor2Name": "Jin Sarah",
-    "dashboard.contributor2Role": "Behavior Analysis Expert",
-    "dashboard.contributor3Name": "Johnson",
-    "dashboard.contributor3Role": "Cognitive Assessor",
-    "dashboard.annotationCategories": "Annotation categories and progress",
-    "dashboard.emotionalAnalysis": "Emotional Analysis",
-    "dashboard.behaviorPatterns": "Behavior Patterns",
-    "dashboard.cognitiveAssessment": "Cognitive Assessment",
-    "dashboard.allModulesUpdates": "Latest updates from all modules",
-    "dashboard.activity1": "New prompt 'Family Conflict Resolution' received highest rating",
-    "dashboard.activity2": "Psychology evaluation batch #247 completed",
-    "dashboard.activity3": "1,247 new annotations added to database",
-    "dashboard.time1": "2 hours ago",
-    "dashboard.time2": "4 hours ago",
-    "dashboard.time3": "6 hours ago",
-
-    // Prompt Engineering
-    "prompt.title": "AI Family Psychology Coach Prompts",
-    "prompt.description": "Create and optimize AI prompts for psychological guidance and evaluation",
-    "prompt.workspace": "Workspace",
-    "prompt.promptManagement": "Prompt Management",
-    "prompt.evaluationResults": "Evaluation Results",
-    "prompt.promptContent": "Prompt Content",
-    "prompt.promptTitle": "Prompt Title",
-    "prompt.evaluationCriteria": "Evaluation Criteria",
-    "prompt.parameterConfig": "Parameter Configuration",
-    "prompt.responseLength": "Response Length",
-    "prompt.modelSelection": "Model Selection",
-    "prompt.currentModel": "Current Model",
-    "prompt.costEstimate": "Cost Estimate",
-    "prompt.generateDialogue": "Generate Dialogue",
-    "prompt.loadPrompt": "Load This Prompt",
-    "prompt.category": "Category",
-
-    // Psychologist Evaluation
-    "psych.title": "Psychologist Evaluation System",
-    "psych.dialogue": "Dialogue",
-    "psych.evaluationRecords": "Evaluation Records",
-    "psych.dialogueList": "Dialogue List",
-    "psych.completionProgress": "Completion Progress",
-    "psych.dimensions": "dimensions",
-    "psych.session": "Session",
-
-    // Leaderboard
-    "leaderboard.title": "Global Leaderboard",
-    "leaderboard.topPerformers": "Top performers in each category",
-    "leaderboard.promptEngineering": "Prompt Engineering",
-    "leaderboard.psychologyEvaluation": "Psychology Evaluation",
-    "leaderboard.totalParticipants": "Total Participants",
-    "leaderboard.averageScore": "Average Score",
-    "leaderboard.topScore": "Top Score",
-    "leaderboard.filterByModel": "Filter by Model",
-    "leaderboard.allModels": "All Models",
-    "leaderboard.rank": "Rank",
-    "leaderboard.user": "User",
-    "leaderboard.score": "Score",
-    "leaderboard.model": "Model",
-    "leaderboard.specialty": "Specialty",
-  },
-  zh: {
     // Sidebar
     "sidebar.dashboard": "仪表板",
     "sidebar.promptEngineering": "提示词工程",
@@ -220,37 +113,20 @@ const translations = {
     "leaderboard.score": "分数",
     "leaderboard.model": "模型",
     "leaderboard.specialty": "专长",
-  },
 } as const
 
 export function LanguageProvider({
   children,
-  initialLocale,
 }: {
   children: React.ReactNode
-  initialLocale?: Locale
 }) {
-  const router = useRouter()
-  const pathname = usePathname()
-
-  const [language, setLanguage] = useState<Locale>(initialLocale || getLocaleFromPathname(pathname))
-
-  useEffect(() => {
-    const currentLocale = getLocaleFromPathname(pathname)
-    setLanguage(currentLocale)
-  }, [pathname])
-
-  const toggleLanguage = () => {
-    const newLanguage: Locale = language === "en" ? "zh" : "en"
-    const pathWithoutLocale = removeLocaleFromPathname(pathname)
-    router.push(`/${newLanguage}${pathWithoutLocale}`)
-  }
+  const language: Locale = "zh"
 
   const t = (key: string): string => {
-    return translations[language][key as keyof (typeof translations)[typeof language]] || key
+    return translations[key as keyof typeof translations] || key
   }
 
-  return <LanguageContext.Provider value={{ language, toggleLanguage, t }}>{children}</LanguageContext.Provider>
+  return <LanguageContext.Provider value={{ language, t }}>{children}</LanguageContext.Provider>
 }
 
 export function useLanguage() {

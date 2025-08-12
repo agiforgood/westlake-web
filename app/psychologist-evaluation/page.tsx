@@ -4,11 +4,11 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Sidebar } from "@/components/sidebar"
 import { HeaderButtons } from "@/components/header-buttons"
-import type { Locale } from "@/lib/i18n"
+
 import { useTheme } from "@/components/theme-provider"
 import { useLanguage } from "@/components/language-provider"
 
-export default function PsychologistEvaluation({ params }: { params: { locale: Locale } }) {
+export default function PsychologistEvaluation() {
   const [activeTab, setActiveTab] = useState("dialogue")
   const { theme } = useTheme()
   const { t } = useLanguage()
