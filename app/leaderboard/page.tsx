@@ -72,12 +72,12 @@ export default function LeaderboardPage() {
 
         {/* Tab Navigation and Filters */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className={`flex space-x-1 p-1 rounded-lg w-fit ${theme === "dark" ? "bg-slate-800" : "bg-gray-200"}`}>
+          <div className={`flex gap-8 border-b ${theme === "dark" ? "border-slate-700" : "border-gray-200"}`}>
             <button
               onClick={() => setActiveTab("prompt-engineering")}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`pb-4 px-2 font-medium transition-colors relative ${
                 activeTab === "prompt-engineering"
-                  ? "bg-[#397eff] text-white"
+                  ? "text-[#397eff] border-b-2 border-[#397eff]"
                   : theme === "dark"
                     ? "text-slate-400 hover:text-white"
                     : "text-gray-600 hover:text-gray-900"
@@ -87,9 +87,9 @@ export default function LeaderboardPage() {
             </button>
             <button
               onClick={() => setActiveTab("psychology")}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`pb-4 px-2 font-medium transition-colors relative ${
                 activeTab === "psychology"
-                  ? "bg-[#397eff] text-white"
+                  ? "text-[#397eff] border-b-2 border-[#397eff]"
                   : theme === "dark"
                     ? "text-slate-400 hover:text-white"
                     : "text-gray-600 hover:text-gray-900"
