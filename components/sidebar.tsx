@@ -156,7 +156,7 @@ export function Sidebar() {
 
           {/* Logo */}
           <div className="flex items-center gap-2 mb-8 mt-[15px] ml-1.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#004cd7] to-[#397eff] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#004cd7] to-[#397eff] flex items-center justify-center opacity-100">
               <span className="text-white font-bold text-sm">W</span>
             </div>
             {!isCollapsed && (
