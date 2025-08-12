@@ -19,7 +19,6 @@ import {
 import { useTheme } from "./theme-provider"
 import { useLanguage } from "./language-provider"
 
-
 const navigationItems = [
   {
     name: "sidebar.dashboard",
@@ -43,7 +42,7 @@ const navigationItems = [
   },
   {
     name: "sidebar.badge",
-    href: "#",
+    href: "/badge",
     icon: Trophy,
   },
   {
@@ -152,8 +151,6 @@ export function Sidebar() {
 
           {/* Theme Toggle Button */}
           <div className="space-y-2">
-
-
             <button
               onClick={toggleTheme}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors w-full ${
