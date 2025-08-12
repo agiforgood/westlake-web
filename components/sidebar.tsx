@@ -130,7 +130,7 @@ export function Sidebar() {
           <div className="space-y-2">
             <button
               onClick={toggleTheme}
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors w-full ${
+              className={`flex items-center gap-3 rounded-lg transition-colors w-full px-0 py-2.5 ${
                 theme === "dark"
                   ? "text-slate-400 hover:text-white hover:bg-slate-800"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
