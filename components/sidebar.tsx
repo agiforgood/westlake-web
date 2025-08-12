@@ -105,7 +105,7 @@ export function Sidebar() {
                   {item.href === "#" ? (
                     <a
                       href={href}
-                      className={`flex items-center gap-3 rounded-lg transition-colors px-3 py-2.5 ${
+                      className={`flex items-center gap-3 rounded-lg transition-colors px-0 py-3 ${
                         isActive
                           ? "bg-[#004cd7] text-white"
                           : theme === "dark"
@@ -120,7 +120,7 @@ export function Sidebar() {
                   ) : (
                     <Link
                       href={href}
-                      className={`flex items-center gap-3 rounded-lg transition-colors px-3 py-2.5 ${
+                      className={`flex items-center gap-3 rounded-lg transition-colors px-0 py-3 ${
                         isActive
                           ? "bg-[#004cd7] text-white"
                           : theme === "dark"
