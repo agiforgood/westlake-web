@@ -6,12 +6,14 @@ import { Trophy, Medal, Award, Star, Filter, ChevronDown } from "lucide-react"
 import type { Locale } from "@/lib/i18n"
 import { HeaderButtons } from "@/components/header-buttons"
 import { useTheme } from "@/components/theme-provider"
+import { useLanguage } from "@/components/language-provider"
 
 export default function LeaderboardPage({ params }: { params: { locale: Locale } }) {
   const [activeTab, setActiveTab] = useState("prompt-engineering")
   const [selectedModel, setSelectedModel] = useState("all")
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const { theme } = useTheme()
+  const { t } = useLanguage()
 
   const modelOptions = [
     { value: "all", label: "所有模型" },
@@ -61,8 +63,8 @@ export default function LeaderboardPage({ params }: { params: { locale: Locale }
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold mb-2">排行榜</h1>
-              <p className={theme === "dark" ? "text-slate-400" : "text-gray-600"}>各类别顶尖表现者</p>
+              <h1 className="text-3xl font-bold mb-2">{t("leaderboard.title")}</h1>
+              <p className={theme === "dark" ? "text-slate-400" : "text-gray-600"}>{t("leaderboard.topPerformers")}</p>
             </div>
           </div>
           <HeaderButtons />
@@ -81,7 +83,7 @@ export default function LeaderboardPage({ params }: { params: { locale: Locale }
                     : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              提示词工程
+              {t("leaderboard.promptEngineering")}
             </button>
             <button
               onClick={() => setActiveTab("psychology")}
@@ -93,7 +95,7 @@ export default function LeaderboardPage({ params }: { params: { locale: Locale }
                     : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              心理学评估
+              {t("leaderboard.psychologyEvaluation")}
             </button>
           </div>
 

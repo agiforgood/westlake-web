@@ -11,6 +11,7 @@ import { Play, Save, Copy, DollarSign, FolderOpen, Calendar } from "lucide-react
 import type { Locale } from "@/lib/i18n"
 import { HeaderButtons } from "@/components/header-buttons"
 import { useTheme } from "@/components/theme-provider"
+import { useLanguage } from "@/components/language-provider"
 
 export default function PromptEngineering({ params }: { params: { locale: Locale } }) {
   const [activeTab, setActiveTab] = useState("workspace")
@@ -19,6 +20,7 @@ export default function PromptEngineering({ params }: { params: { locale: Locale
   const [selectedModel, setSelectedModel] = useState("deepseek-v3")
   const [maxRounds, setMaxRounds] = useState(20)
   const { theme } = useTheme()
+  const { t } = useLanguage()
 
   const samplePrompts = [
     {
@@ -55,10 +57,10 @@ export default function PromptEngineering({ params }: { params: { locale: Locale
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className={`text-3xl font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-              齐家AI家庭心理教练提示词
+              {t("prompt.title")}
             </h1>
             <p className={theme === "dark" ? "text-slate-400" : "text-gray-600"}>
-              创建和优化用于心理指导和评估的AI提示词
+              {t("prompt.description")}
             </p>
           </div>
 
@@ -77,7 +79,7 @@ export default function PromptEngineering({ params }: { params: { locale: Locale
                   : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            工作台
+            {t("prompt.workspace")}
           </button>
           <button
             onClick={() => setActiveTab("management")}
@@ -89,7 +91,7 @@ export default function PromptEngineering({ params }: { params: { locale: Locale
                   : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            提示词管理
+            {t("prompt.promptManagement")}
           </button>
           <button
             onClick={() => setActiveTab("results")}
@@ -101,7 +103,7 @@ export default function PromptEngineering({ params }: { params: { locale: Locale
                   : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            评估结果
+            {t("prompt.evaluationResults")}
           </button>
         </div>
 
@@ -114,7 +116,7 @@ export default function PromptEngineering({ params }: { params: { locale: Locale
                 {/* Prompt Content */}
                 <Card className={theme === "dark" ? "bg-slate-800 border-slate-700" : "bg-white border-gray-200"}>
                   <CardHeader>
-                    <CardTitle className={theme === "dark" ? "text-white" : "text-gray-900"}>提示词内容</CardTitle>
+                    <CardTitle className={theme === "dark" ? "text-white" : "text-gray-900"}>{t("prompt.promptContent")}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <Textarea

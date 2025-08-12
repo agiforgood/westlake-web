@@ -77,6 +77,7 @@ const translations = {
 
     // Prompt Engineering
     "prompt.title": "AI Family Psychology Coach Prompts",
+    "prompt.description": "Create and optimize AI prompts for psychological guidance and evaluation",
     "prompt.workspace": "Workspace",
     "prompt.promptManagement": "Prompt Management",
     "prompt.evaluationResults": "Evaluation Results",
@@ -103,6 +104,7 @@ const translations = {
 
     // Leaderboard
     "leaderboard.title": "Global Leaderboard",
+    "leaderboard.topPerformers": "Top performers in each category",
     "leaderboard.promptEngineering": "Prompt Engineering",
     "leaderboard.psychologyEvaluation": "Psychology Evaluation",
     "leaderboard.totalParticipants": "Total Participants",
@@ -178,6 +180,7 @@ const translations = {
 
     // Prompt Engineering
     "prompt.title": "齐家AI家庭心理教练提示词",
+    "prompt.description": "创建和优化用于心理指导和评估的AI提示词",
     "prompt.workspace": "工作台",
     "prompt.promptManagement": "提示词管理",
     "prompt.evaluationResults": "评估结果",
@@ -204,6 +207,7 @@ const translations = {
 
     // Leaderboard
     "leaderboard.title": "全球排行榜",
+    "leaderboard.topPerformers": "各类别顶尖表现者",
     "leaderboard.promptEngineering": "提示词工程",
     "leaderboard.psychologyEvaluation": "心理学评估",
     "leaderboard.totalParticipants": "总参与者",

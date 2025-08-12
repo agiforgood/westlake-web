@@ -6,10 +6,12 @@ import { Sidebar } from "@/components/sidebar"
 import { HeaderButtons } from "@/components/header-buttons"
 import type { Locale } from "@/lib/i18n"
 import { useTheme } from "@/components/theme-provider"
+import { useLanguage } from "@/components/language-provider"
 
 export default function PsychologistEvaluation({ params }: { params: { locale: Locale } }) {
   const [activeTab, setActiveTab] = useState("dialogue")
   const { theme } = useTheme()
+  const { t } = useLanguage()
 
   // Generate evaluation entries
   const evaluationEntries = Array.from({ length: 24 }, (_, i) => ({

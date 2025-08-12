@@ -167,6 +167,7 @@ export function Sidebar() {
 
           {/* Theme and Language Toggle Buttons */}
           <div className="space-y-2">
+          {/*
             <button
               onClick={handleLanguageToggle}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors w-full ${
@@ -179,6 +180,8 @@ export function Sidebar() {
               <Languages className="w-5 h-5" />
               {!isCollapsed && <span>{language === "en" ? t("sidebar.chinese") : t("sidebar.english")}</span>}
             </button>
+            -->
+          */}
 
             <button
               onClick={toggleTheme}
