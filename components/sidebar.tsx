@@ -81,29 +81,6 @@ export function Sidebar() {
         } ${theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200"}`}
       >
         <div className="p-6 h-full flex flex-col relative">
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className={`absolute top-4 right-4 p-1.5 rounded-lg transition-colors opacity-80 hover:opacity-100 ${
-              theme === "dark"
-                ? "text-slate-400 hover:text-white hover:bg-slate-800"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-            }`}
-          >
-            {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-          </button>
-
-          {/* Logo */}
-          <div className="flex items-center gap-2 mb-8">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#004cd7] to-[#397eff] flex items-center justify-center">
-              <span className="text-white font-bold text-sm">W</span>
-            </div>
-            {!isCollapsed && (
-              <span className={`font-semibold text-lg ${theme === "dark" ? "text-white" : "text-slate-900"}`}>
-                WestLake
-              </span>
-            )}
-          </div>
-
           {/* Navigation */}
           <nav className="space-y-2 flex-1">
             {navigationItems.map((item) => {
@@ -163,6 +140,30 @@ export function Sidebar() {
               {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               {!isCollapsed && <span>{theme === "dark" ? t("sidebar.lightMode") : t("sidebar.darkMode")}</span>}
             </button>
+          </div>
+
+          {/* Collapse Button */}
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className={`absolute top-1/2 -translate-y-1/2 -right-3 w-6 h-6 rounded-full transition-all duration-200 border ${
+              theme === "dark"
+                ? "bg-slate-800 border-slate-700 text-slate-400 hover:text-white hover:shadow-lg hover:shadow-slate-900/50"
+                : "bg-white border-gray-300 text-slate-600 hover:text-slate-900 hover:shadow-lg hover:shadow-gray-400/50"
+            } flex items-center justify-center z-10`}
+          >
+            {isCollapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
+          </button>
+
+          {/* Logo */}
+          <div className="flex items-center gap-2 mb-8">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#004cd7] to-[#397eff] flex items-center justify-center">
+              <span className="text-white font-bold text-sm">W</span>
+            </div>
+            {!isCollapsed && (
+              <span className={`font-semibold text-lg ${theme === "dark" ? "text-white" : "text-slate-900"}`}>
+                WestLake
+              </span>
+            )}
           </div>
         </div>
       </div>
