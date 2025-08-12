@@ -7,13 +7,12 @@ import { useLanguage } from "@/components/language-provider"
 import { useTheme } from "@/components/theme-provider"
 import { HeaderButtons } from "@/components/header-buttons"
 
-
 export default function Dashboard() {
   const { t } = useLanguage()
   const { theme } = useTheme()
 
   return (
-    <div className={`min-h-screen ${theme === "dark" ? "bg-slate-950 text-white" : "bg-gray-50 text-gray-900"}`}>
+    <div className={`min-h-screen ${theme === "dark" ? "bg-slate-900 text-white" : "bg-gray-50 text-gray-900"}`}>
       {/* Sidebar */}
       <Sidebar />
 

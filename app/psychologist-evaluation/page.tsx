@@ -22,7 +22,7 @@ export default function PsychologistEvaluation() {
   }))
 
   return (
-    <div className={`min-h-screen ${theme === "dark" ? "bg-slate-950 text-white" : "bg-gray-50 text-gray-900"}`}>
+    <div className={`min-h-screen ${theme === "dark" ? "bg-slate-900 text-white" : "bg-gray-50 text-gray-900"}`}>
       <Sidebar />
 
       {/* Main Content */}
