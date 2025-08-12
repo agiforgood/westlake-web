@@ -81,6 +81,18 @@ export function Sidebar() {
         } ${theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200"}`}
       >
         <div className="p-6 h-full flex flex-col relative">
+          {/* Logo */}
+          <div className={`flex items-center gap-2 mb-8 ${isCollapsed ? "justify-center" : "ml-1.5"}`}>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#004cd7] to-[#397eff] flex items-center justify-center">
+              <span className="text-white font-bold text-sm">W</span>
+            </div>
+            {!isCollapsed && (
+              <span className={`font-semibold text-lg ${theme === "dark" ? "text-white" : "text-slate-900"}`}>
+                WestLake
+              </span>
+            )}
+          </div>
+
           {/* Navigation */}
           <nav className="space-y-2 flex-1">
             {navigationItems.map((item) => {
@@ -93,7 +105,7 @@ export function Sidebar() {
                   {item.href === "#" ? (
                     <a
                       href={href}
-                      className={`flex items-center gap-3 rounded-lg transition-colors px-0 py-2.5 ${
+                      className={`flex items-center gap-3 rounded-lg transition-colors px-3 py-2.5 ${
                         isActive
                           ? "bg-[#004cd7] text-white"
                           : theme === "dark"
@@ -108,7 +120,7 @@ export function Sidebar() {
                   ) : (
                     <Link
                       href={href}
-                      className={`flex items-center gap-3 rounded-lg transition-colors px-0 py-2.5 ${
+                      className={`flex items-center gap-3 rounded-lg transition-colors px-3 py-2.5 ${
                         isActive
                           ? "bg-[#004cd7] text-white"
                           : theme === "dark"
@@ -130,7 +142,7 @@ export function Sidebar() {
           <div className="space-y-2">
             <button
               onClick={toggleTheme}
-              className={`flex items-center gap-3 rounded-lg transition-colors w-full px-0 py-2.5 ${
+              className={`flex items-center gap-3 rounded-lg transition-colors w-full px-3 py-2.5 ${
                 theme === "dark"
                   ? "text-slate-400 hover:text-white hover:bg-slate-800"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
@@ -153,18 +165,6 @@ export function Sidebar() {
           >
             {isCollapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
           </button>
-
-          {/* Logo */}
-          <div className="flex items-center gap-2 mb-8 mt-[15px] ml-1.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#004cd7] to-[#397eff] flex items-center justify-center opacity-100">
-              <span className="text-white font-bold text-sm">W</span>
-            </div>
-            {!isCollapsed && (
-              <span className={`font-semibold text-lg ${theme === "dark" ? "text-white" : "text-slate-900"}`}>
-                WestLake
-              </span>
-            )}
-          </div>
         </div>
       </div>
 
