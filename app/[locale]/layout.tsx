@@ -13,15 +13,17 @@ export const metadata: Metadata = {
   generator: "v0.dev",
 }
 
-export default function LocaleLayout({
+export default async function LocaleLayout({
   children,
   params,
 }: {
   children: React.ReactNode
-  params: { locale: Locale }
+  params: Promise<{ locale: Locale }>
 }) {
+  const { locale } = await params
+  
   return (
-    <html lang={params.locale}>
+    <html lang={locale}>
       <head>
         <style>{`
 html {
@@ -33,7 +35,7 @@ html {
       </head>
       <body className={`${GeistSans.variable} ${GeistMono.variable}`}>
         <ThemeProvider>
-          <LanguageProvider locale={params.locale}>
+          <LanguageProvider initialLocale={locale}>
             <div>{children}</div>
           </LanguageProvider>
         </ThemeProvider>

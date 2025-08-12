@@ -19,7 +19,7 @@ import {
 } from "lucide-react"
 import { useTheme } from "./theme-provider"
 import { useLanguage } from "./language-provider"
-import { getLocaleFromPathname } from "@/lib/i18n"
+import { getLocaleFromPathname, removeLocaleFromPathname } from "@/lib/i18n"
 
 const navigationItems = [
   {
@@ -79,7 +79,7 @@ export function Sidebar() {
 
   const handleLanguageToggle = () => {
     const newLocale = language === "en" ? "zh" : "en"
-    const pathWithoutLocale = pathname.replace(`/${currentLocale}`, "") || "/"
+    const pathWithoutLocale = removeLocaleFromPathname(pathname)
     const newPath = `/${newLocale}${pathWithoutLocale}`
 
     // Update language in context
