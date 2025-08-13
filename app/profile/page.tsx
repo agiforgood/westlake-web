@@ -49,6 +49,9 @@ export default function ProfilePage() {
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h1 className="text-3xl font-bold mb-2">志愿者说明书</h1>
+                <p className={`text-lg ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
+                  智能问答社会创新网络志愿者个人信息管理
+                </p>
               </div>
               <div className="flex items-center gap-4">
                 <Button
