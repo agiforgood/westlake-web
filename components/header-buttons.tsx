@@ -10,20 +10,7 @@ export function HeaderButtons() {
 
   return (
     <div className="flex items-center gap-4">
-      <Button
-        variant="ghost"
-        size="icon"
-        className={`${theme === "dark" ? "text-slate-400 hover:text-white" : "text-gray-600 hover:text-gray-900"}`}
-      >
-        <Bell className="h-[30px] w-[30px]" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className={`${theme === "dark" ? "text-slate-400 hover:text-white" : "text-gray-600 hover:text-gray-900"}`}
-      >
-        <Settings className="w-5 h-5" />
-      </Button>
+
       <AvatarDropdown userId="Ethanovum" userName="JD" />
     </div>
   )
