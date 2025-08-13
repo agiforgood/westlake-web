@@ -135,7 +135,7 @@ export default function GuestPage() {
       </header>
 
       {/* Main Content */}
-      <main className="relative z-10 flex-1 flex items-center justify-center px-8">
+      <main className="relative z-0 flex-1 flex items-center justify-center px-8">
         <div className="text-center">
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-gray-800 tracking-wider leading-tight">
             智能向善社会创新网络
