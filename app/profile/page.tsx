@@ -35,6 +35,7 @@ export default function ProfilePage() {
     learningGoals: "未填写",
     showAddress: true, // 改为默认打钩
     showContact: true, // 新增联系方式公开显示选项
+    showAdditionalInfo: true, // 新增电子邮箱或微信公开显示选项，默认打钩
   })
 
   const handleInputChange = (field: string, value: string) => {
@@ -190,6 +191,22 @@ export default function ProfilePage() {
                             : "bg-gray-100 border-gray-300 text-gray-900"
                         }
                       />
+                      <div className="flex items-center gap-2 mt-2">
+                        <input
+                          type="checkbox"
+                          id="showAdditionalInfo"
+                          disabled={!isEditing}
+                          checked={formData.showAdditionalInfo}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, showAdditionalInfo: e.target.checked }))}
+                          className="w-4 h-4 text-[#397eff] bg-gray-100 border-gray-300 rounded focus:ring-[#397eff] focus:ring-2"
+                        />
+                        <label
+                          htmlFor="showAdditionalInfo"
+                          className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}
+                        >
+                          公开显示电子邮箱或微信
+                        </label>
+                      </div>
                     </div>
 
                     <div>
