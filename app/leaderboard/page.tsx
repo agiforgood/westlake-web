@@ -3,13 +3,14 @@
 import { useState } from "react"
 import { Sidebar } from "@/components/sidebar"
 import { Trophy, Medal, Award, Star, Filter, ChevronDown } from "lucide-react"
+import { setActiveTab } from "@/utils/tab-utils" // Import setActiveTab from utils
 
 import { HeaderButtons } from "@/components/header-buttons"
 import { useTheme } from "@/components/theme-provider"
 import { useLanguage } from "@/components/language-provider"
 
 export default function LeaderboardPage() {
-  const [activeTab, setActiveTab] = useState("prompt-engineering")
+  // Remove this line entirely since we don't need tab state anymore
   const [selectedModel, setSelectedModel] = useState("all")
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const { theme } = useTheme()
@@ -35,19 +36,8 @@ export default function LeaderboardPage() {
     { rank: 8, name: "孙丽娜", score: 2498, badge: "⭐", change: "+7", model: "deepseek-v3" },
   ]
 
-  const psychologyLeaderboard = [
-    { rank: 1, name: "马丽亚医生", score: 3156, badge: "🏆", change: "+18", model: "gpt-4" },
-    { rank: 2, name: "刘建明医生", score: 3089, badge: "🥈", change: "+6", model: "claude-3" },
-    { rank: 3, name: "王雅琳医生", score: 2987, badge: "🥉", change: "+11", model: "gpt-4" },
-    { rank: 4, name: "朴志勇医生", score: 2934, badge: "⭐", change: "-3", model: "deepseek-v3" },
-    { rank: 5, name: "苏菲医生", score: 2876, badge: "⭐", change: "+9", model: "gemini-pro" },
-    { rank: 6, name: "汤姆森医生", score: 2823, badge: "⭐", change: "+4", model: "gpt-3.5" },
-    { rank: 7, name: "帕特尔医生", score: 2789, badge: "⭐", change: "+2", model: "claude-3" },
-    { rank: 8, name: "王志华医生", score: 2745, badge: "⭐", change: "+13", model: "gpt-4" },
-  ]
-
   const getFilteredLeaderboard = () => {
-    const baseLeaderboard = activeTab === "prompt-engineering" ? promptEngineeringLeaderboard : psychologyLeaderboard
+    const baseLeaderboard = promptEngineeringLeaderboard
     if (selectedModel === "all") return baseLeaderboard
     return baseLeaderboard.filter((participant) => participant.model === selectedModel)
   }
@@ -73,27 +63,9 @@ export default function LeaderboardPage() {
           <div className={`flex gap-8 border-b ${theme === "dark" ? "border-slate-700" : "border-gray-200"}`}>
             <button
               onClick={() => setActiveTab("prompt-engineering")}
-              className={`pb-4 px-2 font-medium transition-colors relative ${
-                activeTab === "prompt-engineering"
-                  ? "text-[#397eff] border-b-2 border-[#397eff]"
-                  : theme === "dark"
-                    ? "text-slate-400 hover:text-white"
-                    : "text-gray-600 hover:text-gray-900"
-              }`}
+              className={`pb-4 px-2 font-medium transition-colors relative ${"text-[#397eff] border-b-2 border-[#397eff]"}`}
             >
               {t("leaderboard.promptEngineering")}
-            </button>
-            <button
-              onClick={() => setActiveTab("psychology")}
-              className={`pb-4 px-2 font-medium transition-colors relative ${
-                activeTab === "psychology"
-                  ? "text-[#397eff] border-b-2 border-[#397eff]"
-                  : theme === "dark"
-                    ? "text-slate-400 hover:text-white"
-                    : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              {t("leaderboard.psychologyEvaluation")}
             </button>
           </div>
 
@@ -178,7 +150,7 @@ export default function LeaderboardPage() {
               <Award className="w-5 h-5 text-purple-500" />
               <span className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>最高分</span>
             </div>
-            <div className="text-2xl font-bold">{activeTab === "prompt-engineering" ? "2,847" : "3,156"}</div>
+            <div className="text-2xl font-bold">2,847</div>
           </div>
 
           <div
@@ -190,7 +162,7 @@ export default function LeaderboardPage() {
               <Star className="w-5 h-5 text-green-500" />
               <span className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>平均分</span>
             </div>
-            <div className="text-2xl font-bold">{activeTab === "prompt-engineering" ? "1,834" : "2,156"}</div>
+            <div className="text-2xl font-bold">1,834</div>
           </div>
         </div>
 
@@ -202,9 +174,7 @@ export default function LeaderboardPage() {
         >
           <div className={`p-6 border-b ${theme === "dark" ? "border-slate-700" : "border-gray-200"}`}>
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">
-                {activeTab === "prompt-engineering" ? "提示词工程" : "心理学评估"} 排名
-              </h2>
+              <h2 className="text-xl font-semibold">提示词工程 排名</h2>
               {selectedModel !== "all" && (
                 <span className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
                   筛选条件:{" "}
