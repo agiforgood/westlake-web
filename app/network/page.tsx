@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useTheme } from "@/components/theme-provider"
 import { useLanguage } from "@/components/language-provider"
-import { Search, SortAsc, SortDesc, User, MapPin, Clock, Heart, Briefcase, Calendar } from "lucide-react"
+import { Search, SortAsc, SortDesc, User, Heart } from "lucide-react"
 
 interface VolunteerProfile {
   id: string
@@ -340,40 +340,20 @@ export default function NetworkPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Badge variant="secondary" className="mb-2">
-                    {volunteer.additionalInfo}
-                  </Badge>
                   <p className={`text-sm line-clamp-2 ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
                     {volunteer.selfIntro}
                   </p>
                 </div>
 
-                <div className="space-y-2">
-                  {volunteer.showAddress && volunteer.currentAddress && (
-                    <div className="flex items-center gap-2">
-                      <MapPin className={`w-4 h-4 ${theme === "dark" ? "text-slate-400" : "text-gray-500"}`} />
-                      <span className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                        {volunteer.currentAddress}
-                      </span>
-                    </div>
-                  )}
-
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Calendar className={`w-4 h-4 ${theme === "dark" ? "text-slate-400" : "text-gray-500"}`} />
                     <span className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                      加入于 {new Date(volunteer.joinDate).toLocaleDateString("zh-CN")}
+                      获得勋章:
                     </span>
+                    <Badge variant="secondary" className="text-xs">
+                      3个
+                    </Badge>
                   </div>
-
-                  {volunteer.availableTime.length > 0 && (
-                    <div className="flex items-center gap-2">
-                      <Clock className={`w-4 h-4 ${theme === "dark" ? "text-slate-400" : "text-gray-500"}`} />
-                      <span className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                        {volunteer.availableTime.slice(0, 2).join(", ")}
-                        {volunteer.availableTime.length > 2 && "..."}
-                      </span>
-                    </div>
-                  )}
                 </div>
               </CardContent>
             </Card>
@@ -487,106 +467,6 @@ export default function NetworkPage() {
                       <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
                         {selectedVolunteer.selfIntro}
                       </p>
-                    </CardContent>
-                  </Card>
-
-                  {/* Professional Background */}
-                  <Card className={theme === "dark" ? "bg-slate-700 border-slate-600" : "bg-gray-50 border-gray-200"}>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Briefcase className="w-5 h-5 text-[#397eff]" />
-                        专业背景
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
-                        {selectedVolunteer.professionalBackground}
-                      </p>
-                    </CardContent>
-                  </Card>
-
-                  {/* Skills and Experience */}
-                  <Card className={theme === "dark" ? "bg-slate-700 border-slate-600" : "bg-gray-50 border-gray-200"}>
-                    <CardHeader>
-                      <CardTitle>技能与经验</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <h4 className={`font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                          可贡献的技能
-                        </h4>
-                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
-                          {selectedVolunteer.skillsAndExperience}
-                        </p>
-                      </div>
-                      <div>
-                        <h4 className={`font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                          专业技能
-                        </h4>
-                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
-                          {selectedVolunteer.skillsToShare}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Values and Expectations */}
-                  <Card className={theme === "dark" ? "bg-slate-700 border-slate-600" : "bg-gray-50 border-gray-200"}>
-                    <CardHeader>
-                      <CardTitle>价值观与期望</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <h4 className={`font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                          核心价值观
-                        </h4>
-                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
-                          {selectedVolunteer.coreValues}
-                        </p>
-                      </div>
-                      <div>
-                        <h4 className={`font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                          参与动机
-                        </h4>
-                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
-                          {selectedVolunteer.participationMotivation}
-                        </p>
-                      </div>
-                      <div>
-                        <h4 className={`font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                          连接期望
-                        </h4>
-                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
-                          {selectedVolunteer.connectionExpectations}
-                        </p>
-                      </div>
-                      <div>
-                        <h4 className={`font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                          学习目标
-                        </h4>
-                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
-                          {selectedVolunteer.learningGoals}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Available Time */}
-                  <Card className={theme === "dark" ? "bg-slate-700 border-slate-600" : "bg-gray-50 border-gray-200"}>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Clock className="w-5 h-5 text-[#397eff]" />
-                        可参与时间
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedVolunteer.availableTime.map((time, index) => (
-                          <Badge key={index} variant="outline">
-                            {time}
-                          </Badge>
-                        ))}
-                      </div>
                     </CardContent>
                   </Card>
                 </div>
