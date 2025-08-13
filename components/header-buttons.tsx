@@ -1,9 +1,9 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Bell, Settings } from "lucide-react"
 import { useTheme } from "@/components/theme-provider"
+import { AvatarDropdown } from "@/components/avatar-dropdown"
 
 export function HeaderButtons() {
   const { theme } = useTheme()
@@ -24,10 +24,7 @@ export function HeaderButtons() {
       >
         <Settings className="w-5 h-5" />
       </Button>
-      <Avatar>
-        <AvatarImage src="/placeholder.svg?height=40&width=40" />
-        <AvatarFallback className="bg-[#004cd7] text-white">JD</AvatarFallback>
-      </Avatar>
+      <AvatarDropdown userId="Ethanovum" userName="JD" />
     </div>
   )
 }
