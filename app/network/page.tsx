@@ -428,7 +428,7 @@ export default function NetworkPage() {
         {/* Permission Dialog */}
         <Dialog open={showPermissionDialog} onOpenChange={setShowPermissionDialog}>
           <DialogContent
-            className={`max-w-md ${theme === "dark" ? "bg-slate-800 border-slate-700" : "bg-white border-gray-200"}`}
+            className={`max-w-md animate-in fade-in-0 zoom-in-95 duration-200 ${theme === "dark" ? "bg-slate-800 border-slate-700" : "bg-white border-gray-200"}`}
           >
             <DialogHeader>
               <DialogTitle className={`text-center ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
@@ -507,7 +507,7 @@ export default function NetworkPage() {
         {/* Volunteer Detail Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent
-            className={`max-w-4xl max-h-[80vh] overflow-y-auto ${
+            className={`max-w-4xl max-h-[80vh] overflow-y-auto animate-in fade-in-0 zoom-in-95 duration-200 ${
               theme === "dark" ? "bg-slate-800 border-slate-700" : "bg-white border-gray-200"
             }`}
           >
