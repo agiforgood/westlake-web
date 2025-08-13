@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import {
   BarChart3,
   Trophy,
@@ -80,16 +81,19 @@ export function Sidebar() {
       >
         <div className="p-6 h-full flex flex-col relative">
           {/* Logo */}
-          <div className={`flex items-center gap-2 mb-8 ${isCollapsed ? "justify-center" : "ml-1.5"}`}>
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#004cd7] to-[#397eff] flex items-center justify-center">
-              <span className="text-white font-bold text-sm">W</span>
+          <Link
+            href="/guest"
+            className={`flex items-center gap-2 mb-8 cursor-pointer hover:opacity-80 transition-opacity ${isCollapsed ? "justify-center" : "ml-1.5"}`}
+          >
+            <div className="w-8 h-8 flex items-center justify-center">
+              <Image src="/agi_logo.svg" alt="AGI Logo" width={32} height={32} className="w-8 h-8" />
             </div>
             {!isCollapsed && (
               <span className={`font-semibold text-lg ${theme === "dark" ? "text-white" : "text-slate-900"}`}>
                 WestLake
               </span>
             )}
-          </div>
+          </Link>
 
           {/* Navigation */}
           <nav className="space-y-2 flex-1">
