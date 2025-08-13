@@ -56,7 +56,7 @@ export default function NetworkPage() {
   const currentUserPermissions: UserPermissions = {
     isPsychologist: false, // 设为 true 测试心理学家权限
     isPromptEngineer: false, // 设为 true 测试提示词工程师权限
-    badgeCount: 0, // 设为 >= 1 测试有勋章用户权限
+    badgeCount: 1, // 设为 >= 1 测试有勋章用户权限
     userType: "normal", // 会根据上面的条件自动计算
   }
 
