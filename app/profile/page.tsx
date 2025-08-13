@@ -48,7 +48,7 @@ export default function ProfilePage() {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h1 className="text-3xl font-bold mb-2">智能问答社会创新网络志愿者说明书</h1>
+                <h1 className="text-3xl font-bold mb-2">志愿者说明书</h1>
               </div>
               <div className="flex items-center gap-4">
                 <Button
