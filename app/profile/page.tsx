@@ -61,7 +61,7 @@ export default function ProfilePage() {
                   }`}
                 >
                   <Edit className="w-4 h-4 mr-2" />
-                  编辑志愿者说明书
+                  编辑
                 </Button>
                 <HeaderButtons />
               </div>
