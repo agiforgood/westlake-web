@@ -51,33 +51,7 @@ export default function ProfilePage() {
       <div className="sidebar-margin">
         <div className="flex">
           {/* Left Sidebar Navigation */}
-          <div
-            className={`w-64 min-h-screen border-r ${theme === "dark" ? "bg-slate-800 border-slate-700" : "bg-white border-gray-200"}`}
-          >
-            <div className="p-6">
-              <nav className="space-y-2">
-                {sidebarItems.map((item) => {
-                  const Icon = item.icon
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => setActiveSection(item.id)}
-                      className={`flex items-center gap-3 w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                        activeSection === item.id
-                          ? "bg-[#004cd7] text-white"
-                          : theme === "dark"
-                            ? "text-slate-400 hover:text-white hover:bg-slate-700"
-                            : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span className="text-sm">{item.name}</span>
-                    </button>
-                  )
-                })}
-              </nav>
-            </div>
-          </div>
+          
 
           {/* Main Content */}
           <div className="flex-1 p-8">
