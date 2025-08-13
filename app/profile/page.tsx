@@ -80,8 +80,15 @@ export default function ProfilePage() {
             <div className="max-w-4xl space-y-12">
               {/* Profile Avatar Section */}
               <div className="text-center">
-                <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
-                  <User className="w-16 h-16 text-white" />
+                <div className="relative w-32 h-32 mx-auto mb-4">
+                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center cursor-pointer">
+                    <User className="w-16 h-16 text-white" />
+                  </div>
+                  {isEditing && (
+                    <button className="absolute bottom-0 right-0 w-8 h-8 bg-[#397eff] rounded-full flex items-center justify-center text-white hover:bg-[#397eff]/80">
+                      <Edit className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
                 <h2 className="text-2xl font-bold mb-2">志愿者说明书</h2>
                 <p className={theme === "dark" ? "text-slate-400" : "text-gray-600"}>欢迎来到智能问答社会创新网络</p>
@@ -205,6 +212,20 @@ export default function ProfilePage() {
                             : "bg-gray-100 border-gray-300 text-gray-900"
                         }
                       />
+                      <div className="flex items-center gap-2 mt-2">
+                        <input
+                          type="checkbox"
+                          id="showAddress"
+                          disabled={!isEditing}
+                          className="w-4 h-4 text-[#397eff] bg-gray-100 border-gray-300 rounded focus:ring-[#397eff] focus:ring-2"
+                        />
+                        <label
+                          htmlFor="showAddress"
+                          className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}
+                        >
+                          公开显示地址
+                        </label>
+                      </div>
                     </div>
                   </div>
 
@@ -377,25 +398,59 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Clock className="w-5 h-5 text-[#397eff]" />
-                    联系信息和可享与时间
+                    联系信息和可参与时间
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-6">
                   <div>
                     <label
-                      className={`block text-sm font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
+                      className={`block text-sm font-medium mb-4 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
                     >
-                      可享与时间
+                      可参与时间 <span className="text-red-500">*</span>
                     </label>
-                    <Input
-                      value={profileData.availableTime}
-                      disabled={!isEditing}
-                      className={
-                        theme === "dark"
-                          ? "bg-slate-700 border-slate-600 text-white"
-                          : "bg-gray-100 border-gray-300 text-gray-900"
-                      }
-                    />
+                    <div className="grid grid-cols-1 gap-4">
+                      {["周一", "周二", "周三", "周四", "周五", "周六", "周日"].map((day) => (
+                        <div key={day} className="flex items-center gap-4">
+                          <span
+                            className={`w-12 text-sm font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}
+                          >
+                            {day}
+                          </span>
+                          <div className="flex gap-4">
+                            <label className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                disabled={!isEditing}
+                                className="w-4 h-4 text-[#397eff] bg-gray-100 border-gray-300 rounded focus:ring-[#397eff] focus:ring-2"
+                              />
+                              <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                                上午
+                              </span>
+                            </label>
+                            <label className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                disabled={!isEditing}
+                                className="w-4 h-4 text-[#397eff] bg-gray-100 border-gray-300 rounded focus:ring-[#397eff] focus:ring-2"
+                              />
+                              <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                                下午
+                              </span>
+                            </label>
+                            <label className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                disabled={!isEditing}
+                                className="w-4 h-4 text-[#397eff] bg-gray-100 border-gray-300 rounded focus:ring-[#397eff] focus:ring-2"
+                              />
+                              <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                                晚上
+                              </span>
+                            </label>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
