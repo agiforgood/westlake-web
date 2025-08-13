@@ -15,7 +15,7 @@ export function HeaderButtons() {
         size="icon"
         className={`${theme === "dark" ? "text-slate-400 hover:text-white" : "text-gray-600 hover:text-gray-900"}`}
       >
-        <Bell className="w-5 h-5" />
+        <Bell className="h-[30px] w-[30px]" />
       </Button>
       <Button
         variant="ghost"
