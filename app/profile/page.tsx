@@ -22,20 +22,20 @@ export default function ProfilePage() {
     name: "Ethan",
     gender: "保密",
     uniqueId: "Ethanovum",
-    additionalInfo: "ethan@example.com", // 改为邮箱示例
-    contactMethod: "未填写",
-    currentAddress: "",
-    selfIntro: "未填写",
-    professionalBackground: "未填写",
-    skillsAndExperience: "未填写",
-    coreValues: "未填写",
-    participationMotivation: "未填写",
-    connectionExpectations: "未填写",
-    skillsToShare: "未填写",
-    learningGoals: "未填写",
+    email: "ethan@example.com", // 改为邮箱示例
+    address: "",
+    phone:"",
     showAddress: true, // 改为默认打钩
     showContact: true, // 新增联系方式公开显示选项
     showAdditionalInfo: true, // 新增电子邮箱或微信公开显示选项，默认打钩
+    intro: "未填写",
+    professionalBackground: "未填写",
+    contributions: "未填写",
+    skills:"未填写",
+    coreValues: "未填写",
+    participationMotivation: "未填写",
+    connectionExpectations: "未填写",
+    learningGoals: "未填写",
   })
 
   const handleInputChange = (field: string, value: string) => {
@@ -179,11 +179,11 @@ export default function ProfilePage() {
                       <label
                         className={`block text-sm font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
                       >
-                        电子邮箱或微信 <span className="text-red-500">*</span>
+                        电子邮箱 <span className="text-red-500">*</span>
                       </label>
                       <Input
-                        value={formData.additionalInfo}
-                        onChange={(e) => handleInputChange("additionalInfo", e.target.value)}
+                        value={formData.email}
+                        onChange={(e) => handleInputChange("email", e.target.value)}
                         disabled={!isEditing}
                         className={
                           theme === "dark"
@@ -216,8 +216,8 @@ export default function ProfilePage() {
                         联系方式 <span className="text-red-500">*</span>
                       </label>
                       <Input
-                        value={formData.contactMethod}
-                        onChange={(e) => handleInputChange("contactMethod", e.target.value)}
+                        value={formData.phone}
+                        onChange={(e) => handleInputChange("phone", e.target.value)}
                         disabled={!isEditing}
                         className={
                           theme === "dark"
@@ -250,8 +250,8 @@ export default function ProfilePage() {
                         当前地址
                       </label>
                       <Input
-                        value={formData.currentAddress}
-                        onChange={(e) => handleInputChange("currentAddress", e.target.value)}
+                        value={formData.address}
+                        onChange={(e) => handleInputChange("address", e.target.value)}
                         disabled={!isEditing}
                         className={
                           theme === "dark"
@@ -287,8 +287,8 @@ export default function ProfilePage() {
                         一句话介绍自己 <span className="text-red-500">*</span>
                       </label>
                       <Textarea
-                        value={formData.selfIntro}
-                        onChange={(e) => handleInputChange("selfIntro", e.target.value)}
+                        value={formData.intro}
+                        onChange={(e) => handleInputChange("intro", e.target.value)}
                         disabled={!isEditing}
                         className={
                           theme === "dark"
@@ -332,11 +332,11 @@ export default function ProfilePage() {
                     <label
                       className={`block text-sm font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
                     >
-                      我可以贡献给大家的技能或经验的事情
+                      我可以做出的贡献 <span className="text-red-500">*</span>
                     </label>
                     <Textarea
-                      value={formData.skillsAndExperience}
-                      onChange={(e) => handleInputChange("skillsAndExperience", e.target.value)}
+                      value={formData.contributions}
+                      onChange={(e) => handleInputChange("contributions", e.target.value)}
                       disabled={!isEditing}
                       className={
                         theme === "dark"
@@ -350,11 +350,11 @@ export default function ProfilePage() {
                     <label
                       className={`block text-sm font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
                     >
-                      我的专业技能或者，我的技能也很棒好
+                      我的专业技能
                     </label>
                     <Textarea
-                      value={formData.skillsToShare}
-                      onChange={(e) => handleInputChange("skillsToShare", e.target.value)}
+                      value={formData.skills}
+                      onChange={(e) => handleInputChange("skills", e.target.value)}
                       disabled={!isEditing}
                       className={
                         theme === "dark"
@@ -379,13 +379,13 @@ export default function ProfilePage() {
                     <label
                       className={`block text-sm font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
                     >
-                      我能够或者的核心价值观 <span className="text-red-500">*</span>
+                      我的核心价值观 <span className="text-red-500">*</span>
                     </label>
                     <Textarea
                       value={formData.coreValues}
                       onChange={(e) => handleInputChange("coreValues", e.target.value)}
                       disabled={!isEditing}
-                      placeholder="我的价值观，法律法规意识，道德价值观念，社会责任感，市场价值观/商业道德观，游戏规则"
+                      placeholder="我的价值观，法律法规意识，道德价值观念，社会责任感"
                       className={
                         theme === "dark"
                           ? "bg-slate-700 border-slate-600 text-white"
@@ -398,7 +398,7 @@ export default function ProfilePage() {
                     <label
                       className={`block text-sm font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
                     >
-                      除了基础心理健康外，我还想要在在我们这个社会创新网络
+                      我想要参与智能向善社会创新网络的原因
                     </label>
                     <Textarea
                       value={formData.participationMotivation}
@@ -416,7 +416,7 @@ export default function ProfilePage() {
                     <label
                       className={`block text-sm font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
                     >
-                      我对什么样的人或智能问答网络技术的支持 <span className="text-red-500">*</span>
+                      我希望得到什么样的支持 <span className="text-red-500">*</span>
                     </label>
                     <Textarea
                       value={formData.connectionExpectations}
