@@ -22,7 +22,7 @@ export default function ProfilePage() {
     name: "Ethan",
     gender: "保密",
     uniqueId: "Ethanovum",
-    additionalInfo: "未填写",
+    additionalInfo: "ethan@example.com", // 改为邮箱示例
     contactMethod: "未填写",
     currentAddress: "",
     selfIntro: "未填写",
@@ -33,7 +33,8 @@ export default function ProfilePage() {
     connectionExpectations: "未填写",
     skillsToShare: "未填写",
     learningGoals: "未填写",
-    showAddress: false,
+    showAddress: true, // 改为默认打钩
+    showContact: true, // 新增联系方式公开显示选项
   })
 
   const handleInputChange = (field: string, value: string) => {
@@ -177,7 +178,7 @@ export default function ProfilePage() {
                       <label
                         className={`block text-sm font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
                       >
-                        其余信息 <span className="text-red-500">*</span>
+                        电子邮箱或微信 <span className="text-red-500">*</span>
                       </label>
                       <Input
                         value={formData.additionalInfo}
@@ -207,6 +208,22 @@ export default function ProfilePage() {
                             : "bg-gray-100 border-gray-300 text-gray-900"
                         }
                       />
+                      <div className="flex items-center gap-2 mt-2">
+                        <input
+                          type="checkbox"
+                          id="showContact"
+                          disabled={!isEditing}
+                          checked={formData.showContact}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, showContact: e.target.checked }))}
+                          className="w-4 h-4 text-[#397eff] bg-gray-100 border-gray-300 rounded focus:ring-[#397eff] focus:ring-2"
+                        />
+                        <label
+                          htmlFor="showContact"
+                          className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}
+                        >
+                          公开显示联系方式
+                        </label>
+                      </div>
                     </div>
 
                     <div>
@@ -421,7 +438,7 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Clock className="w-5 h-5 text-[#397eff]" />
-                    联系信息和可参与时间
+                    可参与时间
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
