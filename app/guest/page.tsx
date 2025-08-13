@@ -22,15 +22,110 @@ export default function GuestPage() {
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          <Link href="#roadmap" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
-            路线图
-          </Link>
-          <Link href="#tasks" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
-            任务
-          </Link>
-          <Link href="#volunteers" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
-            志愿者
-          </Link>
+          {/* 产品 Dropdown */}
+          <div className="relative group">
+            <button className="text-gray-700 hover:text-gray-900 font-medium transition-colors flex items-center gap-1">
+              产品
+              <svg
+                className="w-4 h-4 transition-transform group-hover:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div className="py-2">
+                <a
+                  href="#qijia-app"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  齐家APP
+                </a>
+                <a
+                  href="#prompt-arena"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  提示词竞技场
+                </a>
+                <a
+                  href="#psychologist-platform"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  心理学家协作平台
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* 文档 Dropdown */}
+          <div className="relative group">
+            <button className="text-gray-700 hover:text-gray-900 font-medium transition-colors flex items-center gap-1">
+              文档
+              <svg
+                className="w-4 h-4 transition-transform group-hover:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div className="py-2">
+                <a
+                  href="#roadmap"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  路线图
+                </a>
+                <a
+                  href="#tasks"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  任务
+                </a>
+                <a
+                  href="#tutorials"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  教程
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* 志愿者 Dropdown */}
+          <div className="relative group">
+            <button className="text-gray-700 hover:text-gray-900 font-medium transition-colors flex items-center gap-1">
+              志愿者
+              <svg
+                className="w-4 h-4 transition-transform group-hover:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div className="py-2">
+                <a
+                  href="#who-we-are"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  我们是谁
+                </a>
+                <a
+                  href="#become-volunteer"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  成为志愿者
+                </a>
+              </div>
+            </div>
+          </div>
         </nav>
 
         {/* Login Button */}
@@ -58,16 +153,46 @@ export default function GuestPage() {
 
       {/* Mobile Navigation Menu (hidden by default, can be toggled) */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-gray-200 p-4 z-20">
-        <nav className="flex justify-around">
-          <Link href="#roadmap" className="text-gray-700 hover:text-gray-900 font-medium text-sm">
-            路线图
-          </Link>
-          <Link href="#tasks" className="text-gray-700 hover:text-gray-900 font-medium text-sm">
-            任务
-          </Link>
-          <Link href="#volunteers" className="text-gray-700 hover:text-gray-900 font-medium text-sm">
-            志愿者
-          </Link>
+        <nav className="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <p className="font-medium text-gray-900 mb-2">产品</p>
+            <div className="space-y-1">
+              <a href="#qijia-app" className="block text-sm text-gray-700 hover:text-gray-900">
+                齐家APP
+              </a>
+              <a href="#prompt-arena" className="block text-sm text-gray-700 hover:text-gray-900">
+                提示词竞技场
+              </a>
+              <a href="#psychologist-platform" className="block text-sm text-gray-700 hover:text-gray-900">
+                心理学家协作平台
+              </a>
+            </div>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 mb-2">文档</p>
+            <div className="space-y-1">
+              <a href="#roadmap" className="block text-sm text-gray-700 hover:text-gray-900">
+                路线图
+              </a>
+              <a href="#tasks" className="block text-sm text-gray-700 hover:text-gray-900">
+                任务
+              </a>
+              <a href="#tutorials" className="block text-sm text-gray-700 hover:text-gray-900">
+                教程
+              </a>
+            </div>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 mb-2">志愿者</p>
+            <div className="space-y-1">
+              <a href="#who-we-are" className="block text-sm text-gray-700 hover:text-gray-900">
+                我们是谁
+              </a>
+              <a href="#become-volunteer" className="block text-sm text-gray-700 hover:text-gray-900">
+                成为志愿者
+              </a>
+            </div>
+          </div>
         </nav>
       </div>
     </div>
