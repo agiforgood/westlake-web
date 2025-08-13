@@ -415,9 +415,11 @@ export default function NetworkPage() {
                     <span className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
                       获得勋章:
                     </span>
-                    <Badge variant="secondary" className="text-xs">
-                      3个
-                    </Badge>
+                    <div className="flex items-center gap-1">
+                      <Trophy className="w-4 h-4 text-yellow-500" />
+                      <Trophy className="w-4 h-4 text-blue-500" />
+                      <Trophy className="w-4 h-4 text-purple-500" />
+                    </div>
                   </div>
                 </div>
               </CardContent>
