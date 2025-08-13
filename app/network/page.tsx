@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useTheme } from "@/components/theme-provider"
 import { useLanguage } from "@/components/language-provider"
-import { Search, SortAsc, SortDesc, User, Heart, Lock, Trophy } from "lucide-react"
+import { Search, SortAsc, SortDesc, User, Heart, Lock, Trophy, Briefcase, Clock } from "lucide-react"
 
 interface VolunteerProfile {
   id: string
@@ -21,6 +21,7 @@ interface VolunteerProfile {
   contactMethod: string
   currentAddress: string
   showAddress: boolean
+  showContact: boolean
   selfIntro: string
   professionalBackground: string
   skillsAndExperience: string
@@ -76,19 +77,23 @@ export default function NetworkPage() {
       name: "Ethan",
       gender: "保密",
       uniqueId: "Ethanovum",
-      additionalInfo: "AI研究爱好者",
-      contactMethod: "ethan@example.com",
+      additionalInfo: "ethan@example.com",
+      contactMethod: "微信: ethan_tech",
       currentAddress: "杭州市西湖区",
       showAddress: true,
+      showContact: true,
       selfIntro: "热爱技术，致力于用AI改善社会",
-      professionalBackground: "计算机科学专业，5年AI开发经验",
-      skillsAndExperience: "机器学习、深度学习、自然语言处理",
-      coreValues: "诚信、创新、社会责任",
-      participationMotivation: "希望通过技术帮助更多人解决心理健康问题",
-      connectionExpectations: "寻找志同道合的技术专家和心理学专业人士",
-      skillsToShare: "Python编程、AI模型训练、数据分析",
-      learningGoals: "深入了解心理学理论，提升跨学科合作能力",
-      availableTime: ["周二下午", "周日下午"],
+      professionalBackground:
+        "计算机科学专业，5年AI开发经验，曾在多家科技公司担任算法工程师，专注于机器学习和深度学习技术的研发与应用。",
+      skillsAndExperience: "机器学习、深度学习、自然语言处理、Python编程、TensorFlow、PyTorch框架开发",
+      coreValues: "诚信、创新、社会责任。相信技术应该服务于人类，推动社会进步。坚持开源精神，乐于分享知识和经验。",
+      participationMotivation:
+        "希望通过技术帮助更多人解决心理健康问题，将AI技术与心理学结合，开发更智能、更人性化的心理健康工具。",
+      connectionExpectations:
+        "寻找志同道合的技术专家和心理学专业人士，希望能够与心理学家、产品经理、设计师等不同背景的专业人士合作。",
+      skillsToShare: "Python编程、AI模型训练、数据分析、系统架构设计、开源项目管理",
+      learningGoals: "深入了解心理学理论，提升跨学科合作能力，学习用户体验设计，了解心理健康领域的实际需求。",
+      availableTime: ["周二下午", "周日下午", "周六上午"],
       joinDate: "2024-01-15",
     },
     {
@@ -96,19 +101,21 @@ export default function NetworkPage() {
       name: "陈志明",
       gender: "男",
       uniqueId: "ChenZhiming",
-      additionalInfo: "家庭心理教练",
-      contactMethod: "zhiming.chen@example.com",
+      additionalInfo: "zhiming.chen@example.com",
+      contactMethod: "电话: 138****8888",
       currentAddress: "北京市朝阳区",
       showAddress: true,
+      showContact: false,
       selfIntro: "专业心理咨询师，专注家庭关系改善",
-      professionalBackground: "心理学硕士，10年临床经验",
-      skillsAndExperience: "家庭治疗、认知行为疗法、情感分析",
-      coreValues: "同理心、专业性、保密原则",
-      participationMotivation: "将传统心理咨询与AI技术结合，扩大服务范围",
-      connectionExpectations: "与技术开发者合作，开发更好的心理健康工具",
-      skillsToShare: "心理评估、咨询技巧、案例分析",
-      learningGoals: "学习AI在心理健康领域的应用",
-      availableTime: ["周一上午", "周三下午", "周五晚上"],
+      professionalBackground:
+        "心理学硕士，10年临床经验，国家二级心理咨询师，擅长家庭治疗、婚姻咨询、青少年心理问题处理。",
+      skillsAndExperience: "家庭治疗、认知行为疗法、情感分析、心理测评、危机干预、团体心理辅导",
+      coreValues: "同理心、专业性、保密原则。始终以来访者的福祉为中心，坚持专业伦理，保护来访者隐私。",
+      participationMotivation: "将传统心理咨询与AI技术结合，扩大服务范围，让更多人能够获得专业的心理健康支持。",
+      connectionExpectations: "与技术开发者合作，开发更好的心理健康工具，同时与其他心理学专家交流经验，提升服务质量。",
+      skillsToShare: "心理评估、咨询技巧、案例分析、心理危机处理、专业督导",
+      learningGoals: "学习AI在心理健康领域的应用，了解数字化心理服务的发展趋势，提升技术应用能力。",
+      availableTime: ["周一上午", "周三下午", "周五晚上", "周日上午"],
       joinDate: "2024-02-20",
     },
     {
@@ -116,19 +123,20 @@ export default function NetworkPage() {
       name: "金美丽",
       gender: "女",
       uniqueId: "JinMeili",
-      additionalInfo: "行为分析专家",
-      contactMethod: "meili.jin@example.com",
+      additionalInfo: "meili.jin@example.com",
+      contactMethod: "邮箱: meili.research@gmail.com",
       currentAddress: "上海市浦东新区",
       showAddress: false,
+      showContact: true,
       selfIntro: "专注于行为模式分析和干预策略研究",
-      professionalBackground: "应用心理学博士，研究行为分析8年",
-      skillsAndExperience: "行为分析、数据统计、研究方法设计",
-      coreValues: "科学严谨、循证实践、持续学习",
-      participationMotivation: "推动心理学研究的数字化转型",
-      connectionExpectations: "寻找数据科学家和统计学专家合作",
-      skillsToShare: "行为数据分析、实验设计、学术写作",
-      learningGoals: "掌握大数据分析技术和机器学习方法",
-      availableTime: ["周二上午", "周四下午"],
+      professionalBackground: "应用心理学博士，研究行为分析8年，发表多篇SCI论文，主持过多项国家级科研项目。",
+      skillsAndExperience: "行为分析、数据统计、研究方法设计、实验心理学、认知神经科学、学术论文写作",
+      coreValues: "科学严谨、循证实践、持续学习。坚信科学研究应该服务于实践，推动心理学理论的应用转化。",
+      participationMotivation: "推动心理学研究的数字化转型，将学术研究成果转化为实际应用，帮助更多人受益。",
+      connectionExpectations: "寻找数据科学家和统计学专家合作，希望与产品开发团队合作，将研究成果产品化。",
+      skillsToShare: "行为数据分析、实验设计、学术写作、统计分析、研究方法论",
+      learningGoals: "掌握大数据分析技术和机器学习方法，学习产品开发流程，了解商业化运作模式。",
+      availableTime: ["周二上午", "周四下午", "周六晚上"],
       joinDate: "2024-01-28",
     },
     {
@@ -136,19 +144,20 @@ export default function NetworkPage() {
       name: "王大伟",
       gender: "男",
       uniqueId: "WangDawei",
-      additionalInfo: "产品经理",
-      contactMethod: "dawei.wang@example.com",
+      additionalInfo: "dawei.wang@example.com",
+      contactMethod: "微信: wangdawei_pm",
       currentAddress: "深圳市南山区",
       showAddress: true,
+      showContact: true,
       selfIntro: "互联网产品经理，关注用户体验和产品创新",
-      professionalBackground: "工商管理硕士，6年产品管理经验",
-      skillsAndExperience: "产品设计、用户研究、项目管理",
-      coreValues: "用户至上、数据驱动、团队协作",
-      participationMotivation: "设计更人性化的心理健康产品",
-      connectionExpectations: "与心理学专家和技术团队协作",
-      skillsToShare: "产品规划、用户体验设计、市场分析",
-      learningGoals: "了解心理健康领域的用户需求和痛点",
-      availableTime: ["周六上午", "周日晚上"],
+      professionalBackground: "工商管理硕士，6年产品管理经验，曾负责多款千万级用户产品的设计和运营。",
+      skillsAndExperience: "产品设计、用户研究、项目管理、数据分析、A/B测试、敏捷开发",
+      coreValues: "用户至上、数据驱动、团队协作。相信好的产品应该解决真实的用户问题，创造实际价值。",
+      participationMotivation: "设计更人性化的心理健康产品，让技术真正服务于用户的心理健康需求。",
+      connectionExpectations: "与心理学专家和技术团队协作，深入了解用户需求，打造有温度的产品。",
+      skillsToShare: "产品规划、用户体验设计、市场分析、运营策略、团队管理",
+      learningGoals: "了解心理健康领域的用户需求和痛点，学习心理学基础知识，提升产品的专业性。",
+      availableTime: ["周六上午", "周日晚上", "周三晚上"],
       joinDate: "2024-03-05",
     },
     {
@@ -156,19 +165,20 @@ export default function NetworkPage() {
       name: "李小红",
       gender: "女",
       uniqueId: "LiXiaohong",
-      additionalInfo: "UI/UX设计师",
-      contactMethod: "xiaohong.li@example.com",
+      additionalInfo: "xiaohong.li@example.com",
+      contactMethod: "QQ: 123456789",
       currentAddress: "成都市高新区",
       showAddress: true,
+      showContact: false,
       selfIntro: "专注于创造温暖、易用的数字体验",
-      professionalBackground: "视觉传达设计专业，4年设计经验",
-      skillsAndExperience: "界面设计、用户体验、视觉设计",
-      coreValues: "美学追求、用户同理心、细节完美",
-      participationMotivation: "为心理健康应用设计更友好的界面",
-      connectionExpectations: "与心理学专家合作，理解用户情感需求",
-      skillsToShare: "设计思维、原型制作、视觉传达",
-      learningGoals: "学习心理学在设计中的应用",
-      availableTime: ["周一晚上", "周三上午", "周六下午"],
+      professionalBackground: "视觉传达设计专业，4年设计经验，擅长UI/UX设计，曾为多家知名企业设计产品界面。",
+      skillsAndExperience: "界面设计、用户体验、视觉设计、交互设计、原型制作、设计系统构建",
+      coreValues: "美学追求、用户同理心、细节完美。相信设计的力量，通过设计传递温暖和关怀。",
+      participationMotivation: "为心理健康应用设计更友好的界面，让用户在使用过程中感受到温暖和支持。",
+      connectionExpectations: "与心理学专家合作，理解用户情感需求，设计出真正有帮助的产品界面。",
+      skillsToShare: "设计思维、原型制作、视觉传达、用户体验优化、设计规范制定",
+      learningGoals: "学习心理学在设计中的应用，了解色彩心理学，提升设计的心理学专业性。",
+      availableTime: ["周一晚上", "周三上午", "周六下午", "周日上午"],
       joinDate: "2024-02-14",
     },
     {
@@ -176,19 +186,20 @@ export default function NetworkPage() {
       name: "张建国",
       gender: "男",
       uniqueId: "ZhangJianguo",
-      additionalInfo: "数据科学家",
-      contactMethod: "jianguo.zhang@example.com",
+      additionalInfo: "jianguo.zhang@example.com",
+      contactMethod: "电话: 139****9999",
       currentAddress: "广州市天河区",
       showAddress: true,
+      showContact: true,
       selfIntro: "用数据洞察人类行为，推动科学决策",
-      professionalBackground: "统计学博士，专注大数据分析7年",
-      skillsAndExperience: "数据挖掘、统计建模、机器学习",
-      coreValues: "数据驱动、科学方法、客观分析",
-      participationMotivation: "将数据科学应用于心理健康研究",
-      connectionExpectations: "与心理学研究者合作进行数据分析",
-      skillsToShare: "统计分析、数据可视化、预测建模",
-      learningGoals: "了解心理学研究方法和理论框架",
-      availableTime: ["周二晚上", "周四上午", "周日上午"],
+      professionalBackground: "统计学博士，专注大数据分析7年，在金融、医疗、教育等多个领域有丰富的数据分析经验。",
+      skillsAndExperience: "数据挖掘、统计建模、机器学习、Python/R编程、数据可视化、商业智能",
+      coreValues: "数据驱动、科学方法、客观分析。相信数据的力量，通过科学的方法发现规律，指导决策。",
+      participationMotivation: "将数据科学应用于心理健康研究，通过数据分析发现心理健康规律，为干预提供科学依据。",
+      connectionExpectations: "与心理学研究者合作进行数据分析，与产品团队合作开发数据驱动的心理健康产品。",
+      skillsToShare: "统计分析、数据可视化、预测建模、A/B测试设计、数据库设计",
+      learningGoals: "了解心理学研究方法和理论框架，学习心理测量学，提升跨学科合作能力。",
+      availableTime: ["周二晚上", "周四上午", "周日上午", "周五下午"],
       joinDate: "2024-01-10",
     },
   ]
@@ -507,7 +518,7 @@ export default function NetworkPage() {
         {/* Volunteer Detail Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent
-            className={`max-w-4xl max-h-[80vh] overflow-y-auto animate-in fade-in-0 zoom-in-95 duration-200 ${
+            className={`max-w-6xl max-h-[90vh] overflow-y-auto animate-in fade-in-0 zoom-in-95 duration-200 ${
               theme === "dark" ? "bg-slate-800 border-slate-700" : "bg-white border-gray-200"
             }`}
           >
@@ -515,7 +526,7 @@ export default function NetworkPage() {
               <>
                 <DialogHeader>
                   <DialogTitle className={`text-center ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                    志愿者详情
+                    志愿者说明书
                   </DialogTitle>
                 </DialogHeader>
 
@@ -532,19 +543,27 @@ export default function NetworkPage() {
                       @{selectedVolunteer.uniqueId}
                     </p>
                     <Badge variant="secondary" className="mt-2">
-                      {selectedVolunteer.additionalInfo}
+                      智能向善社会创新网络志愿者
                     </Badge>
                   </div>
 
-                  {/* Basic Info */}
+                  {/* 个人基础信息 */}
                   <Card className={theme === "dark" ? "bg-slate-700 border-slate-600" : "bg-gray-50 border-gray-200"}>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <User className="w-5 h-5 text-[#397eff]" />
-                        基本信息
+                        个人基础信息
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <span
+                          className={`text-sm font-medium ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}
+                        >
+                          姓名/昵称:
+                        </span>
+                        <p className={theme === "dark" ? "text-white" : "text-gray-900"}>{selectedVolunteer.name}</p>
+                      </div>
                       <div>
                         <span
                           className={`text-sm font-medium ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}
@@ -557,18 +576,40 @@ export default function NetworkPage() {
                         <span
                           className={`text-sm font-medium ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}
                         >
-                          联系方式:
+                          唯一ID:
                         </span>
                         <p className={theme === "dark" ? "text-white" : "text-gray-900"}>
-                          {selectedVolunteer.contactMethod}
+                          {selectedVolunteer.uniqueId}
                         </p>
                       </div>
+                      <div>
+                        <span
+                          className={`text-sm font-medium ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}
+                        >
+                          电子邮箱或微信:
+                        </span>
+                        <p className={theme === "dark" ? "text-white" : "text-gray-900"}>
+                          {selectedVolunteer.additionalInfo}
+                        </p>
+                      </div>
+                      {selectedVolunteer.showContact && (
+                        <div>
+                          <span
+                            className={`text-sm font-medium ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}
+                          >
+                            联系方式:
+                          </span>
+                          <p className={theme === "dark" ? "text-white" : "text-gray-900"}>
+                            {selectedVolunteer.contactMethod}
+                          </p>
+                        </div>
+                      )}
                       {selectedVolunteer.showAddress && selectedVolunteer.currentAddress && (
                         <div>
                           <span
                             className={`text-sm font-medium ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}
                           >
-                            地址:
+                            当前地址:
                           </span>
                           <p className={theme === "dark" ? "text-white" : "text-gray-900"}>
                             {selectedVolunteer.currentAddress}
@@ -588,18 +629,125 @@ export default function NetworkPage() {
                     </CardContent>
                   </Card>
 
-                  {/* Self Introduction */}
+                  {/* 自我介绍和专业背景 */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Card className={theme === "dark" ? "bg-slate-700 border-slate-600" : "bg-gray-50 border-gray-200"}>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Heart className="w-5 h-5 text-[#397eff]" />
+                          一句话介绍自己
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
+                          {selectedVolunteer.selfIntro}
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className={theme === "dark" ? "bg-slate-700 border-slate-600" : "bg-gray-50 border-gray-200"}>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Briefcase className="w-5 h-5 text-[#397eff]" />
+                          专业背景介绍
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
+                          {selectedVolunteer.professionalBackground}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* 专业能力与贡献范围 */}
+                  <Card className={theme === "dark" ? "bg-slate-700 border-slate-600" : "bg-gray-50 border-gray-200"}>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Briefcase className="w-5 h-5 text-[#397eff]" />
+                        专业能力与贡献范围
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div>
+                        <h4 className={`font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                          可以贡献的技能或经验
+                        </h4>
+                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
+                          {selectedVolunteer.skillsAndExperience}
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className={`font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                          专业技能分享
+                        </h4>
+                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
+                          {selectedVolunteer.skillsToShare}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* 价值观与期望连接 */}
                   <Card className={theme === "dark" ? "bg-slate-700 border-slate-600" : "bg-gray-50 border-gray-200"}>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <Heart className="w-5 h-5 text-[#397eff]" />
-                        自我介绍
+                        价值观与期望连接
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div>
+                        <h4 className={`font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                          核心价值观
+                        </h4>
+                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
+                          {selectedVolunteer.coreValues}
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className={`font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                          参与动机
+                        </h4>
+                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
+                          {selectedVolunteer.participationMotivation}
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className={`font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                          期望连接
+                        </h4>
+                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
+                          {selectedVolunteer.connectionExpectations}
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className={`font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                          学习目标
+                        </h4>
+                        <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
+                          {selectedVolunteer.learningGoals}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* 可参与时间 */}
+                  <Card className={theme === "dark" ? "bg-slate-700 border-slate-600" : "bg-gray-50 border-gray-200"}>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Clock className="w-5 h-5 text-[#397eff]" />
+                        可参与时间
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className={theme === "dark" ? "text-slate-300" : "text-gray-700"}>
-                        {selectedVolunteer.selfIntro}
-                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedVolunteer.availableTime.map((time, index) => (
+                          <Badge key={index} variant="secondary" className="text-sm">
+                            {time}
+                          </Badge>
+                        ))}
+                      </div>
                     </CardContent>
                   </Card>
                 </div>
