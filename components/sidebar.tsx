@@ -47,7 +47,7 @@ const navigationItems = [
   },
   {
     name: "sidebar.network",
-    href: "#",
+    href: "/network",
     icon: Network,
   },
   {
@@ -64,12 +64,10 @@ export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   const createLocalizedHref = (href: string) => {
-    if (href === "#") return href
     return href
   }
 
   const isActiveItem = (href: string) => {
-    if (href === "#") return false
     return pathname === href
   }
 
@@ -102,37 +100,20 @@ export function Sidebar() {
 
               return (
                 <div key={item.name}>
-                  {item.href === "#" ? (
-                    <a
-                      href={href}
-                      className={`flex items-center gap-3 rounded-lg transition-colors py-2.5 px-1.5 ${
-                        isActive
-                          ? "bg-[#004cd7] text-white"
-                          : theme === "dark"
-                            ? "text-slate-400 hover:text-white hover:bg-slate-800"
-                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                      } ${isCollapsed ? "justify-center" : ""}`}
-                      title={isCollapsed ? t(item.name) : undefined}
-                    >
-                      <Icon className="w-5 h-5" />
-                      {!isCollapsed && <span>{t(item.name)}</span>}
-                    </a>
-                  ) : (
-                    <Link
-                      href={href}
-                      className={`flex items-center gap-3 rounded-lg transition-colors py-2.5 px-1.5 ${
-                        isActive
-                          ? "bg-[#004cd7] text-white"
-                          : theme === "dark"
-                            ? "text-slate-400 hover:text-white hover:bg-slate-800"
-                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                      } ${isCollapsed ? "justify-center" : ""}`}
-                      title={isCollapsed ? t(item.name) : undefined}
-                    >
-                      <Icon className="w-5 h-5" />
-                      {!isCollapsed && <span>{t(item.name)}</span>}
-                    </Link>
-                  )}
+                  <Link
+                    href={href}
+                    className={`flex items-center gap-3 rounded-lg transition-colors py-2.5 px-1.5 ${
+                      isActive
+                        ? "bg-[#004cd7] text-white"
+                        : theme === "dark"
+                          ? "text-slate-400 hover:text-white hover:bg-slate-800"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                    } ${isCollapsed ? "justify-center" : ""}`}
+                    title={isCollapsed ? t(item.name) : undefined}
+                  >
+                    <Icon className="w-5 h-5" />
+                    {!isCollapsed && <span>{t(item.name)}</span>}
+                  </Link>
                 </div>
               )
             })}
