@@ -18,7 +18,7 @@ export default function ProfilePage() {
   const { theme } = useTheme()
   const { t } = useLanguage()
 
-  const profileData = {
+  const [formData, setFormData] = useState({
     name: "Ethan",
     gender: "保密",
     uniqueId: "Ethanovum",
@@ -33,7 +33,11 @@ export default function ProfilePage() {
     connectionExpectations: "未填写",
     skillsToShare: "未填写",
     learningGoals: "未填写",
-    availableTime: "周日下午 周二下午",
+    showAddress: false,
+  })
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
   return (
@@ -112,7 +116,8 @@ export default function ProfilePage() {
                         姓名/昵称/希望被称呼的名字 <span className="text-red-500">*</span>
                       </label>
                       <Input
-                        value={profileData.name}
+                        value={formData.name}
+                        onChange={(e) => handleInputChange("name", e.target.value)}
                         disabled={!isEditing}
                         className={
                           theme === "dark"
@@ -128,7 +133,11 @@ export default function ProfilePage() {
                       >
                         性别 <span className="text-red-500">*</span>
                       </label>
-                      <Select disabled={!isEditing}>
+                      <Select
+                        disabled={!isEditing}
+                        value={formData.gender}
+                        onValueChange={(value) => handleInputChange("gender", value)}
+                      >
                         <SelectTrigger
                           className={
                             theme === "dark"
@@ -136,7 +145,7 @@ export default function ProfilePage() {
                               : "bg-gray-100 border-gray-300 text-gray-900"
                           }
                         >
-                          <SelectValue placeholder={profileData.gender} />
+                          <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="male">男</SelectItem>
@@ -153,7 +162,8 @@ export default function ProfilePage() {
                         唯一ID <span className="text-red-500">*</span>
                       </label>
                       <Input
-                        value={profileData.uniqueId}
+                        value={formData.uniqueId}
+                        onChange={(e) => handleInputChange("uniqueId", e.target.value)}
                         disabled={!isEditing}
                         className={
                           theme === "dark"
@@ -170,7 +180,8 @@ export default function ProfilePage() {
                         其余信息 <span className="text-red-500">*</span>
                       </label>
                       <Input
-                        value={profileData.additionalInfo}
+                        value={formData.additionalInfo}
+                        onChange={(e) => handleInputChange("additionalInfo", e.target.value)}
                         disabled={!isEditing}
                         className={
                           theme === "dark"
@@ -187,7 +198,8 @@ export default function ProfilePage() {
                         联系方式 <span className="text-red-500">*</span>
                       </label>
                       <Input
-                        value={profileData.contactMethod}
+                        value={formData.contactMethod}
+                        onChange={(e) => handleInputChange("contactMethod", e.target.value)}
                         disabled={!isEditing}
                         className={
                           theme === "dark"
@@ -204,7 +216,8 @@ export default function ProfilePage() {
                         当前地址
                       </label>
                       <Input
-                        value={profileData.currentAddress}
+                        value={formData.currentAddress}
+                        onChange={(e) => handleInputChange("currentAddress", e.target.value)}
                         disabled={!isEditing}
                         className={
                           theme === "dark"
@@ -217,6 +230,8 @@ export default function ProfilePage() {
                           type="checkbox"
                           id="showAddress"
                           disabled={!isEditing}
+                          checked={formData.showAddress}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, showAddress: e.target.checked }))}
                           className="w-4 h-4 text-[#397eff] bg-gray-100 border-gray-300 rounded focus:ring-[#397eff] focus:ring-2"
                         />
                         <label
@@ -238,7 +253,8 @@ export default function ProfilePage() {
                         一句话介绍自己 <span className="text-red-500">*</span>
                       </label>
                       <Textarea
-                        value={profileData.selfIntro}
+                        value={formData.selfIntro}
+                        onChange={(e) => handleInputChange("selfIntro", e.target.value)}
                         disabled={!isEditing}
                         className={
                           theme === "dark"
@@ -255,7 +271,8 @@ export default function ProfilePage() {
                         我的专业背景介绍
                       </label>
                       <Textarea
-                        value={profileData.professionalBackground}
+                        value={formData.professionalBackground}
+                        onChange={(e) => handleInputChange("professionalBackground", e.target.value)}
                         disabled={!isEditing}
                         className={
                           theme === "dark"
@@ -284,7 +301,8 @@ export default function ProfilePage() {
                       我可以贡献给大家的技能或经验的事情
                     </label>
                     <Textarea
-                      value={profileData.skillsAndExperience}
+                      value={formData.skillsAndExperience}
+                      onChange={(e) => handleInputChange("skillsAndExperience", e.target.value)}
                       disabled={!isEditing}
                       className={
                         theme === "dark"
@@ -301,7 +319,8 @@ export default function ProfilePage() {
                       我的专业技能或者，我的技能也很棒好
                     </label>
                     <Textarea
-                      value={profileData.skillsToShare}
+                      value={formData.skillsToShare}
+                      onChange={(e) => handleInputChange("skillsToShare", e.target.value)}
                       disabled={!isEditing}
                       className={
                         theme === "dark"
@@ -329,7 +348,8 @@ export default function ProfilePage() {
                       我能够或者的核心价值观 <span className="text-red-500">*</span>
                     </label>
                     <Textarea
-                      value={profileData.coreValues}
+                      value={formData.coreValues}
+                      onChange={(e) => handleInputChange("coreValues", e.target.value)}
                       disabled={!isEditing}
                       placeholder="我的价值观，法律法规意识，道德价值观念，社会责任感，市场价值观/商业道德观，游戏规则"
                       className={
@@ -347,7 +367,8 @@ export default function ProfilePage() {
                       除了基础心理健康外，我还想要在在我们这个社会创新网络
                     </label>
                     <Textarea
-                      value={profileData.participationMotivation}
+                      value={formData.participationMotivation}
+                      onChange={(e) => handleInputChange("participationMotivation", e.target.value)}
                       disabled={!isEditing}
                       className={
                         theme === "dark"
@@ -364,7 +385,8 @@ export default function ProfilePage() {
                       我对什么样的人或智能问答网络技术的支持 <span className="text-red-500">*</span>
                     </label>
                     <Textarea
-                      value={profileData.connectionExpectations}
+                      value={formData.connectionExpectations}
+                      onChange={(e) => handleInputChange("connectionExpectations", e.target.value)}
                       disabled={!isEditing}
                       className={
                         theme === "dark"
@@ -381,7 +403,8 @@ export default function ProfilePage() {
                       我的思想和灵感的来源
                     </label>
                     <Textarea
-                      value={profileData.learningGoals}
+                      value={formData.learningGoals}
+                      onChange={(e) => handleInputChange("learningGoals", e.target.value)}
                       disabled={!isEditing}
                       className={
                         theme === "dark"
