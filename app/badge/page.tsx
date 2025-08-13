@@ -236,15 +236,15 @@ export default function BadgePage() {
   const getRarityBg = (rarity: string) => {
     switch (rarity) {
       case "common":
-        return "bg-gray-100 dark:bg-gray-800"
+        return "bg-gray-100 dark:bg-slate-800"
       case "rare":
-        return "bg-blue-100 dark:bg-blue-900/30"
+        return "bg-blue-100 dark:bg-slate-800"
       case "epic":
-        return "bg-purple-100 dark:bg-purple-900/30"
+        return "bg-purple-100 dark:bg-slate-800"
       case "legendary":
-        return "bg-yellow-100 dark:bg-yellow-900/30"
+        return "bg-yellow-100 dark:bg-slate-800"
       default:
-        return "bg-gray-100 dark:bg-gray-800"
+        return "bg-gray-100 dark:bg-slate-800"
     }
   }
 
@@ -362,13 +362,19 @@ export default function BadgePage() {
                     : theme === "dark"
                       ? "bg-slate-800/50 border-slate-700/50 opacity-60"
                       : "bg-white/50 border-gray-200/50 opacity-60"
-                } ${getRarityBg(badge.rarity)}`}
+                }`}
                 onClick={() => handleBadgeClick(badge)}
               >
                 <CardContent className="p-6 text-center">
                   <div
                     className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${
-                      badge.earned ? getRarityBg(badge.rarity) : theme === "dark" ? "bg-slate-700" : "bg-gray-200"
+                      badge.earned
+                        ? theme === "dark"
+                          ? "bg-slate-700"
+                          : getRarityBg(badge.rarity).split(" ")[0] // 只取浅色模式的背景色
+                        : theme === "dark"
+                          ? "bg-slate-700"
+                          : "bg-gray-200"
                     }`}
                   >
                     <IconComponent
@@ -444,7 +450,9 @@ export default function BadgePage() {
                   <div
                     className={`w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center ${
                       selectedBadge.earned
-                        ? getRarityBg(selectedBadge.rarity)
+                        ? theme === "dark"
+                          ? "bg-slate-700"
+                          : getRarityBg(selectedBadge.rarity).split(" ")[0]
                         : theme === "dark"
                           ? "bg-slate-700"
                           : "bg-gray-200"
