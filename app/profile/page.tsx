@@ -44,7 +44,7 @@ export default function ProfilePage() {
           {/* Left Sidebar Navigation */}
 
           {/* Main Content */}
-          <div className="flex-1 p-8">
+          <div className="flex-1 p-8 py-6 px-6">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
