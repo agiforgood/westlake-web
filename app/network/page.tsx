@@ -1,22 +1,26 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { Sidebar } from "@/components/sidebar"
 import { HeaderButtons } from "@/components/header-buttons"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useTheme } from "@/components/theme-provider"
 import { useLanguage } from "@/components/language-provider"
-import { Search, Filter, ChevronDown, User, MapPin, Clock, Heart, Briefcase, Star, Calendar, Mail } from "lucide-react"
+import { Search, Filter, User, MapPin, Clock, Heart, Briefcase, Calendar } from "lucide-react"
 
 interface Volunteer {
   id: string
   name: string
-  uniqueId: string
   gender: string
-  location: string
+  uniqueId: string
+  additionalInfo: string
+  contactMethod: string
+  currentAddress: string
   selfIntro: string
   professionalBackground: string
   skillsAndExperience: string
@@ -25,224 +29,195 @@ interface Volunteer {
   connectionExpectations: string
   skillsToShare: string
   learningGoals: string
-  contactMethod: string
   availableTime: string[]
   joinDate: string
-  rating: number
-  completedTasks: number
-  specialties: string[]
   showAddress: boolean
+  avatar?: string
 }
 
 export default function NetworkPage() {
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState("joinDate")
-  const [filterBy, setFilterBy] = useState("all")
   const [selectedVolunteer, setSelectedVolunteer] = useState<Volunteer | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [isSortOpen, setIsSortOpen] = useState(false)
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
   const { theme } = useTheme()
   const { t } = useLanguage()
 
-  // 模拟志愿者数据
+  // 示例志愿者数据
   const volunteers: Volunteer[] = [
     {
       id: "1",
       name: "陈志明",
-      uniqueId: "chenzhiming",
       gender: "男",
-      location: "北京市",
-      selfIntro: "热爱心理学和AI技术的家庭教练，致力于帮助家庭建立更好的沟通关系",
-      professionalBackground: "心理学硕士，从事家庭心理咨询工作5年",
-      skillsAndExperience: "家庭关系咨询、情感支持、心理评估",
-      coreValues: "诚信、专业、关爱、成长",
-      participationMotivation: "希望通过AI技术帮助更多家庭解决心理问题",
-      connectionExpectations: "寻找志同道合的心理学专家和技术人员",
-      skillsToShare: "心理咨询技巧、家庭治疗方法",
-      learningGoals: "学习最新的AI心理学应用技术",
-      contactMethod: "微信: chenzhiming123",
-      availableTime: ["周一下午", "周三晚上", "周六上午"],
+      uniqueId: "chenzhiming",
+      additionalInfo: "心理学博士，专注家庭治疗",
+      contactMethod: "微信: czm_psychology",
+      currentAddress: "北京市海淀区",
+      selfIntro: "专业心理咨询师，致力于家庭关系改善和心理健康教育",
+      professionalBackground: "北京师范大学心理学博士，10年临床心理咨询经验",
+      skillsAndExperience: "家庭治疗、认知行为疗法、情感咨询",
+      coreValues: "以人为本，科学严谨，助人自助",
+      participationMotivation: "希望通过AI技术扩大心理健康服务的覆盖面",
+      connectionExpectations: "寻找志同道合的心理健康从业者和技术专家",
+      skillsToShare: "心理评估、治疗方案设计、专业培训",
+      learningGoals: "学习AI在心理健康领域的应用",
+      availableTime: ["周二下午", "周四上午", "周六全天"],
       joinDate: "2024-01-15",
-      rating: 4.8,
-      completedTasks: 156,
-      specialties: ["心理咨询", "家庭治疗", "情感支持"],
       showAddress: true,
     },
     {
       id: "2",
-      name: "金美丽",
-      uniqueId: "jinmeili",
+      name: "李小红",
       gender: "女",
-      location: "上海市",
-      selfIntro: "UI/UX设计师，专注于心理健康应用的用户体验设计",
-      professionalBackground: "设计学学士，5年互联网产品设计经验",
-      skillsAndExperience: "用户界面设计、用户体验研究、产品原型设计",
-      coreValues: "创新、美学、用户至上、团队合作",
-      participationMotivation: "希望通过设计让心理健康服务更加易用和温暖",
-      connectionExpectations: "与心理学专家和开发者合作，创造更好的产品",
-      skillsToShare: "设计思维、用户研究方法、视觉设计",
-      learningGoals: "深入了解心理学理论，提升专业设计能力",
-      contactMethod: "邮箱: jinmeili@example.com",
-      availableTime: ["周二晚上", "周四下午", "周日上午"],
+      uniqueId: "lixiaohong",
+      additionalInfo: "UI/UX设计师，关注用户体验",
+      contactMethod: "邮箱: lixiaohong@design.com",
+      currentAddress: "上海市浦东新区",
+      selfIntro: "资深设计师，专注于创造有温度的数字产品",
+      professionalBackground: "中央美术学院设计学硕士，8年互联网产品设计经验",
+      skillsAndExperience: "用户研究、界面设计、交互设计、设计系统",
+      coreValues: "用户至上，简约美学，可持续设计",
+      participationMotivation: "希望用设计的力量让心理健康服务更易获得",
+      connectionExpectations: "与心理学专家合作，设计更好的用户体验",
+      skillsToShare: "产品设计、用户体验优化、视觉设计",
+      learningGoals: "了解心理学原理在设计中的应用",
+      availableTime: ["周一晚上", "周三下午", "周日上午"],
       joinDate: "2024-02-20",
-      rating: 4.6,
-      completedTasks: 89,
-      specialties: ["UI设计", "UX研究", "产品设计"],
-      showAddress: true,
+      showAddress: false,
     },
     {
       id: "3",
       name: "王大伟",
-      uniqueId: "wangdawei",
       gender: "男",
-      location: "深圳市",
-      selfIntro: "全栈开发工程师，专注于AI和心理健康技术的结合",
-      professionalBackground: "计算机科学硕士，8年软件开发经验",
-      skillsAndExperience: "Python、React、机器学习、数据分析",
-      coreValues: "技术创新、开源精神、持续学习、社会责任",
-      participationMotivation: "用技术力量推动心理健康事业的发展",
-      connectionExpectations: "与心理学专家合作，开发更智能的心理健康工具",
-      skillsToShare: "编程技能、AI算法、系统架构设计",
-      learningGoals: "学习心理学知识，提升跨领域合作能力",
+      uniqueId: "wangdawei",
+      additionalInfo: "全栈开发工程师，AI技术爱好者",
       contactMethod: "GitHub: wangdawei-dev",
-      availableTime: ["周一晚上", "周五下午", "周六晚上"],
+      currentAddress: "深圳市南山区",
+      selfIntro: "技术驱动的产品开发者，相信技术可以改变世界",
+      professionalBackground: "清华大学计算机科学硕士，5年AI产品开发经验",
+      skillsAndExperience: "机器学习、自然语言处理、Web开发、数据分析",
+      coreValues: "开源精神，技术创新，社会责任",
+      participationMotivation: "用AI技术解决心理健康领域的实际问题",
+      connectionExpectations: "与心理学专家和设计师协作开发AI产品",
+      skillsToShare: "AI模型开发、系统架构设计、技术培训",
+      learningGoals: "深入理解心理学理论和实践",
+      availableTime: ["周一晚上", "周五下午", "周六下午"],
       joinDate: "2024-01-10",
-      rating: 4.9,
-      completedTasks: 203,
-      specialties: ["全栈开发", "机器学习", "数据分析"],
-      showAddress: false,
+      showAddress: true,
     },
     {
       id: "4",
-      name: "李小红",
-      uniqueId: "lixiaohong",
+      name: "张美丽",
       gender: "女",
-      location: "广州市",
-      selfIntro: "临床心理学博士，专注于儿童和青少年心理健康",
-      professionalBackground: "临床心理学博士，10年儿童心理治疗经验",
-      skillsAndExperience: "儿童心理评估、青少年心理治疗、家庭系统治疗",
-      coreValues: "专业、耐心、关爱、科学",
-      participationMotivation: "希望帮助更多儿童和家庭获得专业的心理支持",
-      connectionExpectations: "与教育工作者和技术人员合作，创新治疗方法",
-      skillsToShare: "儿童心理学理论、治疗技巧、案例分析",
-      learningGoals: "学习数字化治疗工具的应用",
-      contactMethod: "电话: 138-0000-0000",
-      availableTime: ["周三下午", "周五上午", "周日下午"],
+      uniqueId: "zhangmeili",
+      additionalInfo: "社会工作者，社区心理健康推广者",
+      contactMethod: "电话: 138****5678",
+      currentAddress: "广州市天河区",
+      selfIntro: "致力于社区心理健康服务，关爱每一个需要帮助的人",
+      professionalBackground: "中山大学社会工作硕士，6年社区服务经验",
+      skillsAndExperience: "社区组织、心理健康宣传、危机干预、团体辅导",
+      coreValues: "平等互助，社会公正，人文关怀",
+      participationMotivation: "希望通过网络平台扩大社区心理健康服务影响力",
+      connectionExpectations: "与专业心理咨询师和技术开发者合作",
+      skillsToShare: "社区动员、活动组织、心理健康宣传",
+      learningGoals: "学习数字化心理健康服务模式",
+      availableTime: ["周三上午", "周五晚上", "周日下午"],
       joinDate: "2024-03-05",
-      rating: 4.7,
-      completedTasks: 67,
-      specialties: ["儿童心理学", "青少年治疗", "家庭治疗"],
       showAddress: true,
     },
     {
       id: "5",
-      name: "张建国",
-      uniqueId: "zhangjianguo",
+      name: "刘建明",
       gender: "男",
-      location: "杭州市",
-      selfIntro: "产品经理，致力于打造有温度的心理健康产品",
-      professionalBackground: "工商管理硕士，6年产品管理经验",
-      skillsAndExperience: "产品规划、需求分析、项目管理、用户调研",
-      coreValues: "用户导向、数据驱动、团队协作、持续改进",
-      participationMotivation: "通过产品思维推动心理健康服务的普及",
-      connectionExpectations: "与心理学专家和技术团队合作，打造优秀产品",
-      skillsToShare: "产品思维、项目管理、商业分析",
-      learningGoals: "深入了解心理健康领域的专业知识",
-      contactMethod: "微信: zhangjianguo_pm",
-      availableTime: ["周二上午", "周四晚上", "周六下午"],
+      uniqueId: "liujianming",
+      additionalInfo: "数据科学家，心理测量专家",
+      contactMethod: "LinkedIn: liu-jianming",
+      currentAddress: "杭州市西湖区",
+      selfIntro: "用数据洞察人心，用科学方法改善心理健康",
+      professionalBackground: "浙江大学统计学博士，专注心理测量和数据分析",
+      skillsAndExperience: "心理测量、数据挖掘、统计分析、量表开发",
+      coreValues: "科学严谨，数据驱动，循证实践",
+      participationMotivation: "开发更准确的心理健康评估工具",
+      connectionExpectations: "与心理学研究者和AI工程师深度合作",
+      skillsToShare: "数据分析、心理测量、研究方法",
+      learningGoals: "探索AI在心理测量中的创新应用",
+      availableTime: ["周二上午", "周四下午", "周六上午"],
       joinDate: "2024-02-28",
-      rating: 4.5,
-      completedTasks: 92,
-      specialties: ["产品管理", "项目管理", "商业分析"],
-      showAddress: true,
+      showAddress: false,
     },
     {
       id: "6",
-      name: "刘雅婷",
-      uniqueId: "liuyating",
+      name: "赵文华",
       gender: "女",
-      location: "成都市",
-      selfIntro: "心理学研究生，专注于积极心理学和幸福感研究",
-      professionalBackground: "心理学硕士在读，2年心理咨询实习经验",
-      skillsAndExperience: "积极心理学、幸福感测量、心理统计",
-      coreValues: "积极向上、科学严谨、助人为乐、终身学习",
-      participationMotivation: "希望将积极心理学理念传播给更多人",
-      connectionExpectations: "与经验丰富的心理学家学习交流",
-      skillsToShare: "积极心理学理论、研究方法、数据分析",
-      learningGoals: "提升实践经验，学习新的治疗技术",
-      contactMethod: "邮箱: liuyating@student.edu.cn",
-      availableTime: ["周一上午", "周三晚上", "周日晚上"],
-      joinDate: "2024-03-20",
-      rating: 4.3,
-      completedTasks: 34,
-      specialties: ["积极心理学", "研究方法", "数据分析"],
-      showAddress: false,
+      uniqueId: "zhaowenhua",
+      additionalInfo: "教育工作者，青少年心理健康关注者",
+      contactMethod: "微信: zhao_educator",
+      currentAddress: "成都市锦江区",
+      selfIntro: "关注青少年心理健康，致力于教育创新",
+      professionalBackground: "华东师范大学教育心理学硕士，12年教育工作经验",
+      skillsAndExperience: "青少年心理辅导、教育咨询、课程设计、家长指导",
+      coreValues: "教育公平，全人发展，终身学习",
+      participationMotivation: "为青少年心理健康教育贡献专业力量",
+      connectionExpectations: "与心理健康专家和技术团队合作开发教育产品",
+      skillsToShare: "教育心理学、青少年辅导、课程开发",
+      learningGoals: "学习数字化心理健康教育方法",
+      availableTime: ["周一下午", "周三晚上", "周日上午"],
+      joinDate: "2024-01-25",
+      showAddress: true,
     },
   ]
 
-  const sortOptions = [
-    { value: "joinDate", label: "加入时间" },
-    { value: "rating", label: "评分" },
-    { value: "completedTasks", label: "完成任务数" },
-    { value: "name", label: "姓名" },
-  ]
+  // 搜索和排序逻辑
+  const filteredAndSortedVolunteers = useMemo(() => {
+    let filtered = volunteers
 
-  const filterOptions = [
-    { value: "all", label: "全部" },
-    { value: "psychology", label: "心理学专家" },
-    { value: "technology", label: "技术专家" },
-    { value: "design", label: "设计专家" },
-    { value: "management", label: "管理专家" },
-  ]
+    // 搜索过滤
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      filtered = volunteers.filter((volunteer) => {
+        const searchableText = [
+          volunteer.name,
+          volunteer.uniqueId,
+          volunteer.additionalInfo,
+          volunteer.selfIntro,
+          volunteer.professionalBackground,
+          volunteer.skillsAndExperience,
+          volunteer.coreValues,
+          volunteer.participationMotivation,
+          volunteer.connectionExpectations,
+          volunteer.skillsToShare,
+          volunteer.learningGoals,
+          volunteer.currentAddress,
+          volunteer.availableTime.join(" "),
+        ]
+          .join(" ")
+          .toLowerCase()
 
-  const getFilteredAndSortedVolunteers = () => {
-    const filtered = volunteers.filter((volunteer) => {
-      const matchesSearch =
-        volunteer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        volunteer.selfIntro.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        volunteer.specialties.some((specialty) => specialty.toLowerCase().includes(searchTerm.toLowerCase()))
+        return searchableText.includes(query)
+      })
+    }
 
-      if (filterBy === "all") return matchesSearch
-
-      const categoryMap: { [key: string]: string[] } = {
-        psychology: ["心理咨询", "心理学", "治疗", "咨询"],
-        technology: ["开发", "技术", "编程", "AI", "机器学习"],
-        design: ["设计", "UI", "UX", "产品设计"],
-        management: ["管理", "产品", "项目"],
-      }
-
-      const keywords = categoryMap[filterBy] || []
-      const matchesFilter = keywords.some(
-        (keyword) =>
-          volunteer.specialties.some((specialty) => specialty.includes(keyword)) ||
-          volunteer.skillsAndExperience.includes(keyword),
-      )
-
-      return matchesSearch && matchesFilter
-    })
-
-    return filtered.sort((a, b) => {
+    // 排序
+    filtered.sort((a, b) => {
       switch (sortBy) {
-        case "rating":
-          return b.rating - a.rating
-        case "completedTasks":
-          return b.completedTasks - a.completedTasks
         case "name":
           return a.name.localeCompare(b.name)
         case "joinDate":
-        default:
           return new Date(b.joinDate).getTime() - new Date(a.joinDate).getTime()
+        case "location":
+          return a.currentAddress.localeCompare(b.currentAddress)
+        default:
+          return 0
       }
     })
-  }
+
+    return filtered
+  }, [searchQuery, sortBy])
 
   const handleVolunteerClick = (volunteer: Volunteer) => {
     setSelectedVolunteer(volunteer)
     setIsDialogOpen(true)
   }
-
-  const filteredVolunteers = getFilteredAndSortedVolunteers()
 
   return (
     <div className={`min-h-screen ${theme === "dark" ? "bg-slate-900 text-white" : "bg-gray-50 text-gray-900"}`}>
@@ -254,7 +229,7 @@ export default function NetworkPage() {
           <div>
             <h1 className="text-3xl font-bold mb-2">志愿者网络</h1>
             <p className={theme === "dark" ? "text-slate-400" : "text-gray-600"}>
-              发现和连接智能向善社会创新网络的志愿者
+              发现和连接智能向善社会创新网络的志愿者们
             </p>
           </div>
           <HeaderButtons />
@@ -262,207 +237,173 @@ export default function NetworkPage() {
 
         {/* Search and Filter Bar */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          {/* Search */}
           <div className="relative flex-1">
-            <Search
-              className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${
-                theme === "dark" ? "text-slate-400" : "text-gray-400"
-              }`}
-            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <Input
-              placeholder="搜索志愿者姓名、技能或专长..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="搜索志愿者姓名、技能、背景、价值观..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className={`pl-10 ${
                 theme === "dark" ? "bg-slate-800 border-slate-700 text-white" : "bg-white border-gray-300 text-gray-900"
               }`}
             />
           </div>
 
-          {/* Sort Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setIsSortOpen(!isSortOpen)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-                theme === "dark"
-                  ? "bg-slate-800 hover:bg-slate-700 border-slate-700 text-white"
-                  : "bg-white hover:bg-gray-50 border-gray-300 text-gray-900"
-              }`}
-            >
-              <span className="text-sm">排序: {sortOptions.find((option) => option.value === sortBy)?.label}</span>
-              <ChevronDown className={`w-4 h-4 transition-transform ${isSortOpen ? "rotate-180" : ""}`} />
-            </button>
-
-            {isSortOpen && (
-              <div
-                className={`absolute right-0 mt-2 w-48 rounded-lg shadow-lg z-10 border ${
-                  theme === "dark" ? "bg-slate-800 border-slate-700" : "bg-white border-gray-300"
+          <div className="flex gap-2">
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger
+                className={`w-40 ${
+                  theme === "dark"
+                    ? "bg-slate-800 border-slate-700 text-white"
+                    : "bg-white border-gray-300 text-gray-900"
                 }`}
               >
-                <div className="py-1">
-                  {sortOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => {
-                        setSortBy(option.value)
-                        setIsSortOpen(false)
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                        sortBy === option.value
-                          ? "bg-[#397eff] text-white"
-                          : theme === "dark"
-                            ? "text-slate-300 hover:bg-slate-700"
-                            : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Filter Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-                theme === "dark"
-                  ? "bg-slate-800 hover:bg-slate-700 border-slate-700 text-white"
-                  : "bg-white hover:bg-gray-50 border-gray-300 text-gray-900"
-              }`}
-            >
-              <Filter className="w-4 h-4" />
-              <span className="text-sm">{filterOptions.find((option) => option.value === filterBy)?.label}</span>
-              <ChevronDown className={`w-4 h-4 transition-transform ${isFilterOpen ? "rotate-180" : ""}`} />
-            </button>
-
-            {isFilterOpen && (
-              <div
-                className={`absolute right-0 mt-2 w-48 rounded-lg shadow-lg z-10 border ${
-                  theme === "dark" ? "bg-slate-800 border-slate-700" : "bg-white border-gray-300"
-                }`}
-              >
-                <div className="py-1">
-                  {filterOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => {
-                        setFilterBy(option.value)
-                        setIsFilterOpen(false)
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                        filterBy === option.value
-                          ? "bg-[#397eff] text-white"
-                          : theme === "dark"
-                            ? "text-slate-300 hover:bg-slate-700"
-                            : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+                <Filter className="w-4 h-4 mr-2" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="joinDate">加入时间</SelectItem>
+                <SelectItem value="name">姓名</SelectItem>
+                <SelectItem value="location">地区</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
-        {/* Results Count */}
-        <div className="mb-6">
-          <p className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-            找到 {filteredVolunteers.length} 位志愿者
-          </p>
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card className={theme === "dark" ? "bg-slate-800 border-slate-700" : "bg-white border-gray-200"}>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3">
+                <User className="w-8 h-8 text-[#397eff]" />
+                <div>
+                  <p className="text-2xl font-bold">{volunteers.length}</p>
+                  <p className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>总志愿者</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className={theme === "dark" ? "bg-slate-800 border-slate-700" : "bg-white border-gray-200"}>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3">
+                <MapPin className="w-8 h-8 text-[#397eff]" />
+                <div>
+                  <p className="text-2xl font-bold">
+                    {new Set(volunteers.map((v) => v.currentAddress.split("市")[0])).size}
+                  </p>
+                  <p className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>覆盖城市</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className={theme === "dark" ? "bg-slate-800 border-slate-700" : "bg-white border-gray-200"}>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3">
+                <Clock className="w-8 h-8 text-[#397eff]" />
+                <div>
+                  <p className="text-2xl font-bold">{filteredAndSortedVolunteers.length}</p>
+                  <p className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>搜索结果</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Volunteer Cards Grid */}
+        {/* Volunteers Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredVolunteers.map((volunteer) => (
+          {filteredAndSortedVolunteers.map((volunteer) => (
             <Card
               key={volunteer.id}
-              className={`cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg ${
+              className={`cursor-pointer transition-all duration-200 hover:scale-105 ${
                 theme === "dark"
                   ? "bg-slate-800 border-slate-700 hover:border-slate-600"
                   : "bg-white border-gray-200 hover:border-gray-300"
               }`}
               onClick={() => handleVolunteerClick(volunteer)}
             >
-              <CardHeader className="pb-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#004cd7] to-[#397eff] flex items-center justify-center">
-                      <User className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <CardTitle className={`text-lg ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                        {volunteer.name}
-                      </CardTitle>
-                      <p className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                        @{volunteer.uniqueId}
-                      </p>
-                    </div>
+              <CardContent className="p-6">
+                {/* Avatar and Basic Info */}
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
+                    <User className="w-8 h-8 text-white" />
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                    <span className={`text-sm font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                      {volunteer.rating}
-                    </span>
+                  <div className="flex-1 min-w-0">
+                    <h3 className={`text-lg font-semibold mb-1 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                      {volunteer.name}
+                    </h3>
+                    <p className={`text-sm mb-2 ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
+                      @{volunteer.uniqueId}
+                    </p>
+                    {volunteer.showAddress && (
+                      <div className="flex items-center gap-1 text-xs text-gray-500">
+                        <MapPin className="w-3 h-3" />
+                        {volunteer.currentAddress}
+                      </div>
+                    )}
                   </div>
                 </div>
-              </CardHeader>
-
-              <CardContent className="space-y-4">
-                {/* Location */}
-                {volunteer.showAddress && (
-                  <div className="flex items-center gap-2">
-                    <MapPin className={`w-4 h-4 ${theme === "dark" ? "text-slate-400" : "text-gray-500"}`} />
-                    <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
-                      {volunteer.location}
-                    </span>
-                  </div>
-                )}
 
                 {/* Self Introduction */}
-                <p className={`text-sm line-clamp-3 ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                <p className={`text-sm mb-4 line-clamp-2 ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
                   {volunteer.selfIntro}
                 </p>
 
-                {/* Specialties */}
-                <div className="flex flex-wrap gap-2">
-                  {volunteer.specialties.slice(0, 3).map((specialty, index) => (
-                    <Badge
-                      key={index}
-                      variant="secondary"
-                      className={`text-xs ${
-                        theme === "dark" ? "bg-slate-700 text-slate-300" : "bg-gray-200 text-gray-700"
-                      }`}
-                    >
-                      {specialty}
-                    </Badge>
-                  ))}
-                  {volunteer.specialties.length > 3 && (
-                    <Badge
-                      variant="outline"
-                      className={`text-xs ${
-                        theme === "dark" ? "border-slate-600 text-slate-400" : "border-gray-300 text-gray-600"
-                      }`}
-                    >
-                      +{volunteer.specialties.length - 3}
-                    </Badge>
-                  )}
+                {/* Additional Info */}
+                <p className={`text-xs mb-4 ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
+                  {volunteer.additionalInfo}
+                </p>
+
+                {/* Skills Preview */}
+                <div className="mb-4">
+                  <p className={`text-xs font-medium mb-2 ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
+                    专业技能
+                  </p>
+                  <p className={`text-sm line-clamp-2 ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                    {volunteer.skillsAndExperience}
+                  </p>
                 </div>
 
-                {/* Stats */}
-                <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-700">
-                  <div className="flex items-center gap-4 text-xs">
-                    <span className={theme === "dark" ? "text-slate-400" : "text-gray-600"}>
-                      完成任务: {volunteer.completedTasks}
-                    </span>
-                    <span className={theme === "dark" ? "text-slate-400" : "text-gray-600"}>
-                      加入: {new Date(volunteer.joinDate).toLocaleDateString("zh-CN")}
-                    </span>
+                {/* Available Time */}
+                <div className="mb-4">
+                  <p className={`text-xs font-medium mb-2 ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
+                    可参与时间
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {volunteer.availableTime.slice(0, 2).map((time, index) => (
+                      <Badge
+                        key={index}
+                        variant="secondary"
+                        className={`text-xs ${
+                          theme === "dark" ? "bg-slate-700 text-slate-300" : "bg-gray-200 text-gray-700"
+                        }`}
+                      >
+                        {time}
+                      </Badge>
+                    ))}
+                    {volunteer.availableTime.length > 2 && (
+                      <Badge
+                        variant="secondary"
+                        className={`text-xs ${
+                          theme === "dark" ? "bg-slate-700 text-slate-300" : "bg-gray-200 text-gray-700"
+                        }`}
+                      >
+                        +{volunteer.availableTime.length - 2}
+                      </Badge>
+                    )}
                   </div>
+                </div>
+
+                {/* Join Date */}
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    加入于 {new Date(volunteer.joinDate).toLocaleDateString("zh-CN")}
+                  </div>
+                  <Button size="sm" className="bg-[#397eff] hover:bg-[#397eff]/80 text-white text-xs">
+                    查看详情
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -470,13 +411,13 @@ export default function NetworkPage() {
         </div>
 
         {/* Empty State */}
-        {filteredVolunteers.length === 0 && (
+        {filteredAndSortedVolunteers.length === 0 && (
           <div className="text-center py-12">
             <User className={`w-16 h-16 mx-auto mb-4 ${theme === "dark" ? "text-slate-500" : "text-gray-400"}`} />
             <h3 className={`text-lg font-medium mb-2 ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
               未找到匹配的志愿者
             </h3>
-            <p className={`${theme === "dark" ? "text-slate-500" : "text-gray-500"}`}>尝试调整搜索条件或筛选选项</p>
+            <p className={`${theme === "dark" ? "text-slate-500" : "text-gray-500"}`}>尝试调整搜索条件或清空搜索框</p>
           </div>
         )}
 
@@ -496,142 +437,74 @@ export default function NetworkPage() {
                 </DialogHeader>
 
                 <div className="space-y-6">
-                  {/* Header */}
-                  <div className="text-center">
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#004cd7] to-[#397eff] flex items-center justify-center mx-auto mb-4">
-                      <User className="w-10 h-10 text-white" />
+                  {/* Profile Header */}
+                  <div className="text-center pb-6 border-b border-gray-200 dark:border-slate-700">
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center mx-auto mb-4">
+                      <User className="w-12 h-12 text-white" />
                     </div>
                     <h2 className={`text-2xl font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
                       {selectedVolunteer.name}
                     </h2>
-                    <p className={`${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
+                    <p className={`text-lg mb-2 ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
                       @{selectedVolunteer.uniqueId}
                     </p>
-                    <div className="flex items-center justify-center gap-4 mt-4">
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className={`font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                          {selectedVolunteer.rating}
-                        </span>
-                      </div>
-                      <span className={`${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>•</span>
-                      <span className={`${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                        完成 {selectedVolunteer.completedTasks} 个任务
-                      </span>
-                    </div>
+                    <p className={`${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                      {selectedVolunteer.additionalInfo}
+                    </p>
                   </div>
 
-                  {/* Basic Info */}
-                  <div
-                    className={`grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg ${
-                      theme === "dark" ? "bg-slate-700" : "bg-gray-100"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <User className={`w-4 h-4 ${theme === "dark" ? "text-slate-400" : "text-gray-500"}`} />
-                      <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
-                        性别: {selectedVolunteer.gender}
-                      </span>
-                    </div>
-                    {selectedVolunteer.showAddress && (
-                      <div className="flex items-center gap-2">
-                        <MapPin className={`w-4 h-4 ${theme === "dark" ? "text-slate-400" : "text-gray-500"}`} />
-                        <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
-                          {selectedVolunteer.location}
-                        </span>
-                      </div>
-                    )}
-                    <div className="flex items-center gap-2">
-                      <Calendar className={`w-4 h-4 ${theme === "dark" ? "text-slate-400" : "text-gray-500"}`} />
-                      <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
-                        加入时间: {new Date(selectedVolunteer.joinDate).toLocaleDateString("zh-CN")}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Mail className={`w-4 h-4 ${theme === "dark" ? "text-slate-400" : "text-gray-500"}`} />
-                      <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
-                        {selectedVolunteer.contactMethod}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Specialties */}
-                  <div>
-                    <h3 className={`text-lg font-semibold mb-3 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                      专业领域
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedVolunteer.specialties.map((specialty, index) => (
-                        <Badge key={index} className="bg-[#397eff] text-white">
-                          {specialty}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Detailed Information */}
-                  <div className="space-y-6">
+                  {/* Contact and Basic Info */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <h3
-                        className={`text-lg font-semibold mb-3 flex items-center gap-2 ${
-                          theme === "dark" ? "text-white" : "text-gray-900"
-                        }`}
+                        className={`text-lg font-semibold mb-3 flex items-center gap-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
                       >
                         <User className="w-5 h-5 text-[#397eff]" />
-                        自我介绍
+                        基本信息
                       </h3>
-                      <p className={`${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
-                        {selectedVolunteer.selfIntro}
-                      </p>
+                      <div className="space-y-3">
+                        <div>
+                          <p className={`text-sm font-medium ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
+                            性别
+                          </p>
+                          <p className={`${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                            {selectedVolunteer.gender}
+                          </p>
+                        </div>
+                        <div>
+                          <p className={`text-sm font-medium ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
+                            联系方式
+                          </p>
+                          <p className={`${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                            {selectedVolunteer.contactMethod}
+                          </p>
+                        </div>
+                        {selectedVolunteer.showAddress && (
+                          <div>
+                            <p
+                              className={`text-sm font-medium ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}
+                            >
+                              当前地址
+                            </p>
+                            <p className={`${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                              {selectedVolunteer.currentAddress}
+                            </p>
+                          </div>
+                        )}
+                        <div>
+                          <p className={`text-sm font-medium ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
+                            加入时间
+                          </p>
+                          <p className={`${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                            {new Date(selectedVolunteer.joinDate).toLocaleDateString("zh-CN")}
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
                     <div>
                       <h3
-                        className={`text-lg font-semibold mb-3 flex items-center gap-2 ${
-                          theme === "dark" ? "text-white" : "text-gray-900"
-                        }`}
-                      >
-                        <Briefcase className="w-5 h-5 text-[#397eff]" />
-                        专业背景
-                      </h3>
-                      <p className={`${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
-                        {selectedVolunteer.professionalBackground}
-                      </p>
-                    </div>
-
-                    <div>
-                      <h3
-                        className={`text-lg font-semibold mb-3 flex items-center gap-2 ${
-                          theme === "dark" ? "text-white" : "text-gray-900"
-                        }`}
-                      >
-                        <Star className="w-5 h-5 text-[#397eff]" />
-                        技能与经验
-                      </h3>
-                      <p className={`${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
-                        {selectedVolunteer.skillsAndExperience}
-                      </p>
-                    </div>
-
-                    <div>
-                      <h3
-                        className={`text-lg font-semibold mb-3 flex items-center gap-2 ${
-                          theme === "dark" ? "text-white" : "text-gray-900"
-                        }`}
-                      >
-                        <Heart className="w-5 h-5 text-[#397eff]" />
-                        核心价值观
-                      </h3>
-                      <p className={`${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
-                        {selectedVolunteer.coreValues}
-                      </p>
-                    </div>
-
-                    <div>
-                      <h3
-                        className={`text-lg font-semibold mb-3 flex items-center gap-2 ${
-                          theme === "dark" ? "text-white" : "text-gray-900"
-                        }`}
+                        className={`text-lg font-semibold mb-3 flex items-center gap-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
                       >
                         <Clock className="w-5 h-5 text-[#397eff]" />
                         可参与时间
@@ -640,16 +513,102 @@ export default function NetworkPage() {
                         {selectedVolunteer.availableTime.map((time, index) => (
                           <Badge
                             key={index}
-                            variant="outline"
-                            className={
-                              theme === "dark" ? "border-slate-600 text-slate-300" : "border-gray-300 text-gray-700"
-                            }
+                            variant="secondary"
+                            className={`${
+                              theme === "dark" ? "bg-slate-700 text-slate-300" : "bg-gray-200 text-gray-700"
+                            }`}
                           >
                             {time}
                           </Badge>
                         ))}
                       </div>
                     </div>
+                  </div>
+
+                  {/* Self Introduction */}
+                  <div>
+                    <h3 className={`text-lg font-semibold mb-3 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                      自我介绍
+                    </h3>
+                    <p className={`${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                      {selectedVolunteer.selfIntro}
+                    </p>
+                  </div>
+
+                  {/* Professional Background */}
+                  <div>
+                    <h3
+                      className={`text-lg font-semibold mb-3 flex items-center gap-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
+                    >
+                      <Briefcase className="w-5 h-5 text-[#397eff]" />
+                      专业背景
+                    </h3>
+                    <p className={`${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                      {selectedVolunteer.professionalBackground}
+                    </p>
+                  </div>
+
+                  {/* Skills and Experience */}
+                  <div>
+                    <h3 className={`text-lg font-semibold mb-3 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                      技能与经验
+                    </h3>
+                    <p className={`${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                      {selectedVolunteer.skillsAndExperience}
+                    </p>
+                  </div>
+
+                  {/* Core Values */}
+                  <div>
+                    <h3
+                      className={`text-lg font-semibold mb-3 flex items-center gap-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
+                    >
+                      <Heart className="w-5 h-5 text-[#397eff]" />
+                      核心价值观
+                    </h3>
+                    <p className={`${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                      {selectedVolunteer.coreValues}
+                    </p>
+                  </div>
+
+                  {/* Participation Motivation */}
+                  <div>
+                    <h3 className={`text-lg font-semibold mb-3 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                      参与动机
+                    </h3>
+                    <p className={`${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                      {selectedVolunteer.participationMotivation}
+                    </p>
+                  </div>
+
+                  {/* Connection Expectations */}
+                  <div>
+                    <h3 className={`text-lg font-semibold mb-3 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                      期望连接
+                    </h3>
+                    <p className={`${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                      {selectedVolunteer.connectionExpectations}
+                    </p>
+                  </div>
+
+                  {/* Skills to Share */}
+                  <div>
+                    <h3 className={`text-lg font-semibold mb-3 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                      可分享技能
+                    </h3>
+                    <p className={`${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                      {selectedVolunteer.skillsToShare}
+                    </p>
+                  </div>
+
+                  {/* Learning Goals */}
+                  <div>
+                    <h3 className={`text-lg font-semibold mb-3 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                      学习目标
+                    </h3>
+                    <p className={`${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                      {selectedVolunteer.learningGoals}
+                    </p>
                   </div>
                 </div>
               </>
