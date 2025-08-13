@@ -52,7 +52,7 @@ const navigationItems = [
   },
   {
     name: "sidebar.profile",
-    href: "#",
+    href: "/profile",
     icon: User,
   },
 ]
