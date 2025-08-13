@@ -49,7 +49,7 @@ export default function ProfilePage() {
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h1 className="text-3xl font-bold mb-2">志愿者说明书</h1>
-                <p className={`text-lg ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
+                <p className={` ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
                   智能向善社会创新网络志愿者个人信息
                 </p>
               </div>
