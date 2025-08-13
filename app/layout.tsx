@@ -1,14 +1,16 @@
-import type { Metadata } from 'next'
-import { GeistSans } from 'geist/font/sans'
-import { GeistMono } from 'geist/font/mono'
-import './globals.css'
-import { ThemeProvider } from '@/components/theme-provider'
-import { LanguageProvider } from '@/components/language-provider'
+import type React from "react"
+import type { Metadata } from "next"
+import { GeistSans } from "geist/font/sans"
+import { GeistMono } from "geist/font/mono"
+import "./globals.css"
+import { ThemeProvider } from "@/components/theme-provider"
+import { LanguageProvider } from "@/components/language-provider"
+import { Toaster } from "sonner"
 
 export const metadata: Metadata = {
-  title: 'WestLake Platform',
-  description: 'WestLake AI Platform Dashboard',
-  generator: 'v0.dev',
+  title: "WestLake Platform",
+  description: "WestLake AI Platform Dashboard",
+  generator: "v0.dev",
 }
 
 export default function RootLayout({
@@ -31,6 +33,7 @@ html {
         <ThemeProvider>
           <LanguageProvider>
             <div>{children}</div>
+            <Toaster position="top-right" richColors />
           </LanguageProvider>
         </ThemeProvider>
       </body>

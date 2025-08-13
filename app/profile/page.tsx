@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useTheme } from "@/components/theme-provider"
 import { useLanguage } from "@/components/language-provider"
 import { Edit, User, Clock, Heart, Briefcase } from "lucide-react"
+import { toast } from "sonner"
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false)
@@ -56,7 +57,12 @@ export default function ProfilePage() {
               <div className="flex items-center gap-4">
                 <Button
                   variant="outline"
-                  onClick={() => setIsEditing(!isEditing)}
+                  onClick={() => {
+                    if (!isEditing) {
+                      toast.info("进入编辑模式，完成点击保存更改")
+                    }
+                    setIsEditing(!isEditing)
+                  }}
                   className={`${
                     theme === "dark"
                       ? "bg-transparent border-slate-600 text-slate-300 hover:bg-slate-800"
@@ -397,10 +403,21 @@ export default function ProfilePage() {
               {/* Action Buttons */}
               {isEditing && (
                 <div className="flex gap-4 pt-6">
-                  <Button className="bg-[#004cd7] hover:bg-[#004cd7]/80 text-white">保存更改</Button>
+                  <Button
+                    className="bg-[#004cd7] hover:bg-[#004cd7]/80 text-white"
+                    onClick={() => {
+                      setIsEditing(false)
+                      toast.success("已成功保存")
+                    }}
+                  >
+                    保存更改
+                  </Button>
                   <Button
                     variant="outline"
-                    onClick={() => setIsEditing(false)}
+                    onClick={() => {
+                      setIsEditing(false)
+                      toast.warning("取消更改")
+                    }}
                     className={
                       theme === "dark"
                         ? "bg-transparent border-slate-600 text-slate-300 hover:bg-slate-800"
