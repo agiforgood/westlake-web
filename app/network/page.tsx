@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useTheme } from "@/components/theme-provider"
 import { useLanguage } from "@/components/language-provider"
-import { Search, SortAsc, SortDesc, User, Heart } from "lucide-react"
+import { Search, SortAsc, SortDesc, User, Heart, Lock, Trophy } from "lucide-react"
 
 interface VolunteerProfile {
   id: string
@@ -34,14 +34,40 @@ interface VolunteerProfile {
   avatar?: string
 }
 
+// 模拟当前用户权限状态
+interface UserPermissions {
+  isPsychologist: boolean
+  isPromptEngineer: boolean
+  badgeCount: number
+  userType: "normal" | "privileged"
+}
+
 export default function NetworkPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState<"name" | "date">("name")
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
   const [selectedVolunteer, setSelectedVolunteer] = useState<VolunteerProfile | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [showPermissionDialog, setShowPermissionDialog] = useState(false)
   const { theme } = useTheme()
   const { t } = useLanguage()
+
+  // 模拟当前用户权限 - 可以根据实际情况修改这些值来测试不同权限
+  const currentUserPermissions: UserPermissions = {
+    isPsychologist: false, // 设为 true 测试心理学家权限
+    isPromptEngineer: false, // 设为 true 测试提示词工程师权限
+    badgeCount: 0, // 设为 >= 1 测试有勋章用户权限
+    userType: "normal", // 会根据上面的条件自动计算
+  }
+
+  // 检查用户是否有权限查看详情
+  const hasViewPermission = () => {
+    return (
+      currentUserPermissions.isPsychologist ||
+      currentUserPermissions.isPromptEngineer ||
+      currentUserPermissions.badgeCount >= 1
+    )
+  }
 
   // Mock data for volunteers
   const volunteers: VolunteerProfile[] = [
@@ -214,8 +240,12 @@ export default function NetworkPage() {
   }, [searchQuery, sortBy, sortOrder])
 
   const handleVolunteerClick = (volunteer: VolunteerProfile) => {
-    setSelectedVolunteer(volunteer)
-    setIsDialogOpen(true)
+    if (hasViewPermission()) {
+      setSelectedVolunteer(volunteer)
+      setIsDialogOpen(true)
+    } else {
+      setShowPermissionDialog(true)
+    }
   }
 
   const toggleSort = (newSortBy: "name" | "date") => {
@@ -242,6 +272,23 @@ export default function NetworkPage() {
           </div>
           <HeaderButtons />
         </div>
+
+        {/* Permission Status Banner */}
+        {!hasViewPermission() && (
+          <div
+            className={`mb-6 p-4 rounded-lg border ${
+              theme === "dark"
+                ? "bg-amber-900/20 border-amber-700 text-amber-200"
+                : "bg-amber-50 border-amber-200 text-amber-800"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <Lock className="w-5 h-5" />
+              <span className="font-medium">权限提示：</span>
+              <span>获得至少1个勋章或成为心理学家/提示词工程师后可查看志愿者详细信息</span>
+            </div>
+          </div>
+        )}
 
         {/* Search and Sort Controls */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -316,13 +363,20 @@ export default function NetworkPage() {
           {filteredAndSortedVolunteers.map((volunteer) => (
             <Card
               key={volunteer.id}
-              className={`cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg ${
+              className={`cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg relative ${
                 theme === "dark"
                   ? "bg-slate-800 border-slate-700 hover:border-slate-600"
                   : "bg-white border-gray-200 hover:border-gray-300"
               }`}
               onClick={() => handleVolunteerClick(volunteer)}
             >
+              {/* Lock overlay for users without permission */}
+              {!hasViewPermission() && (
+                <div className="absolute inset-0 bg-black/10 rounded-lg flex items-center justify-center z-10">
+                  <Lock className={`w-6 h-6 ${theme === "dark" ? "text-slate-400" : "text-gray-500"}`} />
+                </div>
+              )}
+
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
@@ -370,6 +424,85 @@ export default function NetworkPage() {
             <p className={`${theme === "dark" ? "text-slate-500" : "text-gray-500"}`}>尝试调整搜索条件或清空搜索框</p>
           </div>
         )}
+
+        {/* Permission Dialog */}
+        <Dialog open={showPermissionDialog} onOpenChange={setShowPermissionDialog}>
+          <DialogContent
+            className={`max-w-md ${theme === "dark" ? "bg-slate-800 border-slate-700" : "bg-white border-gray-200"}`}
+          >
+            <DialogHeader>
+              <DialogTitle className={`text-center ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                权限不足
+              </DialogTitle>
+            </DialogHeader>
+
+            <div className="text-center py-6">
+              <div
+                className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${
+                  theme === "dark" ? "bg-slate-700" : "bg-gray-100"
+                }`}
+              >
+                <Lock className={`w-8 h-8 ${theme === "dark" ? "text-slate-400" : "text-gray-500"}`} />
+              </div>
+
+              <h3 className={`text-lg font-medium mb-4 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                请做出贡献获得勋章，查看志愿者详情
+              </h3>
+
+              <p className={`text-sm mb-6 ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
+                您需要满足以下条件之一才能查看志愿者详细信息：
+              </p>
+
+              <div
+                className={`text-left space-y-2 mb-6 p-4 rounded-lg ${
+                  theme === "dark" ? "bg-slate-700" : "bg-gray-50"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Trophy className="w-4 h-4 text-yellow-500" />
+                  <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                    获得至少1个勋章
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4 text-blue-500" />
+                  <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                    成为认证心理学家
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4 text-purple-500" />
+                  <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
+                    成为提示词工程师
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  className="flex-1 bg-[#004cd7] hover:bg-[#004cd7]/80 text-white"
+                  onClick={() => {
+                    setShowPermissionDialog(false)
+                    // 这里可以跳转到相关页面
+                  }}
+                >
+                  去获得勋章
+                </Button>
+                <Button
+                  variant="outline"
+                  className={`flex-1 ${
+                    theme === "dark"
+                      ? "bg-transparent border-slate-600 text-slate-300 hover:bg-slate-700"
+                      : "bg-transparent border-gray-300 text-gray-700 hover:bg-gray-100"
+                  }`}
+                  onClick={() => setShowPermissionDialog(false)}
+                >
+                  我知道了
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         {/* Volunteer Detail Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
