@@ -3,8 +3,6 @@
 import { useState } from "react"
 import { Sidebar } from "@/components/sidebar"
 import { Trophy, Medal, Award, Star, Filter, ChevronDown } from "lucide-react"
-import { setActiveTab } from "@/utils/tab-utils" // Import setActiveTab from utils
-
 import { HeaderButtons } from "@/components/header-buttons"
 import { useTheme } from "@/components/theme-provider"
 import { useLanguage } from "@/components/language-provider"
@@ -61,12 +59,9 @@ export default function LeaderboardPage() {
         {/* Tab Navigation and Filters */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className={`flex gap-8 border-b ${theme === "dark" ? "border-slate-700" : "border-gray-200"}`}>
-            <button
-              onClick={() => setActiveTab("prompt-engineering")}
-              className={`pb-4 px-2 font-medium transition-colors relative ${"text-[#397eff] border-b-2 border-[#397eff]"}`}
-            >
+            <div className={`pb-4 px-2 font-medium text-[#397eff] border-b-2 border-[#397eff]`}>
               {t("leaderboard.promptEngineering")}
-            </button>
+            </div>
           </div>
 
           {/* Model filter dropdown */}
