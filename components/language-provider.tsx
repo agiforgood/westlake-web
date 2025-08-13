@@ -19,7 +19,7 @@ const translations = {
     "sidebar.leaderboard": "排行榜",
     "sidebar.badge": "徽章",
     "sidebar.network": "网络",
-    "sidebar.profile": "个人资料",
+    "sidebar.profile": "志愿者说明书",
     "sidebar.lightMode": "浅色模式",
     "sidebar.darkMode": "深色模式",
     "sidebar.english": "English",
