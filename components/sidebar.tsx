@@ -105,7 +105,7 @@ export function Sidebar() {
                   {item.href === "#" ? (
                     <a
                       href={href}
-                      className={`flex items-center gap-3 rounded-lg transition-colors py-3 px-1.5 ${
+                      className={`flex items-center gap-3 rounded-lg transition-colors py-2.5 px-1.5 ${
                         isActive
                           ? "bg-[#004cd7] text-white"
                           : theme === "dark"
@@ -120,7 +120,7 @@ export function Sidebar() {
                   ) : (
                     <Link
                       href={href}
-                      className={`flex items-center gap-3 rounded-lg transition-colors py-1.5 my-5 px-1.5 ${
+                      className={`flex items-center gap-3 rounded-lg transition-colors py-2.5 px-1.5 ${
                         isActive
                           ? "bg-[#004cd7] text-white"
                           : theme === "dark"
@@ -142,7 +142,7 @@ export function Sidebar() {
           <div className="space-y-2">
             <button
               onClick={toggleTheme}
-              className={`flex items-center gap-3 rounded-lg transition-colors w-full px-0 py-3 ${
+              className={`flex items-center gap-3 rounded-lg transition-colors w-full py-2.5 px-1.5 ${
                 theme === "dark"
                   ? "text-slate-400 hover:text-white hover:bg-slate-800"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
