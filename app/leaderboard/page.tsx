@@ -58,7 +58,7 @@ export default function LeaderboardPage() {
     <div className={`min-h-screen ${theme === "dark" ? "bg-slate-900 text-white" : "bg-gray-50 text-gray-900"}`}>
       <Sidebar />
 
-      <div className="sidebar-margin p-8">
+      <div className="sidebar-margin p-8 px-6 py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
