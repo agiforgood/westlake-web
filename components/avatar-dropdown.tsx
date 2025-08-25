@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { User, LogOut } from "lucide-react"
 import Link from "next/link"
@@ -16,6 +17,7 @@ export function AvatarDropdown({ userImage, userName = "JD", userId = "Ethanovum
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { theme } = useTheme()
+  const router = useRouter()
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -30,6 +32,14 @@ export function AvatarDropdown({ userImage, userName = "JD", userId = "Ethanovum
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
+
+  const handleLogout = () => {
+    setIsOpen(false)
+    // Handle logout logic here
+    console.log("Logout clicked")
+    // Redirect to homepage
+    router.push("/")
+  }
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -76,11 +86,7 @@ export function AvatarDropdown({ userImage, userName = "JD", userId = "Ethanovum
             <div className={`border-t my-2 ${theme === "dark" ? "border-slate-700" : "border-gray-200"}`} />
 
             <button
-              onClick={() => {
-                setIsOpen(false)
-                // Handle logout logic here
-                console.log("Logout clicked")
-              }}
+              onClick={handleLogout}
               className={`flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors ${
                 theme === "dark"
                   ? "text-red-400 hover:text-red-300 hover:bg-slate-700"
