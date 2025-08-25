@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Star, ChevronLeft, ChevronRight } from "lucide-react"
+import { Star, ChevronUp, ChevronDown } from "lucide-react"
 
 export default function HomePage() {
   const [currentPage, setCurrentPage] = useState(0)
@@ -29,6 +29,31 @@ export default function HomePage() {
   const goToPage = (pageIndex: number) => {
     setCurrentPage(pageIndex)
   }
+
+  // Handle wheel scroll
+  useEffect(() => {
+    let isScrolling = false
+
+    const handleWheel = (e: WheelEvent) => {
+      if (isScrolling) return
+
+      isScrolling = true
+      setTimeout(() => {
+        isScrolling = false
+      }, 1000)
+
+      if (e.deltaY > 0) {
+        // Scroll down
+        nextPage()
+      } else {
+        // Scroll up
+        prevPage()
+      }
+    }
+
+    window.addEventListener("wheel", handleWheel, { passive: true })
+    return () => window.removeEventListener("wheel", handleWheel)
+  }, [])
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -161,11 +186,11 @@ export default function HomePage() {
       {/* Sliding Pages Container */}
       <div className="relative w-full h-screen">
         <div
-          className="flex w-full h-full transition-transform duration-1000 ease-in-out"
-          style={{ transform: `translateX(-${currentPage * 100}%)` }}
+          className="flex flex-col w-full h-full transition-transform duration-1000 ease-in-out"
+          style={{ transform: `translateY(-${currentPage * 100}vh)` }}
         >
           {/* Page 1: Title with Video Background */}
-          <div className="min-w-full h-full relative flex items-center justify-center">
+          <div className="min-h-screen w-full relative flex items-center justify-center">
             {/* Video Background */}
             <video className="absolute inset-0 w-full h-full object-cover" autoPlay loop muted playsInline>
               <source src="/placeholder.mp4" type="video/mp4" />
@@ -183,7 +208,7 @@ export default function HomePage() {
           </div>
 
           {/* Page 2: Mission */}
-          <div className="min-w-full h-full bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 flex items-center justify-center px-8">
+          <div className="min-h-screen w-full bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 flex items-center justify-center px-8">
             <div className="max-w-4xl text-center text-white">
               <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">以人为本，智能向善</h2>
               <p className="text-xl md:text-2xl leading-relaxed opacity-90">
@@ -197,7 +222,7 @@ export default function HomePage() {
           </div>
 
           {/* Page 3: Innovation Philosophy */}
-          <div className="min-w-full h-full bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 flex items-center justify-center px-8">
+          <div className="min-h-screen w-full bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 flex items-center justify-center px-8">
             <div className="max-w-5xl text-center text-white">
               <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
                 激活认知盈余，构建贡献、协作与声誉机制的社会创新网络
@@ -220,7 +245,7 @@ export default function HomePage() {
           </div>
 
           {/* Page 4: Vision */}
-          <div className="min-w-full h-full bg-gradient-to-br from-amber-600 via-orange-600 to-red-600 flex items-center justify-center px-8">
+          <div className="min-h-screen w-full bg-gradient-to-br from-amber-600 via-orange-600 to-red-600 flex items-center justify-center px-8">
             <div className="max-w-4xl text-center text-white">
               <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">共创意义的容器：超越生命的有限性</h2>
               <div className="space-y-6 text-lg md:text-xl leading-relaxed opacity-90">
@@ -239,16 +264,16 @@ export default function HomePage() {
       </div>
 
       {/* Navigation Controls */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50">
-        <div className="flex items-center gap-4">
+      <div className="absolute right-8 top-1/2 transform -translate-y-1/2 z-50">
+        <div className="flex flex-col items-center gap-4">
           <button
             onClick={prevPage}
             className="p-2 rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm transition-colors"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronUp className="w-5 h-5" />
           </button>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2">
             {Array.from({ length: totalPages }).map((_, index) => (
               <button
                 key={index}
@@ -264,8 +289,18 @@ export default function HomePage() {
             onClick={nextPage}
             className="p-2 rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm transition-colors"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronDown className="w-5 h-5" />
           </button>
+        </div>
+      </div>
+
+      {/* Scroll Hint */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50 text-white/70 text-center">
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-sm">滚动浏览</span>
+          <div className="animate-bounce">
+            <ChevronDown className="w-4 h-4" />
+          </div>
         </div>
       </div>
 
