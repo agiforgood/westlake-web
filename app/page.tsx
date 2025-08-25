@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Star, ChevronUp, ChevronDown } from "lucide-react"
+import { Star, ChevronDown } from "lucide-react"
 
 export default function HomePage() {
   const [currentPage, setCurrentPage] = useState(0)
@@ -263,34 +263,18 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Navigation Controls */}
+      {/* Page Indicators */}
       <div className="absolute right-8 top-1/2 transform -translate-y-1/2 z-50">
-        <div className="flex flex-col items-center gap-4">
-          <button
-            onClick={prevPage}
-            className="p-2 rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm transition-colors"
-          >
-            <ChevronUp className="w-5 h-5" />
-          </button>
-
-          <div className="flex flex-col gap-2">
-            {Array.from({ length: totalPages }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToPage(index)}
-                className={`w-3 h-3 rounded-full transition-colors ${
-                  currentPage === index ? "bg-white" : "bg-white/40 hover:bg-white/60"
-                }`}
-              />
-            ))}
-          </div>
-
-          <button
-            onClick={nextPage}
-            className="p-2 rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm transition-colors"
-          >
-            <ChevronDown className="w-5 h-5" />
-          </button>
+        <div className="flex flex-col gap-3">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToPage(index)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                currentPage === index ? "bg-white/80 scale-125" : "bg-white/20 hover:bg-white/40"
+              }`}
+            />
+          ))}
         </div>
       </div>
 
