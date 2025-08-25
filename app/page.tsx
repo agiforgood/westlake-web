@@ -167,7 +167,7 @@ export default function HomePage() {
         </nav>
 
         {/* Login Button */}
-        <Link href="/dashboard">
+        <Link href="/login">
           <Button className="bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-sm px-6 py-2 rounded-full font-medium">
             登录
           </Button>
