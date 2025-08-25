@@ -188,7 +188,7 @@ export default function LoginPage() {
 
             <div className="text-center">
               <span className="text-sm text-gray-600">还没有账户？</span>
-              <Link href="#" className="text-sm text-blue-600 hover:text-blue-800 ml-1">
+              <Link href="/register" className="text-sm text-blue-600 hover:text-blue-800 ml-1">
                 立即注册
               </Link>
             </div>
