@@ -82,7 +82,7 @@ export function Sidebar() {
         <div className="p-6 h-full flex flex-col relative">
           {/* Logo */}
           <Link
-            href="/guest"
+            href="/"
             className={`flex items-center gap-2 mb-8 cursor-pointer hover:opacity-80 transition-opacity ${isCollapsed ? "justify-center" : "ml-1.5"}`}
           >
             <div className="w-8 h-8 flex items-center justify-center">
