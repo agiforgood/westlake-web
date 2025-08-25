@@ -1,6 +1,4 @@
 "use client"
-
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Star, Download, Smartphone, Heart, Users, Shield } from "lucide-react"
@@ -27,12 +25,12 @@ export default function QijiaAppPage() {
 
       {/* Header */}
       <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 bg-black/10 backdrop-blur-sm">
-        <Link href="/" className="flex items-center gap-3">
+        <div className="flex items-center gap-3">
           <div className="w-10 h-10 flex items-center justify-center">
             <Star className="w-8 h-8 text-white fill-white" />
           </div>
           <span className="text-xl font-semibold text-white">智能向善</span>
-        </Link>
+        </div>
       </header>
 
       {/* Main Content */}
