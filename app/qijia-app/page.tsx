@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Star, Download, Smartphone, Heart, Users, Shield, ArrowLeft } from "lucide-react"
+import { Star, Download, Smartphone, Heart, Users, Shield } from "lucide-react"
 
 export default function QijiaAppPage() {
   return (
@@ -32,12 +32,6 @@ export default function QijiaAppPage() {
             <Star className="w-8 h-8 text-white fill-white" />
           </div>
           <span className="text-xl font-semibold text-white">智能向善</span>
-        </Link>
-        <Link href="/">
-          <Button variant="outline" className="text-white border-white/30 hover:bg-white/10 bg-transparent">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            返回首页
-          </Button>
         </Link>
       </header>
 
