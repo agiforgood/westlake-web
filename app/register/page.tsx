@@ -66,9 +66,9 @@ export default function RegisterPage() {
     // Simulate registration process
     setTimeout(() => {
       setIsLoading(false)
-      setSuccess("注册成功！正在跳转到登录页面...")
+      setSuccess("注册成功！正在跳转到仪表板...")
       setTimeout(() => {
-        router.push("/login")
+        router.push("/dashboard")
       }, 1500)
     }, 2000)
   }

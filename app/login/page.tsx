@@ -8,22 +8,32 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Star, Eye, EyeOff, AlertCircle, CheckCircle } from "lucide-react"
+import { Star, Eye, EyeOff, AlertCircle, CheckCircle, Mail, Lock } from "lucide-react"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  })
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const router = useRouter()
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
     setError("")
     setSuccess("")
+    setIsLoading(true)
 
     // Simulate login process
     setTimeout(() => {
@@ -42,18 +52,14 @@ export default function LoginPage() {
     }, 1000)
   }
 
-  const handleLoginFailure = () => {
-    setError("登录失败：用户名或密码错误")
-    setIsLoading(false)
-  }
-
   const simulateLoginFailure = () => {
     setIsLoading(true)
     setError("")
     setSuccess("")
 
     setTimeout(() => {
-      handleLoginFailure()
+      setError("登录失败：用户名或密码错误")
+      setIsLoading(false)
     }, 2000)
   }
 
@@ -87,7 +93,7 @@ export default function LoginPage() {
       </header>
 
       {/* Login Form */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-20">
         <Card className="w-full max-w-md bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold text-gray-900">欢迎回来</CardTitle>
@@ -99,15 +105,19 @@ export default function LoginPage() {
                 <label htmlFor="email" className="text-sm font-medium text-gray-700">
                   邮箱地址
                 </label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="请输入您的邮箱"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full"
-                />
+                <div className="relative">
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="请输入您的邮箱"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full pl-10"
+                  />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -117,13 +127,15 @@ export default function LoginPage() {
                 <div className="relative">
                   <Input
                     id="password"
+                    name="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="请输入您的密码"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={formData.password}
+                    onChange={handleInputChange}
                     required
-                    className="w-full pr-10"
+                    className="w-full pl-10 pr-10"
                   />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -135,10 +147,16 @@ export default function LoginPage() {
               </div>
 
               <div className="flex items-center justify-between">
-                <label className="flex items-center">
-                  <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                  <span className="ml-2 text-sm text-gray-600">记住我</span>
-                </label>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="remember"
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label htmlFor="remember" className="ml-2 text-sm text-gray-600">
+                    记住我
+                  </label>
+                </div>
                 <Link href="#" className="text-sm text-blue-600 hover:text-blue-800">
                   忘记密码？
                 </Link>
@@ -166,11 +184,11 @@ export default function LoginPage() {
             {/* Test Buttons */}
             <div className="space-y-3 pt-4 border-t border-gray-200">
               <p className="text-sm text-gray-500 text-center">测试功能</p>
-              <div className="flex gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <Button
                   onClick={handleSkipLogin}
                   variant="outline"
-                  className="flex-1 text-sm bg-transparent"
+                  className="text-sm text-green-600 border-green-300 hover:bg-green-50 bg-transparent"
                   disabled={isLoading}
                 >
                   跳过登录
@@ -178,10 +196,10 @@ export default function LoginPage() {
                 <Button
                   onClick={simulateLoginFailure}
                   variant="outline"
-                  className="flex-1 text-sm text-red-600 border-red-300 hover:bg-red-50 bg-transparent"
+                  className="text-sm text-red-600 border-red-300 hover:bg-red-50 bg-transparent"
                   disabled={isLoading}
                 >
-                  模拟登录失败
+                  登录失败
                 </Button>
               </div>
             </div>
