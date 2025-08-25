@@ -4,10 +4,9 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Star, Download, Smartphone, Heart, Users, Shield, Menu, X } from "lucide-react"
+import { Star, Download, Smartphone, Heart, Users, Shield } from "lucide-react"
 
 export default function QijiaAppPage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
@@ -16,24 +15,14 @@ export default function QijiaAppPage() {
     setIsAuthenticated(authStatus === "true")
   }, [])
 
-  const handleProtectedNavigation = (path: string, requireAuth = true) => {
-    if (requireAuth && !isAuthenticated) {
-      alert("请先登录后再访问此功能")
+  const handleProtectedNavigation = (targetPath: string, featureName: string) => {
+    if (!isAuthenticated) {
+      alert(`请先登录以访问${featureName}功能`)
       window.location.href = "/login"
     } else {
-      window.location.href = path
+      window.location.href = targetPath
     }
   }
-
-  const navItems = [
-    { name: "齐家APP", href: "/qijia-app", current: true },
-    { name: "提示词竞技场", href: "/prompt-engineering", protected: true },
-    { name: "心理学家协作平台", href: "/psychologist-evaluation", protected: true },
-    { name: "教程", href: "/tutorial" },
-    { name: "关于我们", href: "/about-us" },
-    { name: "路线图", href: "https://westlakeaiforgood.feishu.cn/wiki/JNXXwuhMairUVxk1wfocW2lcnkc", external: true },
-    { name: "任务", href: "https://docs.westlakeaiforgood.com/", external: true },
-  ]
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -54,112 +43,135 @@ export default function QijiaAppPage() {
       <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
       <div className="absolute inset-0 bg-black/60"></div>
 
-      {/* Navigation */}
-      <nav className="absolute top-0 left-0 right-0 z-50 bg-black/10 backdrop-blur-sm border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 flex items-center justify-center">
-                <Star className="w-8 h-8 text-white fill-white" />
-              </div>
-              <span className="text-xl font-semibold text-white">智能向善</span>
-            </Link>
+      {/* Header */}
+      <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 bg-black/10 backdrop-blur-sm">
+        {/* Logo and Brand */}
+        <Link href="/" className="flex items-center gap-3">
+          <div className="w-10 h-10 flex items-center justify-center">
+            <Star className="w-8 h-8 text-white fill-white" />
+          </div>
+          <span className="text-xl font-semibold text-white">智能向善</span>
+        </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                {navItems.map((item) => (
-                  <div key={item.name}>
-                    {item.external ? (
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-white/80 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                      >
-                        {item.name}
-                      </a>
-                    ) : (
-                      <button
-                        onClick={() =>
-                          item.protected ? handleProtectedNavigation(item.href) : (window.location.href = item.href)
-                        }
-                        className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                          item.current ? "bg-white/20 text-white" : "text-white/80 hover:text-white hover:bg-white/10"
-                        }`}
-                      >
-                        {item.name}
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* CTA Button */}
-            <div className="hidden md:block">
-              <Button
-                onClick={() => handleProtectedNavigation("/dashboard")}
-                className="bg-white text-gray-900 hover:bg-gray-100 font-medium"
+        {/* Navigation */}
+        <nav className="hidden md:flex items-center gap-8">
+          {/* 产品 Dropdown */}
+          <div className="relative group">
+            <button className="text-white/90 hover:text-white font-medium transition-colors flex items-center gap-1">
+              产品
+              <svg
+                className="w-4 h-4 transition-transform group-hover:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                成为志愿者
-              </Button>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-white hover:text-gray-300 p-2">
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="py-2">
+                <Link
+                  href="/qijia-app"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors bg-gray-50 font-medium"
+                >
+                  齐家APP
+                </Link>
+                <button
+                  onClick={() => handleProtectedNavigation("/prompt-engineering", "提示词竞技场")}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  提示词竞技场
+                </button>
+                <button
+                  onClick={() => handleProtectedNavigation("/psychologist-evaluation", "心理学家协作平台")}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  心理学家协作平台
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-black/20 backdrop-blur-sm border-t border-white/10">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {navItems.map((item) => (
-                <div key={item.name}>
-                  {item.external ? (
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white/80 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {item.name}
-                    </a>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setIsMenuOpen(false)
-                        item.protected ? handleProtectedNavigation(item.href) : (window.location.href = item.href)
-                      }}
-                      className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${
-                        item.current ? "bg-white/20 text-white" : "text-white/80 hover:text-white hover:bg-white/10"
-                      }`}
-                    >
-                      {item.name}
-                    </button>
-                  )}
-                </div>
-              ))}
-              <Button
-                onClick={() => {
-                  setIsMenuOpen(false)
-                  handleProtectedNavigation("/dashboard")
-                }}
-                className="w-full mt-4 bg-white text-gray-900 hover:bg-gray-100 font-medium"
+          {/* 文档 Dropdown */}
+          <div className="relative group">
+            <button className="text-white/90 hover:text-white font-medium transition-colors flex items-center gap-1">
+              文档
+              <svg
+                className="w-4 h-4 transition-transform group-hover:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                成为志愿者
-              </Button>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="py-2">
+                <a
+                  href="https://westlakeaiforgood.feishu.cn/wiki/JNXXwuhMairUVxk1wfocW2lcnkc"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  路线图
+                </a>
+                <a
+                  href="https://docs.westlakeaiforgood.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  任务
+                </a>
+                <Link
+                  href="/tutorial"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  教程
+                </Link>
+              </div>
             </div>
           </div>
-        )}
-      </nav>
+
+          {/* 志愿者 Dropdown */}
+          <div className="relative group">
+            <button className="text-white/90 hover:text-white font-medium transition-colors flex items-center gap-1">
+              志愿者
+              <svg
+                className="w-4 h-4 transition-transform group-hover:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="py-2">
+                <Link
+                  href="/about-us"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  我们是谁
+                </Link>
+                <button
+                  onClick={() => handleProtectedNavigation("/dashboard", "志愿者平台")}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  成为志愿者
+                </button>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        {/* Login Button */}
+        <Link href="/login">
+          <Button className="bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-sm px-6 py-2 rounded-full font-medium">
+            登录/注册
+          </Button>
+        </Link>
+      </header>
 
       {/* Main Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-20">
