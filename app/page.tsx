@@ -183,9 +183,20 @@ export default function HomePage() {
           {/* Page 1: Title with Video Background */}
           <div className="min-h-screen w-full relative flex items-center justify-center">
             {/* Video Background */}
-            <video className="absolute inset-0 w-full h-full object-cover" autoPlay loop muted playsInline>
-              <source src="/placeholder.mp4" type="video/mp4" />
-              {/* Fallback gradient background */}
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+              crossOrigin="anonymous"
+            >
+              <source
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                type="video/mp4"
+              />
+              {/* Fallback gradient background if video fails to load */}
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
             </video>
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
             <div className="absolute inset-0 bg-black/20"></div>
@@ -201,8 +212,18 @@ export default function HomePage() {
           {/* Page 2: Mission */}
           <div className="min-h-screen w-full relative flex items-center justify-center">
             {/* Same Video Background */}
-            <video className="absolute inset-0 w-full h-full object-cover" autoPlay loop muted playsInline>
-              <source src="/placeholder.mp4" type="video/mp4" />
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+              crossOrigin="anonymous"
+            >
+              <source
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                type="video/mp4"
+              />
             </video>
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
             <div className="absolute inset-0 bg-black/40"></div>
@@ -222,8 +243,18 @@ export default function HomePage() {
           {/* Page 3: Innovation Philosophy */}
           <div className="min-h-screen w-full relative flex items-center justify-center">
             {/* Same Video Background */}
-            <video className="absolute inset-0 w-full h-full object-cover" autoPlay loop muted playsInline>
-              <source src="/placeholder.mp4" type="video/mp4" />
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+              crossOrigin="anonymous"
+            >
+              <source
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                type="video/mp4"
+              />
             </video>
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
             <div className="absolute inset-0 bg-black/40"></div>
@@ -252,8 +283,18 @@ export default function HomePage() {
           {/* Page 4: Vision */}
           <div className="min-h-screen w-full relative flex items-center justify-center">
             {/* Same Video Background */}
-            <video className="absolute inset-0 w-full h-full object-cover" autoPlay loop muted playsInline>
-              <source src="/placeholder.mp4" type="video/mp4" />
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+              crossOrigin="anonymous"
+            >
+              <source
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                type="video/mp4"
+              />
             </video>
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
             <div className="absolute inset-0 bg-black/40"></div>
