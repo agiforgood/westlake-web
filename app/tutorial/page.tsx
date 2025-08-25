@@ -233,7 +233,7 @@ export default function TutorialPage() {
         <div className="max-w-6xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-12">
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">新手教程</h1>
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 mt-[10px ] mt-10">新手教程</h1>
             <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
               快速掌握提示词工程师和心理学家协作平台的基本操作
             </p>
