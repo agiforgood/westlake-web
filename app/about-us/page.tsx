@@ -256,7 +256,7 @@ export default function AboutUsPage() {
         <div className="max-w-7xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-16">
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">关于我们</h1>
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 mt-10">关于我们</h1>
             <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed max-w-4xl mx-auto">
               我们是一群充满热情的志愿者，致力于用人工智能技术创造积极的社会影响，让科技真正服务于人类的福祉
             </p>
