@@ -9,15 +9,6 @@ export default function HomePage() {
   const [currentPage, setCurrentPage] = useState(0)
   const totalPages = 4
 
-  // Auto-advance pages every 8 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentPage((prev) => (prev + 1) % totalPages)
-    }, 8000)
-
-    return () => clearInterval(interval)
-  }, [])
-
   const nextPage = () => {
     setCurrentPage((prev) => (prev + 1) % totalPages)
   }
@@ -208,8 +199,15 @@ export default function HomePage() {
           </div>
 
           {/* Page 2: Mission */}
-          <div className="min-h-screen w-full bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 flex items-center justify-center px-8">
-            <div className="max-w-4xl text-center text-white">
+          <div className="min-h-screen w-full relative flex items-center justify-center">
+            {/* Same Video Background */}
+            <video className="absolute inset-0 w-full h-full object-cover" autoPlay loop muted playsInline>
+              <source src="/placeholder.mp4" type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
+            <div className="absolute inset-0 bg-black/40"></div>
+
+            <div className="relative z-10 max-w-4xl text-center text-white px-8">
               <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">以人为本，智能向善</h2>
               <p className="text-xl md:text-2xl leading-relaxed opacity-90">
                 公益领域始终面临两大挑战：与前沿技术之间的观念鸿沟，以及缺乏高效的专业志愿者网络。这导致许多社会问题虽有人关注，却难有创新性解决方案。
@@ -222,8 +220,15 @@ export default function HomePage() {
           </div>
 
           {/* Page 3: Innovation Philosophy */}
-          <div className="min-h-screen w-full bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 flex items-center justify-center px-8">
-            <div className="max-w-5xl text-center text-white">
+          <div className="min-h-screen w-full relative flex items-center justify-center">
+            {/* Same Video Background */}
+            <video className="absolute inset-0 w-full h-full object-cover" autoPlay loop muted playsInline>
+              <source src="/placeholder.mp4" type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
+            <div className="absolute inset-0 bg-black/40"></div>
+
+            <div className="relative z-10 max-w-5xl text-center text-white px-8">
               <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
                 激活认知盈余，构建贡献、协作与声誉机制的社会创新网络
               </h2>
@@ -245,8 +250,15 @@ export default function HomePage() {
           </div>
 
           {/* Page 4: Vision */}
-          <div className="min-h-screen w-full bg-gradient-to-br from-amber-600 via-orange-600 to-red-600 flex items-center justify-center px-8">
-            <div className="max-w-4xl text-center text-white">
+          <div className="min-h-screen w-full relative flex items-center justify-center">
+            {/* Same Video Background */}
+            <video className="absolute inset-0 w-full h-full object-cover" autoPlay loop muted playsInline>
+              <source src="/placeholder.mp4" type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
+            <div className="absolute inset-0 bg-black/40"></div>
+
+            <div className="relative z-10 max-w-4xl text-center text-white px-8">
               <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">共创意义的容器：超越生命的有限性</h2>
               <div className="space-y-6 text-lg md:text-xl leading-relaxed opacity-90">
                 <p>
