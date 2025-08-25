@@ -4,7 +4,8 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Star, Play, BookOpen, Users, Brain, Target, CheckCircle, ArrowRight } from "lucide-react"
+import { Play, BookOpen, Users, Brain, Target, CheckCircle, ArrowRight } from "lucide-react"
+import { Navbar } from "@/components/navbar"
 
 export default function TutorialPage() {
   const promptEngineeringSteps = [
@@ -80,15 +81,10 @@ export default function TutorialPage() {
       <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
       <div className="absolute inset-0 bg-black/70"></div>
 
-      {/* Header */}
-      <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 bg-black/10 backdrop-blur-sm">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 flex items-center justify-center">
-            <Star className="w-8 h-8 text-white fill-white" />
-          </div>
-          <span className="text-xl font-semibold text-white">智能向善</span>
-        </Link>
-      </header>
+      {/* Navigation */}
+      <div className="relative z-50">
+        <Navbar />
+      </div>
 
       {/* Main Content */}
       <div className="relative z-10 min-h-screen px-4 py-20">
