@@ -10,7 +10,7 @@
 无
 
 **响应示例**  
-```json
+\`\`\`json
 {
   "totalUsers": 12847,
   "activePrompts": 2341,
@@ -20,7 +20,7 @@
   "weeklyGrowth": 8.2,
   "qualityScore": 94.2
 }
-```
+\`\`\`
 
 ### 2. 获取贡献者排行
 **端点**  
@@ -32,7 +32,7 @@
 | limit | number | 返回条目数（默认5）|
 
 **响应示例**  
-```json
+\`\`\`json
 [
   {
     "rank": 1,
@@ -49,7 +49,7 @@
     "avatar": "/placeholder-user.jpg"
   }
 ]
-```
+\`\`\`
 
 ### 3. 获取标注分类数据
 **端点**  
@@ -59,7 +59,7 @@
 无
 
 **响应示例**  
-```json
+\`\`\`json
 {
   "categories": [
     {
@@ -74,7 +74,7 @@
     }
   ]
 }
-```
+\`\`\`
 
 ### 4. 获取最近活动
 **端点**  
@@ -86,7 +86,7 @@
 | type | string | 过滤类型（prompt/evaluation/annotation）|
 
 **响应示例**  
-```json
+\`\`\`json
 [
   {
     "id": "act001",
@@ -101,7 +101,7 @@
     "timestamp": "4小时前"
   }
 ]
-```
+\`\`\`
 
 
 ## 徽章接口 `/api/badge`
@@ -119,7 +119,7 @@
 | category | string | 徽章分类（可选值：design/development/prompt-engineer/psychologist） |
 
 **响应示例**  
-```json
+\`\`\`json
 [
   {
     "id": "badge_001",
@@ -142,7 +142,7 @@
     "unlockTime": null
   }
 ]
-```
+\`\`\`
 
 ### 新增接口：获取用户已获得徽章
 **端点**  
@@ -155,7 +155,7 @@
 无
 
 **响应示例**  
-```json
+\`\`\`json
 {
   "userId": "user_123",
   "acquiredBadges": [
@@ -169,7 +169,7 @@
     }
   ]
 }
-```
+\`\`\`
 
 
 ## 排行榜接口 `/api/leaderboard`
@@ -182,14 +182,14 @@
 无
 
 **响应示例**  
-```json
+\`\`\`json
 {
   "totalParticipants": 1247,
   "weeklyActive": 892,
   "topScore": 98.7,
   "averageScore": 82.4,
 }
-```
+\`\`\`
 
 ### 2. 获取提示词工程师排名
 **端点**  
@@ -204,7 +204,7 @@
 | specialty | string | 筛选专长领域（可选） |
 
 **响应示例**  
-```json
+\`\`\`json
 {
   "rankings": [
     {
@@ -221,7 +221,7 @@
     }
   ]
 }
-```
+\`\`\`
 ## 志愿者网络接口 `/api/network`
 
 ### 1. 获取志愿者列表
@@ -238,7 +238,7 @@
 | pageSize | number | 每页数量（默认20，最大100） |
 
 **响应示例**  
-```json
+\`\`\`json
 {
   "success": true,
   "data": {
@@ -264,7 +264,7 @@
     ]
   }
 }
-```
+\`\`\`
 
 ### 2. 获取志愿者详情
 **端点**  
@@ -279,7 +279,7 @@
 | userId | string | 志愿者唯一ID |
 
 **响应示例**  
-```json
+\`\`\`json
 {
   "success": true,
   "data": {
@@ -296,7 +296,7 @@
     }
   }
 }
-```
+\`\`\`
 
 
 
@@ -313,7 +313,7 @@
 无
 
 **响应示例**  
-```json
+\`\`\`json
 {
   "success": true,
   "data": {
@@ -336,7 +336,7 @@
     learningGoals: "未填写",
   }
 }
-```
+\`\`\`
 
 ### 2. 更新用户Profile
 **端点**  
@@ -349,7 +349,7 @@
 `Content-Type: application/json-patch+json`
 
 **请求示例**  
-```json
+\`\`\`json
 [
   { 
     "op": "replace",
@@ -367,10 +367,10 @@
     "value": "夫妻沟通，代际矛盾"
   }
 ]
-```
+\`\`\`
 
 **响应示例**  
-```json
+\`\`\`json
 {
   "success": true,
   "updatedFields": [
@@ -380,7 +380,7 @@
   ],
   "validationErrors": []
 }
-```
+\`\`\`
 
 /prompt-engineering # 提示词工程师工作台
 

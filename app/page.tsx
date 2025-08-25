@@ -1,281 +1,386 @@
 "use client"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Users, Trophy, Brain, TrendingUp, Star, Target } from "lucide-react"
-import { Sidebar } from "@/components/sidebar"
-import { useLanguage } from "@/components/language-provider"
-import { useTheme } from "@/components/theme-provider"
-import { HeaderButtons } from "@/components/header-buttons"
 
-export default function Dashboard() {
-  const { t } = useLanguage()
-  const { theme } = useTheme()
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Star, ChevronDown } from "lucide-react"
+
+// Mock authentication state - in real app this would come from context/store
+const useAuth = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  // Mock check - in real app this would check actual auth state
+  useEffect(() => {
+    // Simulate checking auth state
+    const authState = localStorage.getItem("isAuthenticated")
+    setIsAuthenticated(authState === "true")
+  }, [])
+
+  return { isAuthenticated }
+}
+
+export default function HomePage() {
+  const [currentPage, setCurrentPage] = useState(0)
+  const { isAuthenticated } = useAuth()
+  const totalPages = 4
+
+  const nextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
+  }
+
+  const prevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 0))
+  }
+
+  const goToPage = (pageIndex: number) => {
+    setCurrentPage(pageIndex)
+  }
+
+  // Handle wheel scroll
+  useEffect(() => {
+    let isScrolling = false
+
+    const handleWheel = (e: WheelEvent) => {
+      if (isScrolling) return
+
+      isScrolling = true
+      setTimeout(() => {
+        isScrolling = false
+      }, 1000)
+
+      if (e.deltaY > 0) {
+        // Scroll down
+        nextPage()
+      } else {
+        // Scroll up
+        prevPage()
+      }
+    }
+
+    window.addEventListener("wheel", handleWheel, { passive: true })
+    return () => window.removeEventListener("wheel", handleWheel)
+  }, [])
+
+  const handleProtectedNavigation = (targetPath: string, featureName: string) => {
+    if (!isAuthenticated) {
+      alert(`请先登录以访问${featureName}功能`)
+      window.location.href = "/login"
+    } else {
+      window.location.href = targetPath
+    }
+  }
 
   return (
-    <div className={`min-h-screen ${theme === "dark" ? "bg-slate-900 text-white" : "bg-gray-50 text-gray-900"}`}>
-      {/* Sidebar */}
-      <Sidebar />
-
-      {/* Main Content */}
-      <div className="sidebar-margin p-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">{t("dashboard.title")}</h1>
-            <p className={theme === "dark" ? "text-slate-400" : "text-gray-600"}>智能向善社会创新网络数据概览</p>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Header */}
+      <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 bg-black/10 backdrop-blur-sm">
+        {/* Logo and Brand */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 flex items-center justify-center">
+            <Star className="w-8 h-8 text-white fill-white" />
           </div>
-          {/* HeaderButtons */}
-          <HeaderButtons />
+          <span className="text-xl font-semibold text-white">智能向善</span>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className={theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className={`text-sm font-medium ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                {t("dashboard.totalUsers")}
-              </CardTitle>
-              <Users className="h-4 w-4 text-[#397eff]" />
-            </CardHeader>
-            <CardContent>
-              <div className={`text-2xl font-bold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>12,847</div>
-              <p className="text-xs text-green-400 flex items-center gap-1">
-                <TrendingUp className="h-3 w-3" />
-                {t("dashboard.monthlyGrowth")}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className={theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className={`text-sm font-medium ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                {t("dashboard.activePrompts")}
-              </CardTitle>
-              <Target className="h-4 w-4 text-[#397eff]" />
-            </CardHeader>
-            <CardContent>
-              <div className={`text-2xl font-bold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>2,341</div>
-              <p className="text-xs text-green-400 flex items-center gap-1">
-                <TrendingUp className="h-3 w-3" />
-                {t("dashboard.weeklyGrowth")}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className={theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className={`text-sm font-medium ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                {t("dashboard.totalAnnotations")}
-              </CardTitle>
-              <Brain className="h-4 w-4 text-[#397eff]" />
-            </CardHeader>
-            <CardContent>
-              <div className={`text-2xl font-bold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>45,692</div>
-              <p className="text-xs text-blue-400 flex items-center gap-1">
-                <Star className="h-3 w-3" />
-                {t("dashboard.qualityScore")}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className={theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className={`text-sm font-medium ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                {t("dashboard.completedEvaluations")}
-              </CardTitle>
-              <Trophy className="h-4 w-4 text-[#397eff]" />
-            </CardHeader>
-            <CardContent>
-              <div className={`text-2xl font-bold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>8,934</div>
-              <p className="text-xs text-yellow-400 flex items-center gap-1">
-                <Trophy className="h-3 w-3" />
-                {t("dashboard.weeklyCompleted")}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Top Prompt Performers */}
-          <Card className={theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"}>
-            <CardHeader>
-              <CardTitle className={`${theme === "dark" ? "text-white" : "text-gray-900"} flex items-center gap-2`}>
-                <Trophy className="h-5 w-5 text-[#397eff]" />
-                {t("dashboard.topPerformers")}
-              </CardTitle>
-              <CardDescription className={theme === "dark" ? "text-slate-400" : "text-gray-600"}>
-                {t("dashboard.monthlyContributors")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 flex items-center justify-center text-sm font-bold text-black">
-                    1
-                  </div>
-                  <div>
-                    <p className={`font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                      {t("dashboard.contributor1Name")}
-                    </p>
-                    <p className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                      {t("dashboard.contributor1Role")}
-                    </p>
-                  </div>
-                </div>
-                <Badge className="bg-[#004cd7] text-white">2,847 {t("dashboard.points")}</Badge>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-gray-300 to-gray-500 flex items-center justify-center text-sm font-bold text-black">
-                    2
-                  </div>
-                  <div>
-                    <p className={`font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                      {t("dashboard.contributor2Name")}
-                    </p>
-                    <p className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                      {t("dashboard.contributor2Role")}
-                    </p>
-                  </div>
-                </div>
-                <Badge className="bg-[#397eff] text-white">2,156 {t("dashboard.points")}</Badge>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-amber-600 to-amber-800 flex items-center justify-center text-sm font-bold text-white">
-                    3
-                  </div>
-                  <div>
-                    <p className={`font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                      {t("dashboard.contributor3Name")}
-                    </p>
-                    <p className={`text-sm ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                      {t("dashboard.contributor3Role")}
-                    </p>
-                  </div>
-                </div>
-                <Badge className={theme === "dark" ? "bg-slate-700 text-white" : "bg-gray-300 text-gray-900"}>
-                  1,923 {t("dashboard.points")}
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Psychology Annotation Stats */}
-          <Card className={theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"}>
-            <CardHeader>
-              <CardTitle className={`${theme === "dark" ? "text-white" : "text-gray-900"} flex items-center gap-2`}>
-                <Brain className="h-5 w-5 text-[#397eff]" />
-                {t("dashboard.psychologyAnnotations")}
-              </CardTitle>
-              <CardDescription className={theme === "dark" ? "text-slate-400" : "text-gray-600"}>
-                {t("dashboard.annotationCategories")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
-                    {t("dashboard.emotionalAnalysis")}
-                  </span>
-                  <span className={`text-sm font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                    18,456
-                  </span>
-                </div>
-                <div className={`w-full rounded-full h-2 ${theme === "dark" ? "bg-slate-800" : "bg-gray-200"}`}>
-                  <div className="bg-[#004cd7] h-2 rounded-full" style={{ width: "75%" }}></div>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
-                    {t("dashboard.behaviorPatterns")}
-                  </span>
-                  <span className={`text-sm font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                    15,234
-                  </span>
-                </div>
-                <div className={`w-full rounded-full h-2 ${theme === "dark" ? "bg-slate-800" : "bg-gray-200"}`}>
-                  <div className="bg-[#397eff] h-2 rounded-full" style={{ width: "62%" }}></div>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className={`text-sm ${theme === "dark" ? "text-slate-300" : "text-gray-700"}`}>
-                    {t("dashboard.cognitiveAssessment")}
-                  </span>
-                  <span className={`text-sm font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                    12,002
-                  </span>
-                </div>
-                <div className={`w-full rounded-full h-2 ${theme === "dark" ? "bg-slate-800" : "bg-gray-200"}`}>
-                  <div className="bg-blue-500 h-2 rounded-full" style={{ width: "48%" }}></div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Recent Activity */}
-        <Card className={theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"}>
-          <CardHeader>
-            <CardTitle className={theme === "dark" ? "text-white" : "text-gray-900"}>
-              {t("dashboard.recentActivity")}
-            </CardTitle>
-            <CardDescription className={theme === "dark" ? "text-slate-400" : "text-gray-600"}>
-              {t("dashboard.allModulesUpdates")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div
-                className={`flex items-center gap-4 p-3 rounded-lg ${theme === "dark" ? "bg-slate-800/50" : "bg-gray-100"}`}
+        {/* Navigation */}
+        <nav className="hidden md:flex items-center gap-8">
+          {/* 产品 Dropdown */}
+          <div className="relative group">
+            <button className="text-white/90 hover:text-white font-medium transition-colors flex items-center gap-1">
+              产品
+              <svg
+                className="w-4 h-4 transition-transform group-hover:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                <div className="w-2 h-2 rounded-full bg-green-400"></div>
-                <div className="flex-1">
-                  <p className={`text-sm ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                    {t("dashboard.activity1")}
-                  </p>
-                  <p className={`text-xs ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                    {t("dashboard.time1")}
-                  </p>
-                </div>
-              </div>
-
-              <div
-                className={`flex items-center gap-4 p-3 rounded-lg ${theme === "dark" ? "bg-slate-800/50" : "bg-gray-100"}`}
-              >
-                <div className="w-2 h-2 rounded-full bg-blue-400"></div>
-                <div className="flex-1">
-                  <p className={`text-sm ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                    {t("dashboard.activity2")}
-                  </p>
-                  <p className={`text-xs ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                    {t("dashboard.time2")}
-                  </p>
-                </div>
-              </div>
-
-              <div
-                className={`flex items-center gap-4 p-3 rounded-lg ${theme === "dark" ? "bg-slate-800/50" : "bg-gray-100"}`}
-              >
-                <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
-                <div className="flex-1">
-                  <p className={`text-sm ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                    {t("dashboard.activity3")}
-                  </p>
-                  <p className={`text-xs ${theme === "dark" ? "text-slate-400" : "text-gray-600"}`}>
-                    {t("dashboard.time3")}
-                  </p>
-                </div>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="py-2">
+                <Link
+                  href="/qijia-app"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  齐家APP
+                </Link>
+                <button
+                  onClick={() => handleProtectedNavigation("/prompt-engineering", "提示词竞技场")}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  提示词竞技场
+                </button>
+                <button
+                  onClick={() => handleProtectedNavigation("/psychologist-evaluation", "心理学家协作平台")}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  心理学家协作平台
+                </button>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+
+          {/* 文档 Dropdown */}
+          <div className="relative group">
+            <button className="text-white/90 hover:text-white font-medium transition-colors flex items-center gap-1">
+              文档
+              <svg
+                className="w-4 h-4 transition-transform group-hover:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="py-2">
+                <a
+                  href="https://westlakeaiforgood.feishu.cn/wiki/JNXXwuhMairUVxk1wfocW2lcnkc"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  路线图
+                </a>
+                <a
+                  href="https://docs.westlakeaiforgood.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  任务
+                </a>
+                <Link
+                  href="/tutorial"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  教程
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* 志愿者 Dropdown */}
+          <div className="relative group">
+            <button className="text-white/90 hover:text-white font-medium transition-colors flex items-center gap-1">
+              志愿者
+              <svg
+                className="w-4 h-4 transition-transform group-hover:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="py-2">
+                <Link
+                  href="/about-us"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  我们是谁
+                </Link>
+                <button
+                  onClick={() => handleProtectedNavigation("/dashboard", "志愿者平台")}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                >
+                  成为志愿者
+                </button>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        {/* Login Button */}
+        <Link href="/login">
+          <Button className="bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-sm px-6 py-2 rounded-full font-medium">
+            登录/注册
+          </Button>
+        </Link>
+      </header>
+
+      {/* Sliding Pages Container */}
+      <div className="relative w-full h-screen">
+        <div
+          className="flex flex-col w-full h-full transition-transform duration-1000 ease-in-out"
+          style={{ transform: `translateY(-${currentPage * 100}vh)` }}
+        >
+          {/* Page 1: Title with Video Background */}
+          <div className="min-h-screen w-full relative flex items-center justify-center">
+            {/* Video Background */}
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+              crossOrigin="anonymous"
+            >
+              <source
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                type="video/mp4"
+              />
+              {/* Fallback gradient background if video fails to load */}
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
+            <div className="absolute inset-0 bg-black/20"></div>
+
+            <div className="relative z-10 text-center px-8">
+              <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-white tracking-[0.2em] leading-tight">
+                智 能 向 善
+                <br />社 会 创 新 网 络
+              </h1>
+            </div>
+          </div>
+
+          {/* Page 2: Mission */}
+          <div className="min-h-screen w-full relative flex items-center justify-center">
+            {/* Same Video Background */}
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+              crossOrigin="anonymous"
+            >
+              <source
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
+            <div className="absolute inset-0 bg-black/40"></div>
+
+            <div className="relative z-10 max-w-4xl text-center text-white px-8">
+              <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">以人为本，智能向善</h2>
+              <p className="text-xl md:text-2xl leading-relaxed opacity-90">
+                公益领域始终面临两大挑战：与前沿技术之间的观念鸿沟，以及缺乏高效的专业志愿者网络。这导致许多社会问题虽有人关注，却难有创新性解决方案。
+              </p>
+              <div className="mt-8 h-1 w-32 bg-white/50 mx-auto"></div>
+              <p className="text-xl md:text-2xl mt-8 leading-relaxed">
+                <strong>智能向善社会创新网络正是为此而生：让公益插上AI技术的翅膀，创造性地解决社会问题。</strong>
+              </p>
+            </div>
+          </div>
+
+          {/* Page 3: Innovation Philosophy */}
+          <div className="min-h-screen w-full relative flex items-center justify-center">
+            {/* Same Video Background */}
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+              crossOrigin="anonymous"
+            >
+              <source
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
+            <div className="absolute inset-0 bg-black/40"></div>
+
+            <div className="relative z-10 max-w-5xl text-center text-white px-8">
+              <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
+                激活认知盈余，构建贡献、协作与声誉机制的社会创新网络
+              </h2>
+              <div className="space-y-6 text-lg md:text-xl leading-relaxed opacity-90">
+                <p>
+                  正如Clay Shirky在《认知盈余》中所说：
+                  <em>"在数字时代，人们拥有大量闲暇时间和认知能力，如果被有效组织，将创造巨大的社会价值。"</em>
+                </p>
+                <div className="h-1 w-24 bg-white/50 mx-auto"></div>
+                <p>
+                  这一洞察启发我们创造性地提出<strong>"得道易助"</strong>
+                  理念——从"得道多助"的道德感召走向"得道易助"的机制创新。
+                </p>
+                <p className="text-xl md:text-2xl font-semibold">
+                  我们不只追求让公益事业获得支持，更致力于创造让专业志愿者的"助人"体验变得轻松美好。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Page 4: Vision */}
+          <div className="min-h-screen w-full relative flex items-center justify-center">
+            {/* Same Video Background */}
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+              crossOrigin="anonymous"
+            >
+              <source
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-cyan-400/30"></div>
+            <div className="absolute inset-0 bg-black/40"></div>
+
+            <div className="relative z-10 max-w-4xl text-center text-white px-8">
+              <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">共创意义的容器：超越生命的有限性</h2>
+              <div className="space-y-6 text-lg md:text-xl leading-relaxed opacity-90">
+                <p>
+                  坂本龙一曾说<em>"艺术千秋，人生朝露"</em>，人生如朝露般短暂易逝，但人类始终渴望超越生命的有限性。
+                </p>
+                <div className="h-1 w-24 bg-white/50 mx-auto"></div>
+                <p className="text-xl md:text-2xl font-semibold">
+                  智能向善社会创新网络正是这样一个让每份贡献都被看见、被记录、被放大的<strong>"意义容器"</strong>。
+                </p>
+                <p>志愿者能真切地看到自己如何改变他人生活、如何融入更大的智慧洪流，创造出超越个体的持久价值。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Page Indicators */}
+      <div className="absolute right-8 top-1/2 transform -translate-y-1/2 z-50">
+        <div className="flex flex-col gap-3">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToPage(index)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                currentPage === index ? "bg-white/80 scale-125" : "bg-white/20 hover:bg-white/40"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Scroll Hint - Only show when not on last page */}
+      {currentPage < totalPages - 1 && (
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50 text-white/70 text-center">
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-sm">滚动浏览</span>
+            <div className="animate-bounce">
+              <ChevronDown className="w-4 h-4" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Footer (only visible on last page) */}
+      <div
+        className={`absolute bottom-0 left-0 right-0 text-center px-8 py-4 text-white/80 transition-opacity duration-500 ${
+          currentPage === totalPages - 1 ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <div className="space-y-1 text-sm">
+          <p>© 2025 智能向善社会创新网络. 保留所有权利</p>
+          <p>浙ICP备2025166409号-1</p>
+        </div>
       </div>
     </div>
   )
