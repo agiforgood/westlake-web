@@ -5,8 +5,23 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Star, ChevronDown } from "lucide-react"
 
+// Mock authentication state - in real app this would come from context/store
+const useAuth = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  // Mock check - in real app this would check actual auth state
+  useEffect(() => {
+    // Simulate checking auth state
+    const authState = localStorage.getItem("isAuthenticated")
+    setIsAuthenticated(authState === "true")
+  }, [])
+
+  return { isAuthenticated }
+}
+
 export default function HomePage() {
   const [currentPage, setCurrentPage] = useState(0)
+  const { isAuthenticated } = useAuth()
   const totalPages = 4
 
   const nextPage = () => {
@@ -46,6 +61,15 @@ export default function HomePage() {
     return () => window.removeEventListener("wheel", handleWheel)
   }, [])
 
+  const handleProtectedNavigation = (targetPath: string, featureName: string) => {
+    if (!isAuthenticated) {
+      alert(`请先登录以访问${featureName}功能`)
+      window.location.href = "/login"
+    } else {
+      window.location.href = targetPath
+    }
+  }
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Header */}
@@ -75,24 +99,24 @@ export default function HomePage() {
             </button>
             <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="py-2">
-                <a
-                  href="#qijia-app"
+                <Link
+                  href="/qijia-app"
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                 >
                   齐家APP
-                </a>
-                <a
-                  href="#prompt-arena"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                </Link>
+                <button
+                  onClick={() => handleProtectedNavigation("/prompt-engineering", "提示词竞技场")}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                 >
                   提示词竞技场
-                </a>
-                <a
-                  href="#psychologist-platform"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                </button>
+                <button
+                  onClick={() => handleProtectedNavigation("/psychologist-evaluation", "心理学家协作平台")}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                 >
                   心理学家协作平台
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -113,23 +137,27 @@ export default function HomePage() {
             <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="py-2">
                 <a
-                  href="#roadmap"
+                  href="https://westlakeaiforgood.feishu.cn/wiki/JNXXwuhMairUVxk1wfocW2lcnkc"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                 >
                   路线图
                 </a>
                 <a
-                  href="#tasks"
+                  href="https://docs.westlakeaiforgood.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                 >
                   任务
                 </a>
-                <a
-                  href="#tutorials"
+                <Link
+                  href="/tutorial"
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                 >
                   教程
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -149,18 +177,18 @@ export default function HomePage() {
             </button>
             <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="py-2">
-                <a
-                  href="#who-we-are"
+                <Link
+                  href="/about-us"
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                 >
                   我们是谁
-                </a>
-                <a
-                  href="#become-volunteer"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                </Link>
+                <button
+                  onClick={() => handleProtectedNavigation("/dashboard", "志愿者平台")}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                 >
                   成为志愿者
-                </a>
+                </button>
               </div>
             </div>
           </div>

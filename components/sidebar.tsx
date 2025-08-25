@@ -1,30 +1,31 @@
 "use client"
 
 import { useState } from "react"
-import { usePathname } from "next/navigation"
 import Link from "next/link"
-import Image from "next/image"
+import { usePathname } from "next/navigation"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { useTheme } from "@/components/theme-provider"
+import { useLanguage } from "@/components/language-provider"
 import {
-  BarChart3,
+  LayoutDashboard,
+  Users,
   Trophy,
   Brain,
   UserCheck,
-  User,
   Network,
-  Award,
-  Sun,
-  Moon,
+  Star,
+  Menu,
+  X,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
-import { useTheme } from "./theme-provider"
-import { useLanguage } from "./language-provider"
 
-const navigationItems = [
+const navigation = [
   {
-    name: "sidebar.dashboard",
-    href: "/",
-    icon: BarChart3,
+    name: "dashboard.title",
+    href: "/dashboard",
+    icon: LayoutDashboard,
   },
   {
     name: "sidebar.promptEngineering",
@@ -37,127 +38,126 @@ const navigationItems = [
     icon: UserCheck,
   },
   {
-    name: "sidebar.leaderboard",
-    href: "/leaderboard",
-    icon: Award,
-  },
-  {
-    name: "sidebar.badge",
-    href: "/badge",
-    icon: Trophy,
-  },
-  {
-    name: "sidebar.network",
+    name: "sidebar.volunteerNetwork",
     href: "/network",
     icon: Network,
   },
   {
-    name: "sidebar.profile",
+    name: "sidebar.leaderboard",
+    href: "/leaderboard",
+    icon: Trophy,
+  },
+  {
+    name: "sidebar.badgeSystem",
+    href: "/badge",
+    icon: Star,
+  },
+  {
+    name: "sidebar.myProfile",
     href: "/profile",
-    icon: User,
+    icon: Users,
   },
 ]
 
 export function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
   const pathname = usePathname()
-  const { theme, toggleTheme } = useTheme()
+  const { theme } = useTheme()
   const { t } = useLanguage()
-  const [isCollapsed, setIsCollapsed] = useState(false)
-
-  const createLocalizedHref = (href: string) => {
-    return href
-  }
-
-  const isActiveItem = (href: string) => {
-    return pathname === href
-  }
 
   return (
     <>
+      {/* Mobile menu button */}
+      <div className="fixed top-4 left-4 z-50 md:hidden">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className={theme === "dark" ? "bg-slate-800 border-slate-700" : "bg-white border-gray-200"}
+        >
+          {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        </Button>
+      </div>
+
+      {/* Mobile overlay */}
+      {mobileOpen && <div className="fixed inset-0 z-40 bg-black/50 md:hidden" onClick={() => setMobileOpen(false)} />}
+
+      {/* Sidebar */}
       <div
-        className={`fixed left-0 top-0 h-full transition-all duration-300 border-r z-50 ${
-          isCollapsed ? "w-20" : "w-64"
-        } ${theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200"}`}
+        className={cn(
+          "fixed left-0 top-0 z-40 h-full transition-all duration-300 ease-in-out",
+          "border-r",
+          theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200",
+          collapsed ? "w-16" : "w-64",
+          mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
+        )}
       >
-        <div className="p-6 h-full flex flex-col relative">
-          {/* Logo */}
-          <Link
-            href="/"
-            className={`flex items-center gap-2 mb-8 cursor-pointer hover:opacity-80 transition-opacity ${isCollapsed ? "justify-center" : "ml-1.5"}`}
-          >
+        {/* Header */}
+        <div className="flex h-16 items-center justify-between px-4 border-b border-inherit">
+          <Link href="/" className="flex items-center gap-3">
             <div className="w-8 h-8 flex items-center justify-center">
-              <Image src="/agi_logo.svg" alt="AGI Logo" width={32} height={32} className="w-8 h-8" />
+              <Star className={`w-6 h-6 ${theme === "dark" ? "text-white" : "text-gray-900"} fill-current`} />
             </div>
-            {!isCollapsed && (
-              <span className={`font-semibold text-lg ${theme === "dark" ? "text-white" : "text-slate-900"}`}>
-                WestLake
+            {!collapsed && (
+              <span className={`text-lg font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                智能向善
               </span>
             )}
           </Link>
 
-          {/* Navigation */}
-          <nav className="space-y-2 flex-1">
-            {navigationItems.map((item) => {
-              const Icon = item.icon
-              const isActive = isActiveItem(item.href)
-              const href = createLocalizedHref(item.href)
-
-              return (
-                <div key={item.name}>
-                  <Link
-                    href={href}
-                    className={`flex items-center gap-3 rounded-lg transition-colors py-2.5 px-1.5 ${
-                      isActive
-                        ? "bg-[#004cd7] text-white"
-                        : theme === "dark"
-                          ? "text-slate-400 hover:text-white hover:bg-slate-800"
-                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                    } ${isCollapsed ? "justify-center" : ""}`}
-                    title={isCollapsed ? t(item.name) : undefined}
-                  >
-                    <Icon className="w-5 h-5" />
-                    {!isCollapsed && <span>{t(item.name)}</span>}
-                  </Link>
-                </div>
-              )
-            })}
-          </nav>
-
-          {/* Theme Toggle Button */}
-          <div className="space-y-2">
-            <button
-              onClick={toggleTheme}
-              className={`flex items-center gap-3 rounded-lg transition-colors w-full py-2.5 px-1.5 ${
-                theme === "dark"
-                  ? "text-slate-400 hover:text-white hover:bg-slate-800"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              } ${isCollapsed ? "justify-center" : ""}`}
-              title={isCollapsed ? (theme === "dark" ? t("sidebar.lightMode") : t("sidebar.darkMode")) : undefined}
-            >
-              {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              {!isCollapsed && <span>{theme === "dark" ? t("sidebar.lightMode") : t("sidebar.darkMode")}</span>}
-            </button>
-          </div>
-
-          {/* Collapse Button */}
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className={`absolute top-1/2 -translate-y-1/2 -right-3 w-6 h-6 rounded-full transition-all duration-200 border ${
-              theme === "dark"
-                ? "bg-slate-800 border-slate-700 text-slate-400 hover:text-white hover:shadow-lg hover:shadow-slate-900/50"
-                : "bg-white border-gray-300 text-slate-600 hover:text-slate-900 hover:shadow-lg hover:shadow-gray-400/50"
-            } flex items-center justify-center z-10`}
+          {/* Collapse button - only show on desktop */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setCollapsed(!collapsed)}
+            className="hidden md:flex h-8 w-8"
           >
-            {isCollapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
-          </button>
+            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </Button>
         </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 space-y-1 p-4">
+          {navigation.map((item) => {
+            const Icon = item.icon
+            const isActive = pathname === item.href
+
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  isActive
+                    ? theme === "dark"
+                      ? "bg-slate-800 text-white"
+                      : "bg-gray-100 text-gray-900"
+                    : theme === "dark"
+                      ? "text-slate-400 hover:text-white hover:bg-slate-800"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100",
+                )}
+              >
+                <Icon className="h-5 w-5 flex-shrink-0" />
+                {!collapsed && <span>{t(item.name)}</span>}
+              </Link>
+            )
+          })}
+        </nav>
       </div>
 
-      {/* Added dynamic margin utility for other components to use */}
+      {/* Main content margin */}
       <style jsx global>{`
         .sidebar-margin {
-          margin-left: ${isCollapsed ? "5rem" : "16rem"};
-          transition: margin-left 300ms ease;
+          margin-left: ${collapsed ? "4rem" : "16rem"};
+          transition: margin-left 300ms ease-in-out;
+        }
+        
+        @media (max-width: 768px) {
+          .sidebar-margin {
+            margin-left: 0;
+          }
         }
       `}</style>
     </>

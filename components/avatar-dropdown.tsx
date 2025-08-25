@@ -9,9 +9,9 @@ import { useTheme } from "./theme-provider"
 export function AvatarDropdown() {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
   const { t } = useLanguage()
   const { theme } = useTheme()
-  const router = useRouter()
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -31,6 +31,8 @@ export function AvatarDropdown() {
     setIsOpen(false)
     // Handle logout logic here
     console.log("Logout clicked")
+    // Clear auth state
+    localStorage.removeItem("isAuthenticated")
     // Redirect to homepage
     router.push("/")
   }
@@ -70,7 +72,7 @@ export function AvatarDropdown() {
             <button
               onClick={() => {
                 setIsOpen(false)
-                // Handle profile navigation
+                router.push("/profile")
               }}
               className={`flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors ${
                 theme === "dark"
