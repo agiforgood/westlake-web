@@ -10,11 +10,11 @@ export default function HomePage() {
   const totalPages = 4
 
   const nextPage = () => {
-    setCurrentPage((prev) => (prev + 1) % totalPages)
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
   }
 
   const prevPage = () => {
-    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages)
+    setCurrentPage((prev) => Math.max(prev - 1, 0))
   }
 
   const goToPage = (pageIndex: number) => {
@@ -290,15 +290,17 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Scroll Hint */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50 text-white/70 text-center">
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-sm">滚动浏览</span>
-          <div className="animate-bounce">
-            <ChevronDown className="w-4 h-4" />
+      {/* Scroll Hint - Only show when not on last page */}
+      {currentPage < totalPages - 1 && (
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50 text-white/70 text-center">
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-sm">滚动浏览</span>
+            <div className="animate-bounce">
+              <ChevronDown className="w-4 h-4" />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Footer (only visible on last page) */}
       <div
